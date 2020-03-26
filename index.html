@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>Corona Hospital Finder</title>
+    </head>
+    <body>
+        <form action="index.html" method="post">
+            <label for="name">Full Legal Name: <input id="name" type="text" name="name"></label>
+            <label for="age">Age: <input id="age" type="number" name="age"></label>
+            <label for="time_to_travel">Time you are willing to travel: <input id="time_to_travel" type="time" name="time_to_travel" value=""></label>
+            <fieldset>
+                <legend>Do you believe you have coronavirus symptoms? Please check off all symptoms you may have.</legend>
+                <div>
+                    <input id="fever" type="checkbox" name="is_corona" value="fever">
+                    <label for="fever">Fever</label>
+                </div>
+                <div>
+                    <input id="tiredness" type="checkbox" name="is_corona" value="tiredness">
+                    <label for="tiredness">Tiredness</label>
+                </div>
+                <div>
+                    <input id="difficulty_breathing" type="checkbox" name="is_corona" value="difficulty_breathing">
+                    <label for="difficulty_breathing">Difficulty Breathing</label>
+                </div>
+                <div>
+                    <input id="dry_cough" type="checkbox" name="is_corona" value="dry_cough">
+                    <label for="dry_cough">Dry Cough</label>
+                </div>
+                <div>
+                    <input id="aches_pains" type="checkbox" name="is_corona" value="aches_pains">
+                    <label for="aches_pains">Aches and Pains</label>
+                </div>
+                <div>
+                    <input id="nasal_congestion" type="checkbox" name="is_corona" value="nasal_congestion">
+                    <label for="nasal_congestion">Nasal Congestion</label>
+                </div>
+                <div>
+                    <input id="runny_nose" type="checkbox" name="is_corona" value="runny_nose">
+                    <label for="runny_nose">Runny Nose</label>
+                </div>
+                <div>
+                    <input id="sore_throat" type="checkbox" name="is_corona" value="sore_throat">
+                    <label for="sore_throat">Sore Throat</label>
+                </div>
+                <div>
+                    <input id="diarrhea" type="checkbox" name="is_corona" value="diarrhea">
+                    <label for="diarrhea">Diarrhea</label>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>Do you have any of the following medical conditions? Please check all the apply</legend>
+                <div>
+                    <input id="high_bp" type="checkbox" name="pre_conditions" value="high_bp">
+                    <label for="high_bp">High Blood Pressure</label>
+                </div>
+                <div>
+                    <input id="heart_problems" type="checkbox" name="pre_conditions" value="heart_problems">
+                    <label for="heart_problems">Heart Problems</label>
+                </div>
+                <div>
+                    <input id="diabetes" type="checkbox" name="pre_conditions" value="diabetes">
+                    <label for="diabetes">Diabetes</label>
+                </div>
+            </fieldset>
+            <input type="submit" name="" value="Submit">
+        </form>
+    </body>
+</html>
