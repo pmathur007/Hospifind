@@ -1,7 +1,7 @@
 import operator
 
 class Patient:
-    def __init__(self, location, transport, conditions, age, symptoms, insurance):
+    def __init__(self, location, time, transport, conditions, age, symptoms, insurance):
         # hyper params for tuning
         self.insurance_cutoff = 5 # number of hospitals that match their insurance cutoff, if above then get rid of non-matches, if below keep all
         self.symptom_cutoff = 1.75 # cutoff for symptom score for coronavirus vs. non coronavirus
@@ -15,11 +15,14 @@ class Patient:
 
         # user data
         self.location = location
+        self.max_time = time
         self.transport = transport
         self.conditions = conditions
         self.age = age
         self.symptoms = symptoms
         self.insurance = insurance
+
+        # later defined data
         self.hospitals = []
         self.symptoms_val = 0
         self.conditions_val = 0
@@ -50,7 +53,7 @@ class Patient:
         self.calculate_hospital_score()
         self.display_hospitals()
 
-    def get_hospitals(self): # use location to find hospitals in a radius (default 10 miles)
+    def get_hospitals(self): # use location to find hospitals in a radius (default 10 miles - high-end estimate based on time?)
         return []
 
     def calculate_time(self): # use location and transport with google API to find time between hospital and patient
