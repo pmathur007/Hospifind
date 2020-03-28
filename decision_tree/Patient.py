@@ -3,14 +3,14 @@ import operator
 class Patient:
     def __init__(self, location, transport, conditions, age, symptoms, insurance):
         # hyper params for tuning
-        self.ins_cutoff = 5 # number of hopsitals that match their insurance cutoff, if above then get rid of non-matches, if below keep all
-        self.symp_cutoff = 1.75 # cutoff for symptom score for coronavirus vs. non coronavirus
+        self.insurance_cutoff = 5 # number of hospitals that match their insurance cutoff, if above then get rid of non-matches, if below keep all
+        self.symptom_cutoff = 1.75 # cutoff for symptom score for coronavirus vs. non coronavirus
         self.radius = 10 # cutoff for radius in miles of what hospitals we will look at
-        self.scweight = 0.5 # weight value for symp_val for coronavirus positive patient
-        self.ccweight = 0.3 # weight value for cond_val for coronavirus positive patient
-        self.acweight = 0.2 # weight value for age_val for coronavirus positive patient
-        self.crweight = 0.5 # weight value for cond_val for regular patient
-        self.arweight = 0.5 # weight value for age_val for regular patient
+        self.symptoms_corona_weight = 0.5 # weight value for symptom_val for coronavirus positive patient
+        self.conditions_corona_weight = 0.3 # weight value for condition_val for coronavirus positive patient
+        self.age_corona_weight = 0.2 # weight value for age_val for coronavirus positive patient
+        self.conditions_regular_weight = 0.5 # weight value for conditions_val for regular patient
+        self.age_regular_weight = 0.5 # weight value for age_val for regular patient
         self.risk_scale = 0.1 # scale that brings down risk value
 
         # user data
@@ -20,75 +20,84 @@ class Patient:
         self.age = age
         self.symptoms = symptoms
         self.insurance = insurance
+        self.hospitals = []
+        self.symptoms_val = 0
+        self.conditions_val = 0
+        self.age_val = 0
+        self.corona = False
+        self.risk = 0
+        self.hospital_times = dict()
+        self.hospital_ranks = []
 
-        self.hospitals = self.getHospitals()
-        self.times = dict()
+    def process(self):
+        self.hospitals = self.get_hospitals()
+        self.hospital_times = dict()
         for h in self.hospitals:
-            self.times[h] = self.calcTime()
+            self.hospital_times[h] = self.calculate_time()
 
-        self.symp_val = self.calcSymp()
-        self.cond_val = self.calcCond()
-        self.age_val = self.calcAge()
+        self.symptoms_val = self.calculate_symptom_score()
+        self.conditions_val = self.calculate_condition_score()
+        self.age_val = self.calculate_age_score()
 
-        self.corona = self.symp_val > self.symp_cutoff
+        self.corona = self.symptoms_val > self.symptom_cutoff
         if self.corona:
-            self.risk = (self.symp_val * self.scweight) + (self.cond_val * self.ccweight) + (self.age_val * self.acweight)
+            self.risk = (self.symptoms_val * self.symptoms_corona_weight) + (self.conditions_val * self.conditions_corona_weight) + (
+                      self.age_val * self.age_corona_weight)
         else:
-            self.risk = (self.cond_val * self.crweight) + (self.age_val * self.arweight)
+            self.risk = (self.conditions_val * self.conditions_regular_weight) + (self.age_val * self.age_regular_weight)
 
-        self.checkIns()
-        self.calcHosp()
-        self.displayHosp()
+        self.check_insurance()
+        self.calculate_hospital_score()
+        self.display_hospitals()
 
+    def get_hospitals(self): # use location to find hospitals in a radius (default 10 miles)
+        return []
 
-    def getHospitals(self): # use location to find hospitals in a radius (default 10 miles)
-        pass
+    def calculate_time(self): # use location and transport with google API to find time between hospital and patient
+        return -1
 
-    def calcTime(self): # use location and transport with google API to find time between hospital and patient
-        pass
-
-    def calcSymp(self): # use symptom values to determine total score
+    def calculate_symptom_score(self): # use symptom values to determine total score
         val = 0
-        symps = {"fever":0.879, "dry cough":0.677, "fatigue":0.381, "phlegm":0.334, "shortness of breath":0.186,
-                "sore throat, headache": 0.139, "chills": 0.114, "vomiting":0.05, "nasal congestion":0.048, "diarrhea":0.037}
+        symptom_dict = {"fever": 0.879, "dry cough": 0.677, "fatigue": 0.381, "phlegm": 0.334, "shortness of breath": 0.186,
+                        "sore throat, headache": 0.139, "chills": 0.114, "vomiting": 0.05, "nasal congestion": 0.048, "diarrhea": 0.037}
         for symptom in self.symptoms:
-            val+=symps[symptom]
+            val += symptom_dict[symptom]
         return (val/2.845) * 10
 
-    def calcCond(self): # use conditions values to determine total score
-        if(self.conditions == 0)
+    def calculate_condition_score(self): # use conditions values to determine total score
+        if self.conditions == 0:
             return 0
-        if(self.conditions == 1)
+        if self.conditions == 1:
             return 5
-        if(self.conditions == 2)
+        if self.conditions == 2:
             return 8
         return 10
 
-    def calcAge(self): # condenses age to 0-10 scale
-        return min(self.age,100) / 10.0
+    def calculate_age_score(self): # condenses age to 0-10 scale
+        return min(self.age, 100) / 10.0
 
-    def calcIns(self): # categorizes insurance type as int
+    def calculate_insurance(self): # categorizes insurance type as int
         pass
 
-    def checkIns(self): # check what hopsitals have the patient's insurance
+    def check_insurance(self): # check what hospitals have the patient's insurance
         hosp = []
         for h in self.hospitals:
             if self.insurance in h.insurance:
-                hosp.append(h);
-        if len(hosp) > self.ins_cutoff:
+                hosp.append(h)
+        if len(hosp) > self.insurance_cutoff:
             self.hospitals = hosp
 
-    def calcHosp(self): # calculates the hospitals scores
-        hrank = dict()
+    def calculate_hospital_score(self): # calculates the hospitals scores
+        hospital_ranks = dict()
         for h in self.hospitals:
             if self.corona:
-                rating = h.per_corona * ((h.corona_score * self.risk_scale * self.risk) + (self.times[h] * (1 - self.risk_scale * self.risk)))
-                hrank[h] = rating
+                rating = h.per_corona * ((h.corona_score * self.risk_scale * self.risk) + (self.hospital_times[h] * (1 - self.risk_scale * self.risk)))
+                hospital_ranks[h] = rating
             else:
-                rating = (h.reg_score * self.risk_scale * self.risk) + (self.times[h] * (1 - self.risk_scale * self.risk))
-                hrank[h] = rating
+                rating = (h.reg_score * self.risk_scale * self.risk) + (self.hospital_times[h] * (1 - self.risk_scale * self.risk))
+                hospital_ranks[h] = rating
 
-        self.hosp_ranked = sorted(hrank.items(), reverse = True, key=operator.itemgetter(1))
+        self.hospital_ranks = sorted(hospital_ranks.items(), reverse=True, key=operator.itemgetter(1))
 
-    def displayHosp(self): # display hospitals in order (self.hosp_ranked) on screen
+    def display_hospitals(self): # display hospitals in order (self.hospital_ranks) on screen
         pass

@@ -8,11 +8,11 @@ class Hospital:
         self.per_corona = coron
         self.insurance = insurance
 
-        self.corona_score = calcCor()
-        self.reg_score = calcReg()
+        self.corona_score = self.calc_corona_score()
+        self.reg_score = self.calc_regular_score()
 
-    def calcCor(self): # calculate corona score (based off test, ventilators, icus and beds)
-        pass
+    def calc_corona_score(self): # calculate corona score (based off test, ventilators, icus and beds)
+        return -1
 
-    def calcReg(self): # calculate regular score (based of bed only)
-        pass
+    def calc_regular_score(self): # calculate regular score (based of bed only)
+        return -1
