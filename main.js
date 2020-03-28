@@ -1,26 +1,76 @@
-// typeform auth token: 5evke2jp3XoYUgdSuMgpVdKpovpweVBdPqTrZRiyB5To
+currentPage = 0;
 
-$(document).ready(function() {
-    const embedElement = document.getElementById("form_map");
-    typeformEmbed.makeWidget(
-        embedElement,
-        'https://pranavmathur001.typeform.com/to/LO0U0p',
+$(function() {
+    showPage(0);
+    $('#patient_button').on('click', function() {
+        currentPage = 1;
+        showPage();
+    });
+
+    $('#hospital_button').on('click', function() {
+        currentPage = 3;
+        showPage();
+    });
+
+    $('#prev_button').on('click', function() {
+        if (currentPage === 3)
         {
-            onSubmit: function() {
-
-            }
+            currentPage = 0
         }
-    );
-
-    const typeform_url = 'https://api.typeform.com/forms/LO0U0p/responses'
-    const xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readystate == 4 && this.status == 200) {
-            console.log(xhttp.responseText);
+        else
+        {
+            currentPage = currentPage - 1;
         }
-    };
+        showPage();
+    });
 
-    xhttp.open("GET", typeform_url);
-    xhttp.setRequestHeader("Authorization", "Bearer 5evke2jp3XoYUgdSuMgpVdKpovpweVBdPqTrZRiyB5To");
-    xhttp.send(null);
+    $('#next_button').on('click', function() {
+        if (currentPage === 2)
+        {
+            patientSubmit();
+        }
+        else if (currentPage == 4)
+        {
+            hospitalSubmit();
+        }
+        else
+        {
+            currentPage = currentPage + 1;
+            showPage();
+        }
+    })
 });
+
+function showPage()
+{
+    formPages = $('.form_page');
+    for (let i = 0; i < formPages.length; i++)
+    {
+        if (i === currentPage)
+        {
+            $(formPages[i]).css('display', 'block');
+        }
+        else
+        {
+            $(formPages[i]).css('display', 'none');
+        }
+    }
+
+    if (currentPage === 0)
+    {
+        $('.next_prev').css('display', 'none');
+    }
+    else
+    {
+        $('.next_prev').css('display', 'inline-block');
+    }
+
+    if (currentPage % 2 === 0)
+    {
+        $('#next_button').text('Submit');
+    }
+    else
+    {
+        $('#next_button').text('Next');
+    }
+}
