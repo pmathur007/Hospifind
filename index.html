@@ -3,12 +3,49 @@
     <head>
         <meta charset="utf-8">
         <title>Corona Hospital Finder</title>
+        <link rel="stylesheet" href="master.css">
+        <link rel="shortcut icon" href="#">
+        <style>
+          #initmap {
+            height: 400px;
+            width: 100%;
+           }
+        </style>
     </head>
     <body>
-        <h1>HospiFind</h1>
-        <p>Due to the COVID-19 pandemic, many hospitals have ecceeded their treatment capacities and suffer from a lack of resource. Hospifind helps you choose the best hospital in the area that will be able to treat you. Fill out the form below to get started.</p>
-        <div id="typeform_container"></div>
+        <div id="desc">
+            <h1>HospiFind</h1>
+            <p>Due to the COVID-19 pandemic, many hospitals have ecceeded their treatment capacities and suffer from a lack of resource. Hospifind helps you choose the best hospital in the area that will be able to treat you. Fill out the form below to get started.</p>
+        </div>
+
+        <div id="form_map">
+
+        </div>
+
+        <div id="search_results">
+
+        </div>
+
         <script src="https://embed.typeform.com/embed.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script type="text/javascript" src="main.js"></script>
+
+        <h3>Your Current Location</h3>
+
+        <div id="initmap"></div>
+        <script>
+          function initMap() {
+            var latd = 15;
+            var lngd = 15;
+            var currLoc = {lat: latd, lng: lngd};
+            var map = new google.maps.Map(
+                document.getElementById('initmap'), {zoom: 4, center: currLoc});
+            var marker = new google.maps.Marker({position: currLoc, map: map});
+          }
+        </script>
+        <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
+        </script>
+
     </body>
 </html>
