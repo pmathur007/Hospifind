@@ -5,8 +5,6 @@ from math import radians, cos, sin, asin, sqrt
 class Patient:
     def __init__(self, state, location, time, transport, conditions, age, symptoms, insurance):
         # hyper params for tuning
-        self.distance_cutoff = 10 # cutoff for direct distance between patient in hospital in miles (to reduce data quickly)
-        self.time_cutoff = 30 # cutoff for time for patient to reach hospital
         self.insurance_cutoff = 5 # number of hospitals that match their insurance cutoff, if above then get rid of non-matches, if below keep all
         self.symptom_cutoff = 1.75 # cutoff for symptom score for coronavirus vs. non coronavirus
         self.radius = 10 # cutoff for radius in miles of what hospitals we will look at
@@ -53,48 +51,12 @@ class Patient:
         else:
             self.risk = (self.conditions_val * self.conditions_regular_weight) + (self.age_val * self.age_regular_weight)
 
-        self.check_insurance()
+        #self.check_insurance()
         self.calculate_hospital_score()
         self.display_hospitals()
 
-    def get_hospitals(self): # use location to find hospitals in a radius (default 10 miles - high-end estimate based on time?)
-        hin = self.get_state_hospitals()
-        for h in hin:
-            distance = self.calculate_distance(h)
-            if distance < self.distance_cutoff:
-                time = self.calculate_time()
-                if time < self.time_cutoff:
-                    self.hospital_times[h] = time
-                    self.hospitals.append(h)
-
-
-    def calculate_distance(self, hospital):
-        # The math module contains a function named
-        # radians which converts from degrees to radians.
-        lon1 = radians(self.location[0])
-        lon2 = radians(hospital.location[0])
-        lat1 = radians(self.location[1])
-        lat2 = radians(hospital.location[1])
-
-        # Haversine formula
-        dlon = lon2 - lon1
-        dlat = lat2 - lat1
-        a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
-
-        c = 2 * asin(sqrt(a))
-
-        # Radius of earth in kilometers. Use 6371 for km
-        r = 3956
-
-        # calculate the result
-        return(c * r)
-
-    def get_state_hospitals(self): # return all hospitals in state using csv
-        dir = "~/Documents/Python/decision_tree/" # just for arya's directory cuz its not working
-        return HospitalDataReader(self.state, dir).hospital_list
-
-    def calculate_time(self, hospital): # use location and transport with google API to find time between hospital and patient
-        return random.randInt(0,60) # random time from 0 to 60 minutes for now
+    def get_hospitals(self): # get it from java script
+        pass
 
     def calculate_symptom_score(self): # use symptom values to determine total score
         val = 0
@@ -116,16 +78,16 @@ class Patient:
     def calculate_age_score(self): # condenses age to 0-10 scale
         return min(self.age, 100) / 10.0
 
-    def calculate_insurance(self): # categorizes insurance type as int
-        return 1
+    #def calculate_insurance(self): # categorizes insurance type as int
+    #    return 1
 
-    def check_insurance(self): # check what hospitals have the patient's insurance
-        hosp = []
-        for h in self.hospitals:
-            if self.insurance_cat in h.insurance:
-                hosp.append(h)
-        if len(hosp) > self.insurance_cutoff:
-            self.hospitals = hosp
+    #def check_insurance(self): # check what hospitals have the patient's insurance
+    #    hosp = []
+    #    for h in self.hospitals:
+    #        if self.insurance_cat in h.insurance:
+    #            hosp.append(h)
+    #    if len(hosp) > self.insurance_cutoff:
+    #        self.hospitals = hosp
 
     def calculate_hospital_score(self): # calculates the hospitals scores
         hospital_ranks = dict()
