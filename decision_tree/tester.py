@@ -1,17 +1,10 @@
-from HospitalDataReader import HospitalDataReader
-from CoronavirusCaseModeling import CoronavirusCaseModeling
-import random
+from Hospital import Hospital
+from Patient import Patient
 
-reader = HospitalDataReader()
-data, name_data, bed_data = reader.read_file("hospital_beds.csv")
-growth_data = dict()
-tester = CoronavirusCaseModeling()
+hospitals = dict()
+hospitals[Hospital("Hosp 1", (100, 100), 35, 397, 35, 111, 0.21, None)] = 10
+hospitals[Hospital("Hosp 2", (100, 120), 22, 143, 12, 26, 0.50, None)] = 5
 
-sum = 0
-for i in range(len(name_data)):
-    data = tester.predict(capacity=int(bed_data[i].replace(",", "")), start_full=random.uniform(0.5, 0.7), start_corona=random.uniform(0.05, 0.1), factor=random.uniform(1.15, 1.25), overload=1)
-    growth_data[name_data[i]] = data
-    print(name_data[i], bed_data[i], "Beds", len(data), "Days")
-    sum += data[0][0]
-print(sum)
-print(growth_data)
+patient = Patient((100, 110), "car", 1, 57, ["fever", "dry cough"], "None")
+patient.input_hospitals({Hospital("Hosp 1", (100, 100), 35, 397, 35, 111, 0.21, None): 10, Hospital("Hosp 2", (100, 120), 22, 143, 12, 26, 0.50, None): 5})
+patient.process()
