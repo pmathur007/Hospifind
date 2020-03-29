@@ -16,16 +16,35 @@
         </header>
 
         <div id="form_map">
-            <form onsubmit="patientSubmit()">
+            <form action="#" onsubmit="patientSubmit()">
                 <div class="form_page">
                     <button id="patient_button" type="button">Patient</button>
                     <button id="hospital_button" type="button">Hospital</button>
                 </div>
                 <div class="form_page">
-                    <label for="name">Full Legal Name: <input id="name" type="text" name="name"></label>
-                    <label for="age">Age: <input id="age" type="number" name="age"></label>
-                    <label for="address">Full Legal Address: <input id="address" type="text" name="address"></label>
-                    <label for="time_to_travel">Time you are willing to travel: <input id="time_to_travel" type="time" name="time_to_travel" value=""></label>
+                    <label for="patient_name">Full Legal Name: <input id="patient_name" type="text" name="patient_name" required></label>
+                    <label for="age">Age: <input id="age" type="number" name="age" required></label>
+                    <label for="address">Full Legal Address: <input id="address" type="text" name="address" required></label>
+                    <fieldset required
+                    >
+                        <legend>What methods of transporation are available to you?</legend>
+                        <div>
+                            <input id="walking" type="radio" name="transportation" value="walking">
+                            <label for="walking">Walking</label>
+                        </div>
+                        <div>
+                            <input id="bicycling" type="radio" name="transportation" value="bicycling">
+                            <label for="bicycling">Bicycling</label>
+                        </div>
+                        <div>
+                            <input id="driving" type="radio" name="transportation" value="driving">
+                            <label for="driving">Driving</label>
+                        </div>
+                        <div>
+                            <input id="transit" type="radio" name="transportation" value="transit">
+                            <label for="transit">Transit</label>
+                        </div>
+                    </fieldset>
                 </div>
                 <div class="form_page">
                     <fieldset>
@@ -85,6 +104,14 @@
                             <input id="diabetes" type="checkbox" name="pre_conditions" value="diabetes">
                             <label for="diabetes">Diabetes</label>
                         </div>
+                        <div>
+                            <input id="asthma" type="checkbox" name="pre_conditions" value="asthma">
+                            <label for="asthma">Asthma</label>
+                        </div>
+                        <div>
+                            <input id="smoking" type="checkbox" name="pre_conditions" value="smoking">
+                            <label for="smoking">Any smoking-related conditions</label>
+                        </div>
                     </fieldset>
                 </div>
                 <div class="form_page">
@@ -100,7 +127,6 @@
                 </div>
                 <button class="next_prev" id="prev_button" type="button">Previous</button>
                 <button class="next_prev" id="next_button" type="button">Next</button>
-                <input type="submit" value="Submit">
             </form>
         </div>
 

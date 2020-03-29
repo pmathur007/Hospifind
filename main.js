@@ -25,12 +25,55 @@ $(function() {
     });
 
     $('#next_button').on('click', function() {
-        if (currentPage === 2)
+        if (currentPage === 1)
+        {
+            patientName = $("#patient_name").val();
+            patientAge = $("#age").val();
+            patientAddress = $("#address").val();
+            transportation = $("input[name='transportation']:checked").val();
+
+            if (patientName == "" || patientAge == "" || patientAddress == "" || transportation == undefined)
+            {
+                console.log("invalid");
+            }
+            else
+            {
+
+            }
+        }
+        else if (currentPage === 2)
         {
             patientSubmit();
         }
+        else if (currentPage === 3)
+        {
+            hospitalId = $("#hospital_id").val();
+            const toSend =
+            {
+                hospital_id: hospitalId
+            };
+
+            xhr = new XMLHttpRequest();
+            xhr.onload = function() {
+                if (xhr.status === 200)
+                {
+                    console.log("FUCK YEAH");
+                }
+            };
+
+            xhr.open("POST", "https://wb4tf07f30.execute-api.us-east-1.amazonaws.com/prod");
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.send(JSON.stringify(toSend));
+        }
         else if (currentPage == 4)
         {
+            capacity = $("#capacity").val();
+            beds = $("#beds").val();
+            icus = $("#icu").val();
+            ventilators = $("#ventilators").val()
+            tests = $("#tests").val();
+            covidPatients = $("#covid_patients").val();
+
             hospitalSubmit();
         }
         else
@@ -40,6 +83,16 @@ $(function() {
         }
     })
 });
+
+function patientSubmit()
+{
+
+}
+
+function hospitalSubmit()
+{
+
+}
 
 function showPage()
 {
