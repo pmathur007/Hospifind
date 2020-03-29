@@ -163,11 +163,11 @@ class Patient:
             print(h[0].name + "\nTime: " + str(self.hospitals[h[0]]) + "\nRating: " + h[1] + "\n")
 
 
-def process(self, json):
+def process(json):
     hospitals = dict()
     patient = Patient(json["Patient"]["prev_conditions"], json["Patient"]["age"], json["Patient"]["symptoms"])
     for hosp in json["Hospitals"]:
         if hosp != "Patient":
-            self.hospitals[Hospital(json[hosp]["Name"], json[hosp]["Beds"], json[hosp]["BedsAvailable"], json[hosp]["ICUAvailable"], json[hosp]["VentilatorsAvailable"], json[hosp]["TestsAvailable"], json[hosp]["CoronavirusPatientPercent"], json[hosp]["DaysSinceLastInput"])] = json[hosp]["TravelTime"]
+            hospitals[Hospital(json[hosp]["Name"], json[hosp]["Beds"], json[hosp]["BedsAvailable"], json[hosp]["ICUAvailable"], json[hosp]["VentilatorsAvailable"], json[hosp]["TestsAvailable"], json[hosp]["CoronavirusPatientPercent"], json[hosp]["DaysSinceLastInput"])] = json[hosp]["TravelTime"]
     patient.input_hospitals(hospitals)
     ranks = patient.process()
