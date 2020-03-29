@@ -156,7 +156,7 @@ class Patient:
                 score = "OK"
             else:
                 score = "Bad"
-            self.hospital_ranks.append((h[0], score))
+            self.hospital_ranks.append((h[0].name, score))
 
     def display_hospitals(self): # display hospitals in order (self.hospital_ranks) on screen
         for h in self.hospital_ranks:
