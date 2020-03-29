@@ -1,14 +1,23 @@
 @import url('https://fonts.googleapis.com/css?family=Ubuntu&display=swap');
 
+header {
+    padding: 1% 5%;
+}
+
 h1 {
     font-family: Ubuntu;
+    font-size: 4em;
     text-align: center;
     color: #bd1628;
 }
 
+header > p {
+    font-size: 1.2em;
+}
+
 button {
     background: inherit;
-    color: #d31122;
+    color: #a91622;
     text-align: center;
     font-size: 1em;
     width: 12%;
@@ -78,6 +87,12 @@ input[type="radio"] + label:hover, input[type="checkbox"] + label:hover {
 input[type="radio"]:checked + label, input[type="checkbox"]:checked + label {
     background: #e6e6e6;
     border: 2px solid #d31122;
+}
+
+footer {
+    font-size: 0.7em;
+    text-align: center;
+    padding: 1% 0%;
 }
 
 #choose_form {
