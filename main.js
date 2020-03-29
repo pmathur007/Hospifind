@@ -1,6 +1,8 @@
-currentPage = 0;
+var currentPage = 0;
 
 $(function() {
+    var hospitalId = -1;
+
     showPage(0); // first load the patient/hospital selection
     $('#patient_button').on('click', function() {
         currentPage = 1; // go to the patient form
@@ -8,12 +10,12 @@ $(function() {
     });
 
     $('#hospital_button').on('click', function() {
-        currentPage = 3; // go to the hospital form
+        currentPage = 2; // go to the hospital form
         showPage();
     });
 
     $('#prev_button').on('click', function() {
-        if (currentPage === 3)
+        if (currentPage === 2)
         {
             currentPage = 0
         }
@@ -28,53 +30,51 @@ $(function() {
     $('#next_button').on('click', function() {
         if (currentPage === 1)
         {
-            patientName = $("#patient_name").val();
-            patientAge = $("#age").val();
-            patientAddress = $("#address").val();
-            transportation = $("input[name='transportation']:checked").val();
+            var patientName = $("#patient_name").val();
+            var patientAge = $("#age").val();
+            var patientAddress = $("#address").val();
+            var transportation = $("input[name='transportation']:checked").val();
 
-            if (patientName == "" || patientAge == "" || patientAddress == "" || transportation == undefined)
+            if (patientName === "" || patientAge === "" || patientAddress === "" || transportation === "")
             {
-                console.log("invalid");
+                alert("Please fill out all fields")
             }
             else
             {
-                currentPage = currentPage + 1;
-                showPage();
+                if (transportation === "walking")
+                    transportation = 0;
+                else if (transportation === "bicycling")
+                    transportation = 1;
+                else if (transportation === "driving")
+                    transportation = 2;
+                else
+                    transportation = 3;
+                    
+                console.log(transportation);
+                var weights = [0.879, 0.677, 0.381, 0.334, 0.186, 0.139, 0.114, 0.05, 0.048, 0.037]
+                var symptomsFields = $("input[name='is_corona']");
+                var symptoms = 0;
+                for (let i = 0; i < weights.length; i++)
+                {
+                    symptoms += symptomsFields[i].checked ? weights[i] : 0;
+                }
+                symptoms = (symptoms / 2.845) * 10;
+
+                var prevCondFields = $("input[name='pre_conditions']");
+                var prev_conditions = 0;
+                for (let i = 0; i < prevCondFields.length; i++)
+                {
+                    prev_conditions += prevCondFields[i].checked ? 1 : 0;
+                }
+
+                patientData = {
+                    "age": patientAge,
+                    "symptoms": symptoms,
+                    "prev_conditions": prev_conditions
+                };
             }
         }
         else if (currentPage === 2)
-        {
-            patientName = $("#patient_name").val();
-            patientAge = $("#age").val();
-            patientAddress = $("#address").val();
-            transportation = $("input[name='transportation']:checked").val();
-
-            let weights = [0.879, 0.677, 0.381, 0.334, 0.186, 0.139, 0.114, 0.05, 0.048, 0.037]
-            symptomsFields = $("input[name='is_corona']");
-            symptoms = 0;
-            for (let i = 0; i < weights.length; i++)
-            {
-                symptoms += symptomsFields[i].checked ? weights[i] : 0;
-            }
-            symptoms = (symptoms / 2.845) * 10;
-
-            prevCondFields = $("input[name='pre_conditions']");
-            prev_conditions = 0;
-            for (let i = 0; i < prevCondFields.length; i++)
-            {
-                prev_conditions += prevCondFields[i].checked ? 1 : 0;
-            }
-
-            patientData = {
-                "age": patientAge,
-                "transporation": transporation,
-                "symptoms": symptoms,
-                "prev_conditions": prev_conditions
-            };
-
-        }
-        else if (currentPage === 3)
         {
             hospitalId = $("#hospital_id").val();
             const toSend =
@@ -97,32 +97,38 @@ $(function() {
                 }
             });
         }
-        else if (currentPage == 4)
+        else if (currentPage == 3)
         {
-            hospital_id = $("hospital_id").val();
-            capacity = $("#capacity").val();
-            beds = $("#beds").val();
-            icus = $("#icu").val();
-            ventilators = $("#ventilators").val()
-            tests = $("#tests").val();
-            covidPatients = $("#covid_patients").val();
+            var capacity = $("#capacity").val();
+            var beds = $("#beds").val();
+            var icus = $("#icu").val();
+            var ventilators = $("#ventilators").val()
+            var tests = $("#tests").val();
+            var covidPatients = $("#covid_patients").val();
 
-            hospitalData = {
-                "hospital_id": hospital_id,
-                "capacity": capacity,
-                "beds": beds,
-                "icus": icus,
-                "ventilators": ventilators,
-                "tests": tests,
-                "covid_patients": covidPatients
-            };
+            if (capacity === "" || beds === "" || icus === "" || ventilators === "" || tests === "" || covidPatients === "")
+            {
+                alert("Please fill out all fields");
+            }
+            else
+            {
+                hospitalData = {
+                    "hospital_id": hospitalId,
+                    "capacity": capacity,
+                    "beds": beds,
+                    "icus": icus,
+                    "ventilators": ventilators,
+                    "tests": tests,
+                    "covid_patients": covidPatients
+                };
 
-            $.post("https://wb4tf07f30.execute-api.us-east-1.amazonaws.com/prod/update", JSON.stringify(hospitalData), function(data, status) {
-                if (status === "success")
-                {
-                    alert("Thanks for submitting! Your data helps raise the hospital capacity line accross the country");
-                }
-            });
+                $.post("https://wb4tf07f30.execute-api.us-east-1.amazonaws.com/prod/update", JSON.stringify(hospitalData), function(data, status) {
+                    if (status === "success")
+                    {
+                        alert("Thanks for submitting! Your data helps raise the hospital capacity line accross the country");
+                    }
+                });
+            }
         }
         else
         {
@@ -156,7 +162,7 @@ function showPage()
         $('.next_prev').css('display', 'inline-block');
     }
 
-    if (currentPage % 2 === 0)
+    if (currentPage % 2 === 1)
     {
         $('#next_button').text('Submit');
     }
