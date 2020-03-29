@@ -5,15 +5,15 @@ import json
 
 
 class Hospital:
-    def __init__(self, name, total_bed, bed, icu, vent, tests, corona, days):
-        self.name = name
+    def __init__(self, authentication_key, total_bed, bed, icu, vent, tests, corona, last_input):
+        self.authentication_key = authentication_key
         self.beds = total_bed
 
-        self.days = days
-        if days == -1:
-            self.ventilators_available, self.beds_available, self.icu_available, self.num_tests, self.percent_corona = self.simulate_data(days)
+        self.last_input = last_input
+        if self.last_input == -1:
+            self.ventilators_available, self.beds_available, self.icu_available, self.num_tests, self.percent_corona = self.simulate_data(self.last_input)
         else:
-            self.ventilators_available, self.beds_available, self.icu_available, self.num_tests, self.percent_corona = self.simulate_data(days, vent, bed, icu, tests, corona)
+            self.ventilators_available, self.beds_available, self.icu_available, self.num_tests, self.percent_corona = self.simulate_data(self.last_input, vent, bed, icu, tests, corona)
 
         # hyper params for tuning
         self.beds_weight = 1
@@ -25,12 +25,14 @@ class Hospital:
         self.corona_score = self.calculate_corona_score()
         self.regular_score = self.calculate_regular_score()
 
-    def simulate_data(self, days, available_ventilators=0, available_beds=0, available_icus=0, available_tests=0, percent_corona=0.1):
-        if days == -1:
+    def simulate_data(self, last_input, available_ventilators=0, available_beds=0, available_icus=0, available_tests=0, num_corona=0):
+        if last_input == -1:
             days_behind = (date.today() - date(2020, 3, 28)).days
             total_icu = int(self.beds * 0.08)
             total_ventilators = int(self.beds * 0.17)
             available_tests = int(self.beds * 0.3)
+
+            percent_corona = 0.1
 
             full_beds = int(self.beds * 0.6)
             corona_start = int(percent_corona * self.beds)
@@ -43,8 +45,8 @@ class Hospital:
             percent_corona = cases[-1][0] / cases[-1][1]
             return max(int(total_ventilators - 0.2*num_corona), 0), max(self.beds - cases[-1][1], 0), max(int(total_icu - 0.1*num_corona), 0), available_tests, round(percent_corona, 2)
         else:
-            days_behind = days
-            num_corona = percent_corona * (self.beds - available_beds)
+            split = last_input.split("/")
+            days_behind = (date.today() - date(int(split[2]), int(split[0]), int(split[1]))).days
 
             full_beds = int(self.beds * 0.6)
             start = (num_corona, num_corona + full_beds)
@@ -62,7 +64,7 @@ class Hospital:
         return (1 - self.percent_corona) * self.per_corona_weight * self.beds_available
 
     def to_string(self):
-        return self.name + "\nLocation: " + str(self.location) + "\nHospital Beds Available: " + str(self.beds_available) + "\nICU Beds Available: " + str(self.icu_available) + "\nVentilators Available: " + str(self.ventilators_available) + "\nNumber of Tests Available: " + str(self.num_tests) + "\nPercentage Coronavirus Patients: " + str(self.percent_corona)
+        return self.authentication_key + "\nHospital Beds Available: " + str(self.beds_available) + "\nICU Beds Available: " + str(self.icu_available) + "\nVentilators Available: " + str(self.ventilators_available) + "\nNumber of Tests Available: " + str(self.num_tests) + "\nPercentage Coronavirus Patients: " + str(self.percent_corona)
 
 
 class Patient:
@@ -156,7 +158,7 @@ class Patient:
                 score = "OK"
             else:
                 score = "Bad"
-            self.hospital_ranks.append((h[0].name, score))
+            self.hospital_ranks.append((h[0].authentication_key, score))
 
     def display_hospitals(self): # display hospitals in order (self.hospital_ranks) on screen
         for h in self.hospital_ranks:
@@ -168,6 +170,6 @@ def process(json):
     patient = Patient(json["Patient"]["prev_conditions"], json["Patient"]["age"], json["Patient"]["symptoms"])
     for hosp in json["Hospitals"]:
         if hosp != "Patient":
-            hospitals[Hospital(json[hosp]["Name"], json[hosp]["Beds"], json[hosp]["BedsAvailable"], json[hosp]["ICUAvailable"], json[hosp]["VentilatorsAvailable"], json[hosp]["TestsAvailable"], json[hosp]["CoronavirusPatientPercent"], json[hosp]["DaysSinceLastInput"])] = json[hosp]["TravelTime"]
+            hospitals[Hospital(json[hosp]["AuthenticationKey"], json[hosp]["Beds"], json[hosp]["BedsAvailable"], json[hosp]["ICUAvailable"], json[hosp]["VentilatorsAvailable"], json[hosp]["TestsAvailable"], json[hosp]["CoronavirusPatientPercent"], json[hosp]["LastInput"])] = json[hosp]["TravelTime"]
     patient.input_hospitals(hospitals)
     ranks = patient.process()
