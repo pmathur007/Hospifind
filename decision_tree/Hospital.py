@@ -13,15 +13,16 @@ class Hospital:
         self.beds_weight = 1
         self.icu_weight = 3
         self.test_weight = 2
+        self.per_corona_weight = 0.25
 
         self.corona_score = self.calculate_corona_score()
         self.regular_score = self.calculate_regular_score()
 
     def calculate_corona_score(self):
-        return self.beds_available * self.beds_weight + self.icu_available * self.icu_weight + self.num_tests * self.test_weight
+        return self.percent_corona * self.per_corona_weight * (self.beds_available * self.beds_weight + self.icu_available * self.icu_weight + self.num_tests * self.test_weight)
 
     def calculate_regular_score(self):
-        return (1 - self.percent_corona) * self.beds_available
+        return (1 - self.percent_corona) * self.per_corona_weight * self.beds_available
 
     def to_string(self):
         return self.name + "\nLocation: " + str(self.location) + "\nHospital Beds Available: " + str(self.beds_available) + "\nICU Beds Available: " + str(self.icu_available) + "\nVentilators Available: " + str(self.ventilators_available) + "\nNumber of Tests Available: " + str(self.num_tests) + "\nPercentage Coronavirus Patients: " + str(self.percent_corona)

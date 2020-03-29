@@ -1,6 +1,5 @@
 import operator
 import random
-from math import radians, cos, sin, asin, sqrt
 
 class Patient:
     def __init__(self, location, transport, conditions, age, symptoms, insurance):
@@ -14,6 +13,7 @@ class Patient:
         self.conditions_regular_weight = 0.5 # weight value for conditions_val for regular patient
         self.age_regular_weight = 0.5 # weight value for age_val for regular patient
         self.risk_scale = 0.1 # scale that brings down risk value
+        self.max_time = 100 # maximum time people will drive
 
         # user data
         self.location = location
@@ -97,18 +97,21 @@ class Patient:
         for hospital in self.hospitals:
             if self.corona:
                 corona_factor = hospital.corona_score * self.risk_scale * self.risk
-                regular_factor = self.hospitals[hospital] * (1 - self.risk_scale * self.risk)
+                regular_factor = (1 - self.risk_scale * self.risk) * (self.max_time - min(self.hospitals[hospital],self.max_time))
 
-                rating = hospital.percent_corona * (corona_factor + regular_factor)
+                rating = corona_factor + regular_factor
                 hospital_ranks[hospital] = rating
             else:
                 risk_factor = hospital.regular_score * self.risk_scale * self.risk
-                regular_factor = self.hospitals[hospital] * (1 - self.risk_scale * self.risk)
+                regular_factor = (1 - self.risk_scale * self.risk) * (self.max_time - min(self.hospitals[hospital],self.max_time))
 
                 rating = risk_factor + regular_factor
                 hospital_ranks[hospital] = rating
-        self.hospital_ranks = sorted(hospital_ranks.items(), reverse=True, key=operator.itemgetter(1))
+        hout = sorted(hospital_ranks.items(), reverse=True, key=operator.itemgetter(1))
+        max = hout[0][1]
+        for h in hout:
+            self.hospital_ranks.append((h[0],(h[1] / max) * 10.0))
 
     def display_hospitals(self): # display hospitals in order (self.hospital_ranks) on screen
         for h in self.hospital_ranks:
-            print(h[0].to_string() + "\nRating: " + str(h[1]) + "\n")
+            print(h[0].to_string() + "\nTime: " + str(self.hospitals[h[0]]) + "\nRating: " + str(round(h[1],2)) + "\n")
