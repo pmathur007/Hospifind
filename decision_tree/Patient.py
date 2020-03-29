@@ -2,8 +2,10 @@ import operator
 import random
 import json
 
+from Hospital import Hospital
+
 class Patient:
-    def __init__(self, location, transport, conditions, age, symptoms, insurance):
+    def __init__(self, transport, conditions, age, symptoms, insurance):
         # hyper params for tuning
         self.insurance_cutoff = 5 # number of hospitals that match their insurance cutoff, if above then get rid of non-matches, if below keep all
         self.symptom_cutoff = 1.75 # cutoff for symptom score for coronavirus vs. non coronavirus
@@ -17,16 +19,15 @@ class Patient:
         self.max_time = 100 # maximum time people will drive
 
         # user data
-        self.location = location
         self.transport = transport
         self.conditions = conditions
         self.age = age
-        self.symptoms = symptoms
+        self.symptoms_val = symptoms
         self.insurance = insurance
 
         # later defined data
         self.hospitals = []
-        self.symptoms_val = 0
+        # self.symptoms_val = 0
         self.conditions_val = 0
         self.age_val = 0
         self.insurance_cat = 0
@@ -60,15 +61,12 @@ class Patient:
         self.display_hospitals()
 
     def get_hospitals(self): # get it from java script
-        return self.given_hospitals
-
-    def calculate_symptom_score(self): # use symptom values to determine total score
-        val = 0
-        symptom_dict = {"fever": 0.879, "dry cough": 0.677, "fatigue": 0.381, "phlegm": 0.334, "shortness of breath": 0.186,
-                        "sore throat, headache": 0.139, "chills": 0.114, "vomiting": 0.05, "nasal congestion": 0.048, "diarrhea": 0.037}
-        for symptom in self.symptoms:
-            val += symptom_dict[symptom]
-        return (val/2.845) * 10
+        # hospitals = dict()
+        # with open("test.json") as f:
+        #     hospital_data = json.load(f)
+        # for hospital in hospital_data:
+        #     hospitals[Hospital(hospital['Name'], hospital['Beds'], (hospital['Latitude'], hospital['Longitude']), hospital['BedsAvailable'], hospital['ICUAvailable'], hospital['VentilatorsAvailable'], hospital["TestsAvailable"], hospital["CoronavirusPatientPercent"], hospital["DaysSinceLastInput"])] = hospital["TravelTime"]
+        pass
 
     def calculate_condition_score(self): # use conditions values to determine total score
         if self.conditions == 0:
