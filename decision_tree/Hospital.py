@@ -11,15 +11,17 @@ class Hospital:
 
         # hyper params for tuning
         self.beds_weight = 1
-        self.icu_weight = 3
-        self.test_weight = 2
+        self.icu_weight = 10
+        self.test_weight = 5
+        self.ventilator_weight = 7
         self.per_corona_weight = 0.25
+
 
         self.corona_score = self.calculate_corona_score()
         self.regular_score = self.calculate_regular_score()
 
     def calculate_corona_score(self):
-        return self.percent_corona * self.per_corona_weight * (self.beds_available * self.beds_weight + self.icu_available * self.icu_weight + self.num_tests * self.test_weight)
+        return self.percent_corona * self.per_corona_weight * (self.beds_available * self.beds_weight + self.icu_available * self.icu_weight + self.num_tests * self.test_weight + self.ventilator_weight * self.ventilators_available)
 
     def calculate_regular_score(self):
         return (1 - self.percent_corona) * self.per_corona_weight * self.beds_available
