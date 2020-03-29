@@ -2,18 +2,88 @@
 
 h1 {
     font-family: Ubuntu;
+    text-align: center;
     color: #bd1628;
 }
 
-.next_prev {
+button {
+    background: inherit;
     color: #d31122;
+    text-align: center;
     font-size: 1em;
-    width: 10%;
-    padding: 1% 3%;
-    border-radius: 2px;
-    border: 1px solid none;
+    width: 12%;
+    margin: 0% 1%;
+    padding: .5% 3%;
+    border-radius: 5px;
+    border: 1px solid #d31122;
 }
 
-.next_prev:hover {
-    background: #bd1628;
+button:hover {
+    background: #d31122;
+    color: #ffffff;
+}
+
+input[type="text"], input[type="number"] {
+    background: inherit;
+    border: none;
+    border-radius: 0px;
+    border-bottom: 1px solid #d31122;
+}
+
+input[type="text"]:focus, input[type="number"]:focus {
+    background: inherit;
+    border: none;
+    outline: none !important;
+    box-shadow: none;
+    border-bottom: 2px solid #bd1628;
+}
+
+form {
+    background: #f2f2f2;
+    border: 1px solid #d31122;
+    border-radius: 5px;
+    margin: 0% 5%;
+    padding: 2%;
+}
+
+label, legend {
+    font-size: 1.2em;
+}
+
+.mc_container {
+    margin: 1% 2%;
+    display: inline-block;
+}
+
+input[type="radio"], input[type="checkbox"] {
+    opacity: 0;
+    position: fixed;
+    width: 0;
+}
+
+input[type="radio"] + label, input[type="checkbox"] + label {
+    display: inline-block;
+    text-align: center;
+    width: 150px;
+    border: 1px solid #d31122;
+    border-radius: 5px;
+}
+
+input[type="radio"] + label:hover, input[type="checkbox"] + label:hover {
+    background: #e6e6e6;
+    display: inline-block;
+}
+
+input[type="radio"]:checked + label, input[type="checkbox"]:checked + label {
+    background: #e6e6e6;
+    display: inline-block;
+    border: 2px solid #d31122;
+}
+
+#choose_form {
+    text-align: center;
+}
+
+#control_buttons {
+    text-align: center;
 }
