@@ -2,8 +2,6 @@ import operator
 import random
 from math import radians, cos, sin, asin, sqrt
 
-from Hospital import Hospital
-
 class Patient:
     def __init__(self, location, transport, conditions, age, symptoms, insurance):
         # hyper params for tuning
@@ -55,7 +53,7 @@ class Patient:
             self.risk = (self.conditions_val * self.conditions_regular_weight) + (self.age_val * self.age_regular_weight)
 
         print("Patient Risk Factor: ", self.risk)
-        
+
         # self.check_insurance()
         self.calculate_hospital_score()
         self.display_hospitals()
@@ -98,13 +96,13 @@ class Patient:
         hospital_ranks = dict()
         for hospital in self.hospitals:
             if self.corona:
-                corona_factor = hospital.get_corona_score() * self.risk_scale * self.risk
+                corona_factor = hospital.corona_score * self.risk_scale * self.risk
                 regular_factor = self.hospitals[hospital] * (1 - self.risk_scale * self.risk)
 
-                rating = hospital.get_percent_corona() * (corona_factor + regular_factor)
+                rating = hospital.percent_corona * (corona_factor + regular_factor)
                 hospital_ranks[hospital] = rating
             else:
-                risk_factor = hospital.get_regular_score() * self.risk_scale * self.risk
+                risk_factor = hospital.regular_score * self.risk_scale * self.risk
                 regular_factor = self.hospitals[hospital] * (1 - self.risk_scale * self.risk)
 
                 rating = risk_factor + regular_factor
