@@ -1,9 +1,8 @@
 import operator
 import random
-from math import radians, cos, sin, asin, sqrt
 
 class Patient:
-    def __init__(self, state, location, time, transport, conditions, age, symptoms, insurance):
+    def __init__(self, location, transport, conditions, age, symptoms, insurance):
         # hyper params for tuning
         self.insurance_cutoff = 5 # number of hospitals that match their insurance cutoff, if above then get rid of non-matches, if below keep all
         self.symptom_cutoff = 1.75 # cutoff for symptom score for coronavirus vs. non coronavirus
@@ -14,11 +13,10 @@ class Patient:
         self.conditions_regular_weight = 0.5 # weight value for conditions_val for regular patient
         self.age_regular_weight = 0.5 # weight value for age_val for regular patient
         self.risk_scale = 0.1 # scale that brings down risk value
+        self.max_time = 100 # maximum time people will drive
 
         # user data
-        self.state = state
         self.location = location
-        self.max_time = time
         self.transport = transport
         self.conditions = conditions
         self.age = age
@@ -33,30 +31,35 @@ class Patient:
         self.insurance_cat = 0
         self.corona = False
         self.risk = 0
-        self.hospital_times = dict()
         self.hospital_ranks = []
 
-    def process(self):
-        self.get_hospitals()
+        # test
+        self.given_hospitals = []
 
+    def input_hospitals(self, hospitals):
+        self.given_hospitals = hospitals
+
+    def process(self):
+        self.hospitals = self.get_hospitals()
         self.symptoms_val = self.calculate_symptom_score()
         self.conditions_val = self.calculate_condition_score()
         self.age_val = self.calculate_age_score()
-        self.insurance_cat = self.calculate_insurance()
+        # self.insurance_cat = self.calculate_insurance()
 
         self.corona = self.symptoms_val > self.symptom_cutoff
         if self.corona:
-            self.risk = (self.symptoms_val * self.symptoms_corona_weight) + (self.conditions_val * self.conditions_corona_weight) + (
-                      self.age_val * self.age_corona_weight)
+            self.risk = (self.symptoms_val * self.symptoms_corona_weight) + (self.conditions_val * self.conditions_corona_weight) + (self.age_val * self.age_corona_weight)
         else:
             self.risk = (self.conditions_val * self.conditions_regular_weight) + (self.age_val * self.age_regular_weight)
 
-        #self.check_insurance()
+        print("Patient Risk Factor: ", self.risk)
+
+        # self.check_insurance()
         self.calculate_hospital_score()
         self.display_hospitals()
 
     def get_hospitals(self): # get it from java script
-        pass
+        return self.given_hospitals
 
     def calculate_symptom_score(self): # use symptom values to determine total score
         val = 0
@@ -91,16 +94,24 @@ class Patient:
 
     def calculate_hospital_score(self): # calculates the hospitals scores
         hospital_ranks = dict()
-        for h in self.hospitals:
+        for hospital in self.hospitals:
             if self.corona:
-                rating = h.per_corona * ((h.corona_score * self.risk_scale * self.risk) + (self.hospital_times[h] * (1 - self.risk_scale * self.risk)))
-                hospital_ranks[h] = rating
-            else:
-                rating = (h.reg_score * self.risk_scale * self.risk) + (self.hospital_times[h] * (1 - self.risk_scale * self.risk))
-                hospital_ranks[h] = rating
+                corona_factor = hospital.corona_score * self.risk_scale * self.risk
+                regular_factor = (1 - self.risk_scale * self.risk) * (self.max_time - min(self.hospitals[hospital],self.max_time))
 
-        self.hospital_ranks = sorted(hospital_ranks.items(), reverse=True, key=operator.itemgetter(1))
+                rating = corona_factor + regular_factor
+                hospital_ranks[hospital] = rating
+            else:
+                risk_factor = hospital.regular_score * self.risk_scale * self.risk
+                regular_factor = (1 - self.risk_scale * self.risk) * (self.max_time - min(self.hospitals[hospital],self.max_time))
+
+                rating = risk_factor + regular_factor
+                hospital_ranks[hospital] = rating
+        hout = sorted(hospital_ranks.items(), reverse=True, key=operator.itemgetter(1))
+        max = hout[0][1]
+        for h in hout:
+            self.hospital_ranks.append((h[0],(h[1] / max) * 10.0))
 
     def display_hospitals(self): # display hospitals in order (self.hospital_ranks) on screen
         for h in self.hospital_ranks:
-            print("Hospital: " + str(h[0].name) + ", Rating: " + str(h[1]) + "\n")
+            print(h[0].to_string() + "\nTime: " + str(self.hospitals[h[0]]) + "\nRating: " + str(round(h[1],2)) + "\n")
