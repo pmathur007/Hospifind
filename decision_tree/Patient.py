@@ -1,5 +1,6 @@
 import operator
 import random
+import json
 
 class Patient:
     def __init__(self, location, transport, conditions, age, symptoms, insurance):
@@ -113,5 +114,7 @@ class Patient:
             self.hospital_ranks.append((h[0],(h[1] / max) * 10.0))
 
     def display_hospitals(self): # display hospitals in order (self.hospital_ranks) on screen
-        for h in self.hospital_ranks:
-            print(h[0].to_string() + "\nTime: " + str(self.hospitals[h[0]]) + "\nRating: " + str(round(h[1],2)) + "\n")
+        # for h in self.hospital_ranks:
+            # print(h[0].to_string() + "\nTime: " + str(self.hospitals[h[0]]) + "\nRating: " + str(round(h[1],2)) + "\n")
+        with open('output.json', 'w') as fp:
+            json.dump(self.hospital_ranks, fp)
