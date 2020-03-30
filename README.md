@@ -1,1 +1,1 @@
-# Corona-Hospital-Finder
+# Hospifind
