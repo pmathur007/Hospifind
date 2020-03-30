@@ -102,3 +102,7 @@ footer {
 #control_buttons {
     text-align: center;
 }
+
+.bullshit {
+    border-left: solid 2px #d31122;
+}

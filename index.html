@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
     <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <title>Corona Hospital Finder</title>
 
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <link rel="stylesheet" href="master.css">
-        <link rel="shortcut icon" href="#">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"/>
+        <link rel="stylesheet" href="master.css"/>
+        <link rel="shortcut icon" href="#"/>
     </head>
 
     <body class="app sidebar-show">
@@ -27,15 +27,15 @@
                         <div class="form-group col-md-4">
                             <div class="form-group">
                                 <label class="text_label" for="patient_name">Full Name:</label>
-                                <input id="patient_name" class="form-control" type="text" name="patient_name">
+                                <input id="patient_name" class="form-control" type="text" name="patient_name"/>
                             </div>
                             <div class="form-group">
                                 <label class="text_label" for="age">Age:</label>
-                                <input id="age" class="form-control"type="number" name="age">
+                                <input id="age" class="form-control"type="number" name="age"/>
                             </div>
                             <div class="form-group">
                                 <label class="text_label" for="address">Full Legal Address:</label>
-                                <input id="address" class="form-control" type="text" name="address">
+                                <input id="address" class="form-control" type="text" name="address"/>
                             </div>
                             <fieldset id="transportation" class="form-group">
                                 <legend>What is your preferred method of transportation?</legend>
@@ -171,13 +171,51 @@
             </form>
         </div>
 
-        <div id="search_results">
+        <!-- <div class="">
+            <div class="bullshit">
+                990 Washington Ave, Brooklyn, NY 11225, USA to 506 Sixth Street, Brooklyn, NY 11215: 1.4 mi in 8 mins
+            </div>
+            <div class="bullshit">
+                990 Washington Ave, Brooklyn, NY 11225, USA to 451 Clarkson Avenue, Brooklyn, NY 11203: 2.0 mi in 10 mins
+            </div>
+            <div class="bullshit">
+                990 Washington Ave, Brooklyn, NY 11225, USA to 450 Clarkson Avenue, Brooklyn, NY 11203: 1.8 mi in 10 mins
+            </div>
+            <div class="bullshit">
+                990 Washington Ave, Brooklyn, NY 11225, USA to 1545 Atlantic Avenue, Brooklyn, NY 11213: 2.2 mi in 11 mins
+            </div>
+            <div class="bullshit">
+                990 Washington Ave, Brooklyn, NY 11225, USA to 585 Schenectady Avenue, Brooklyn, NY 11203: 2.3 mi in 11 mins
+            </div>
+            <div class="bullshit">
+                990 Washington Ave, Brooklyn, NY 11225, USA to 121 DeKalb Avenue, Brooklyn, NY 11201: 2.1 mi in 11 mins
+            </div>
+            <div class="bullshit">
+                990 Washington Ave, Brooklyn, NY 11225, USA to 760 Broadway, Brooklyn, NY 11206: 3.1 mi in 17 mins
+            </div>
+            <div class="bullshit">
+                990 Washington Ave, Brooklyn, NY 11225, USA to 4802 Tenth Avenue, Brooklyn, NY 11219: 3.4 mi in 18 mins
+            </div>
+            <div class="bullshit">
+                990 Washington Ave, Brooklyn, NY 11225, USA to One Brookdale Plaza, Brooklyn, NY 11212: 3.5 mi in 17 mins
+            </div>
+            <div class="bullshit">
+                990 Washington Ave, Brooklyn, NY 11225, USA to 150 55th Street, Brooklyn, NY 11220: 5.8 mi in 22 mins
+            </div>
+        </div> -->
 
+        <div id="search_results">
+            <div id="map">
+
+            </div>
+            <div id="results">
+
+            </div>
         </div>
 
         <footer>Designed by Aarav Bajaj, Arya Grayeli, Pranav Mathur, Ron Nachum, Amrita Sahu.</footer>
 
-        <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
