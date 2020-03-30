@@ -13,13 +13,17 @@ header {
 }
 
 img {
-    width: 50%;
+    width: 30%;
     display: block;
     margin: auto;
 }
 
 header > p {
     font-size: 1.2em;
+}
+
+strong {
+    color: #ff0000;
 }
 
 button {
@@ -48,6 +52,7 @@ input[type="text"], input[type="number"] {
 }
 
 input[type="text"]:focus, input[type="number"]:focus {
+    color: #d9d9d9;
     background: inherit;
     border: none;
     outline: none !important;
