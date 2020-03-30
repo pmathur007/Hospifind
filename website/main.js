@@ -2789,7 +2789,7 @@ $(function() {
                 console.log(jsonToSend);
 
                 $.post("https://wb4tf07f30.execute-api.us-east-1.amazonaws.com/prod/decision-tree", JSON.stringify(jsonToSend), function(data, status) {
-                    console.log("FUCK YEAH");
+
                 });
             }
         }
@@ -2857,7 +2857,8 @@ $(function() {
     })
 });
 
-function shortestDistances(data, address, travelMode) {
+function shortestDistances(data, address, travelMode)
+{
       var geocoder = new google.maps.Geocoder();
       var service = new google.maps.DistanceMatrixService;
       var myLatLng = new google.maps.LatLng({lat: 0, lng: 0});
@@ -2866,6 +2867,13 @@ function shortestDistances(data, address, travelMode) {
         center: {lat: 55.53, lng: 9.4},
         zoom: 10
       });
+
+      $('#map').css({
+          'float': 'top',
+          'height': '50%',
+          'width': '100%'
+      });
+
       var latlng = [];
 
       geocoder.geocode({'address': address}, function(results, status) {
@@ -2936,9 +2944,9 @@ function shortestDistances(data, address, travelMode) {
                  geocoder.geocode({'address': originList[i]}, function(results, status){});//, showGeocodedAddressOnMap(false));
                  for (var j = 0; j < results.length; j++) {
                    geocoder.geocode({'address': destinationList[j]}, function(results, status){});//, showGeocodedAddressOnMap(true));
-                   outputDiv.innerHTML += originList[i] + ' to ' + destinations[j] +
+                   outputDiv.innerHTML += '<div class="location_result">' + originList[i] + ' to ' + destinations[j] +
                        ': ' + results[j].distance.text + ' in ' +
-                       results[j].duration.text + '<br>';
+                       results[j].duration.text + '</div>';
                    data[j].TravelTime = results[j].duration.text;
                    //console.log(data[j].TravelTime);
                    //console.log(JSON.stringify(data[j]));

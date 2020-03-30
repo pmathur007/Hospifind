@@ -1,14 +1,21 @@
 @import url('https://fonts.googleapis.com/css?family=Ubuntu&display=swap');
 
+html, body {
+    background: #1a1a1a;
+    color: #ffffff;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
 header {
     padding: 1% 5%;
 }
 
-h1 {
-    font-family: Ubuntu;
-    font-size: 4em;
-    text-align: center;
-    color: #bd1628;
+img {
+    width: 50%;
+    display: block;
+    margin: auto;
 }
 
 header > p {
@@ -34,6 +41,7 @@ button:hover {
 
 input[type="text"], input[type="number"] {
     background: inherit;
+    color: #d9d9d9;
     border: none;
     border-radius: 0px;
     border-bottom: 1px solid #d31122;
@@ -48,7 +56,7 @@ input[type="text"]:focus, input[type="number"]:focus {
 }
 
 form {
-    background: #f2f2f2;
+    background: #262626;
     border: 1px solid #d31122;
     border-radius: 5px;
     margin: 0% 5%;
@@ -81,11 +89,11 @@ input[type="radio"] + label, input[type="checkbox"] + label {
 }
 
 input[type="radio"] + label:hover, input[type="checkbox"] + label:hover {
-    background: #e6e6e6;
+    background: #4d4d4d;
 }
 
 input[type="radio"]:checked + label, input[type="checkbox"]:checked + label {
-    background: #e6e6e6;
+    background: #4d4d4d;
     border: 2px solid #d31122;
 }
 
@@ -103,6 +111,21 @@ footer {
     text-align: center;
 }
 
-.bullshit {
-    border-left: solid 2px #d31122;
+
+#right-panel {
+  float: bottom;
+  width: 48%;
+  padding-top: 2%;
+}
+
+.location_result {
+    background: #262626;
+    font-size: 1.3em;
+    border-left: solid 3px #d31122;
+    padding: 1% 2%;
+    margin: 1% 5%;
+}
+
+.location_result:hover {
+    box-shadow: 3px 3px #4d4d4d;
 }
