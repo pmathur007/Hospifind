@@ -1,11 +1,9 @@
 from datetime import date
 import operator
-import random
-import json
 
 
 class Hospital:
-    def __init__(self, authentication_key, total_bed, bed, icu, vent, tests, corona, last_input):
+    def __init__(self, authentication_key, total_bed, bed, icu, vent, tests, num_corona, last_input):
         self.authentication_key = authentication_key
         self.beds = total_bed
 
@@ -13,7 +11,7 @@ class Hospital:
         if self.last_input == -1:
             self.ventilators_available, self.beds_available, self.icu_available, self.num_tests, self.percent_corona = self.simulate_data(self.last_input)
         else:
-            self.ventilators_available, self.beds_available, self.icu_available, self.num_tests, self.percent_corona = self.simulate_data(self.last_input, vent, bed, icu, tests, corona)
+            self.ventilators_available, self.beds_available, self.icu_available, self.num_tests, self.percent_corona = self.simulate_data(self.last_input, vent, bed, icu, tests, num_corona)
 
         # hyper params for tuning
         self.beds_weight = 1
@@ -170,6 +168,6 @@ def process(json):
     patient = Patient(json["Patient"]["prev_conditions"], json["Patient"]["age"], json["Patient"]["symptoms"])
     for hosp in json["Hospitals"]:
         if hosp != "Patient":
-            hospitals[Hospital(json[hosp]["AuthenticationKey"], json[hosp]["Beds"], json[hosp]["BedsAvailable"], json[hosp]["ICUAvailable"], json[hosp]["VentilatorsAvailable"], json[hosp]["TestsAvailable"], json[hosp]["CoronavirusPatientPercent"], json[hosp]["LastInput"])] = json[hosp]["TravelTime"]
+            hospitals[Hospital(json[hosp]["AuthenticationKey"], json[hosp]["Beds"], json[hosp]["BedsAvailable"], json[hosp]["ICUAvailable"], json[hosp]["VentilatorsAvailable"], json[hosp]["TestsAvailable"], json[hosp]["CoronavirusNumber"], json[hosp]["LastInput"])] = json[hosp]["TravelTime"]
     patient.input_hospitals(hospitals)
     ranks = patient.process()
