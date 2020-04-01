@@ -134,3 +134,16 @@ footer {
 .location_result:hover {
     box-shadow: 3px 3px #4d4d4d;
 }
+
+.location_name, .location_info {
+    display: inline-block;
+    width: 80%;
+}
+
+.rating {
+    font-size: 1.3em;
+    display: inline-block;
+    position: absolute;
+    width: 85%;
+    padding-left: 80%;
+}
