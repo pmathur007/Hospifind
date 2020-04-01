@@ -31,7 +31,7 @@ button {
     color: #a91622;
     text-align: center;
     font-size: 1em;
-    width: 12%;
+    width: 16%;
     margin: 0% 1%;
     padding: .5% 3%;
     border-radius: 5px;
@@ -102,10 +102,20 @@ input[type="radio"]:checked + label, input[type="checkbox"]:checked + label {
     border: 2px solid #d31122;
 }
 
+.form_page > p {
+    text-align: center;
+    font-size: 1.4em;
+    color: #999999;
+}
+
 footer {
     font-size: 0.7em;
     text-align: center;
     padding: 1% 0%;
+}
+
+#form_container {
+    margin-bottom: 2%;
 }
 
 #choose_form {
@@ -146,4 +156,12 @@ footer {
     position: absolute;
     width: 85%;
     padding-left: 80%;
+}
+
+.info_window {
+    color: #000000;
+}
+
+.info_window > h2 {
+    font-size: 1.2em;
 }

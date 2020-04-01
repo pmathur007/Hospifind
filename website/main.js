@@ -174,7 +174,7 @@ var dbdata = [
     "Address": "100 High Street, Buffalo, NY 14203",
     "Latitude": 42.90065,
     "Longitude": -78.86566,
-    "Beds": "1,068",
+    "Beds": 1068,
     "BedsAvailable": 0,
     "VentilatorsAvailable": 0,
     "ICUAvailable": 0,
@@ -769,7 +769,7 @@ var dbdata = [
     "Address": "270-05 76th Avenue, New Hyde Park, NY 11040",
     "Latitude": 40.75329,
     "Longitude": -73.7071,
-    "Beds": "1,549",
+    "Beds": 1549,
     "BedsAvailable": 0,
     "VentilatorsAvailable": 0,
     "ICUAvailable": 0,
@@ -922,7 +922,7 @@ var dbdata = [
     "Address": "111 East 210th Street, Bronx, NY 10467",
     "Latitude": 40.88079,
     "Longitude": -73.8795,
-    "Beds": "1,529",
+    "Beds": 1529,
     "BedsAvailable": 0,
     "VentilatorsAvailable": 0,
     "ICUAvailable": 0,
@@ -1211,7 +1211,7 @@ var dbdata = [
     "Address": "525 East 68th Street, New York, NY 10065",
     "Latitude": 40.7643,
     "Longitude": -73.954,
-    "Beds": "2,650",
+    "Beds": 2650,
     "BedsAvailable": 0,
     "VentilatorsAvailable": 0,
     "ICUAvailable": 0,
@@ -1347,7 +1347,7 @@ var dbdata = [
     "Address": "300 Community Drive, Manhasset, NY 11030",
     "Latitude": 40.7742,
     "Longitude": -73.7006,
-    "Beds": "1,040",
+    "Beds": 1040,
     "BedsAvailable": 0,
     "VentilatorsAvailable": 0,
     "ICUAvailable": 0,
@@ -1619,7 +1619,7 @@ var dbdata = [
     "Address": "550 First Avenue, New York, NY 10016",
     "Latitude": 40.7421,
     "Longitude": -73.974,
-    "Beds": "1,629",
+    "Beds": 1629,
     "BedsAvailable": 0,
     "VentilatorsAvailable": 0,
     "ICUAvailable": 0,
@@ -2418,7 +2418,7 @@ var dbdata = [
     "Address": "One Gustave L. Levy Place, New York, NY 10029",
     "Latitude": 40.7892,
     "Longitude": -73.955,
-    "Beds": "1,161",
+    "Beds": 1161,
     "BedsAvailable": 0,
     "VentilatorsAvailable": 0,
     "ICUAvailable": 0,
@@ -2723,11 +2723,11 @@ function durationToMinutes(string) {
 function minutesToString(minutes) {
     if (minutes >= 60)
     {
-        return (minutes / 60) + ' hr' + (minutes % 60 === 0 ? '' : ' ' + (minutes % 60) + ' min');
+        return parseInt(minutes / 60) + ' hr' + (minutes % 60 === 0 ? '' : ' ' + (minutes % 60) + ' min');
     }
     else
     {
-        return (minutes % 60) + ' min';
+        return parseInt(minutes % 60) + ' min';
     }
 }
 
@@ -2786,6 +2786,15 @@ function shortestDistances(address, travelMode)
             dbdata = dbdata.filter(function(x) { return x !== null });
 
             var markersArray = [];
+            var infoWindowsArray = [];
+            var originLatLng = new google.maps.LatLng({lat: latlng[0], lng: latlng[1]});
+            map.fitBounds(bounds.extend(originLatLng));
+
+            var originMarker = new google.maps.Marker({
+                map: map,
+                position: originLatLng,
+                icon: 'http://maps.google.com/mapfiles/ms/icons/blue.png'
+            })
 
             var destinations = [];
             for(var i = 0; i < 10; i++) {
@@ -2813,15 +2822,10 @@ function shortestDistances(address, travelMode)
                 }
                 for (var i = 0; i < originList.length; i++) {
                     var results = response.rows[i].elements;
-                    geocoder.geocode({'address': originList[i]}, function(results, status){});//, showGeocodedAddressOnMap(false));
+                    geocoder.geocode({'address': originList[i]}, function(results, status){});
                     for (var j = 0; j < results.length; j++) {
-                        geocoder.geocode({'address': destinationList[j]}, function(results, status){});//, showGeocodedAddressOnMap(true));
-                        // outputDiv.innerHTML += '<div class="location_result">' + destinations[j] +
-                        //    ': ' + results[j].distance.text + ' in ' +
-                        //    results[j].duration.text + '</div>';
+                        geocoder.geocode({'address': destinationList[j]}, function(results, status){});
                         dbdata[j].TravelTime = durationToMinutes(results[j].duration.text);
-                    //console.log(data[j].TravelTime);
-                    //console.log(JSON.stringify(data[j]));
                     }
                     console.log(dbdata);
                 }
@@ -2846,18 +2850,62 @@ function shortestDistances(address, travelMode)
                             '</div>'
                         );
                     });
-                });
-            //console.log(JSON.stringify(data));
-            });
 
-            for (var i = 0; i < destinations.length; i++) {
-                var myLatLng = new google.maps.LatLng({lat: dbdata[i].Latitude, lng: dbdata[i].Longitude});
-                map.fitBounds(bounds.extend(myLatLng));
-                markersArray.push(new google.maps.Marker({
-                    map: map,
-                    position: myLatLng
-                }));
-            }
+                    var icons = [];
+                    $(".rating").each(function() {
+                        if ($(this).text() === 'Great')
+                        {
+                            $(this).css('color', '#009933');
+                            $(this).parent().css('border-left', 'solid 3px #009933');
+                            icons.push('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
+                        }
+                        else if ($(this).text() === 'Good')
+                        {
+                            $(this).css('color', '#ffd633');
+                            $(this).parent().css('border-left', 'solid 3px #ffd633');
+                            icons.push('http://maps.google.com/mapfiles/ms/icons/yellow-dot.png')
+                        }
+                        else if ($(this).text() === 'OK')
+                        {
+                            $(this).css('color', '#ff8000');
+                            $(this).parent().css('border-left', 'solid 3px #ff8000');
+                            icons.push('http://maps.google.com/mapfiles/ms/icons/orange-dot.png')
+                        }
+                        else {
+                            $(this).css('color', '#e62e00');
+                            $(this).parent().css('border-left', 'solid 3px #e62e00')
+                            icons.push('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
+                        }
+                    });
+
+                    for (var i = 0; i < hospitalRatings.length; i++) {
+                        var myLatLng = new google.maps.LatLng({lat: hospitalRatings[i].Latitude, lng: hospitalRatings[i].Longitude});
+                        map.fitBounds(bounds.extend(myLatLng));
+                        markersArray.push(new google.maps.Marker({
+                            map: map,
+                            position: myLatLng,
+                            icon: icons[i]
+                        }));
+
+                        var link = "https://www.google.com/maps/search/?api=1&query=" + hospitalRatings[i].Name.split(" ").join("+");
+                        infoWindowsArray.push(new google.maps.InfoWindow({
+                            content: '<div class="info_window">' +
+                                            '<h2>' + hospitalRatings[i].Name + '</h2>' +
+                                            '<p>' + hospitalRatings[i].Address + ' - ' + minutesToString(hospitalRatings[i].TravelTime) + '</p>' +
+                                            '<a href="' + link + '" target="_blank"> Get directions </a>' +
+                                      '</div>'
+                        }));
+                        google.maps.event.addListener(markersArray[i], 'click', (function(marker, i) {
+                            return function() {
+                                infoWindowsArray.forEach((item, i) => {
+                                    item.close();
+                                });
+                                infoWindowsArray[i].open(map, markersArray[i]);
+                            };
+                        })(markersArray[i], i));
+                    }
+                });
+            });
         }
         else {
             alert('Geocode was not successful for the following reason: ' + status);
@@ -2880,7 +2928,13 @@ $(function() {
     });
 
     $('#prev_button').on('click', function() {
-        if (currentPage === 2)
+        if (currentPage === 4)
+        {
+            $('map').html('');
+            $('results').html('');
+        }
+
+        if (currentPage === 2 || currentPage === 4 || currentPage === 5)
         {
             currentPage = 0
         }
@@ -2939,21 +2993,8 @@ $(function() {
                 };
 
                 shortestDistances(patientAddress, transportation, patientData);
-
-                // jsonToSend = {
-                //     "Patient": patientData,
-                //     "Hospital": dbdata
-                // }
-                //
-                // console.log(jsonToSend);
-                //
-                // $.post("https://wb4tf07f30.execute-api.us-east-1.amazonaws.com/prod/decision-tree", JSON.stringify(jsonToSend), function(data, status) {
-                //     console.log(JSON.parse(data.body).Hospital);
-                //     hospitalRatings = JSON.parse(data.body).Hospital;
-                //     hospitalRatings.forEach((item, i) => {
-                //         console.log(item.Rating);
-                //     });
-                // });
+                currentPage = 4;
+                showPage();
             }
         }
         else if (currentPage === 2)
@@ -3007,7 +3048,8 @@ $(function() {
                 $.post("https://wb4tf07f30.execute-api.us-east-1.amazonaws.com/prod/update", JSON.stringify(hospitalData), function(data, status) {
                     if (status === "success")
                     {
-                        alert("Thanks for submitting! Your data helps raise the hospital capacity line accross the country");
+                        currentPage = 5;
+                        showPage();
                     }
                 });
             }
@@ -3035,16 +3077,27 @@ function showPage()
         }
     }
 
+    if (currentPage === 4 || currentPage === 5)
+    {
+        $('#next_button').css('display', 'none');
+        $('#prev_button').text('Start Over');
+    }
+    else
+    {
+        $('#next_button').css('display', 'inline-block');
+        $('#prev_button').text('Previous');
+    }
+
     if (currentPage === 0)
     {
         $('.next_prev').css('display', 'none');
     }
-    else
+    else if (currentPage < 4)
     {
         $('.next_prev').css('display', 'inline-block');
     }
 
-    if (currentPage % 2 === 1)
+    if (currentPage < 4 && currentPage % 2 === 1)
     {
         $('#next_button').text('Submit');
     }
