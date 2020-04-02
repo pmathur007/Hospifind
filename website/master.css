@@ -19,11 +19,24 @@ img {
 }
 
 header > p {
+    position: relative;
+    bottom: 6vh;
     font-size: 1.2em;
+    display: inline-block;
+    width: 50%;
+}
+
+small {
+    font-size: 0.7em;
+    line-height: 1;
 }
 
 strong {
     color: #ff0000;
+}
+
+iframe {
+    width: 49%;
 }
 
 button {

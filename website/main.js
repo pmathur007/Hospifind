@@ -2930,8 +2930,8 @@ $(function() {
     $('#prev_button').on('click', function() {
         if (currentPage === 4)
         {
-            $('map').html('');
-            $('results').html('');
+            $('#map').html('');
+            $('#results').html('');
         }
 
         if (currentPage === 2 || currentPage === 4 || currentPage === 5)
