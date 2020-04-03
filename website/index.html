@@ -24,108 +24,119 @@
                     <button id="hospital_button" type="button">Hospital</button>
                 </div>
                 <div class="form_page">
-                    <div class="row">
-                        <div class="form-group col-md-4">
-                            <div class="form-group">
-                                <label class="text_label" for="patient_name">Full Name:</label>
-                                <input id="patient_name" class="form-control" type="text" name="patient_name"/>
-                            </div>
-                            <div class="form-group">
-                                <label class="text_label" for="age">Age:</label>
-                                <input id="age" class="form-control"type="number" name="age"/>
-                            </div>
-                            <div class="form-group">
-                                <label class="text_label" for="address">Full Legal Address:</label>
-                                <input id="address" class="form-control" type="text" name="address"/>
-                            </div>
-                            <fieldset id="transportation" class="form-group">
-                                <legend>What is your preferred method of transportation?</legend>
-                                <div class="mc_container">
-                                    <input id="walking" type="radio" name="transportation" value="walking">
-                                    <label for="walking">Walking</label>
-                                </div>
-                                <div class="mc_container">
-                                    <input id="bicycling" type="radio" name="transportation" value="bicycling">
-                                    <label for="bicycling">Bicycling</label>
-                                </div>
-                                <div class="mc_container">
-                                    <input id="driving" type="radio" name="transportation" value="driving">
-                                    <label for="driving">Driving</label>
-                                </div>
-                                <div class="mc_container">
-                                    <input id="transit" type="radio" name="transportation" value="transit">
-                                    <label for="transit">Transit</label>
-                                </div>
-                            </fieldset>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label class="text_label" for="patient_name">Full Name:</label>
+                            <input id="patient_name" class="form-control" type="text" name="patient_name"/>
                         </div>
-                        <fieldset class="form-group col-md-4">
-                            <legend>Do you believe you have coronavirus symptoms? Please check off all symptoms you may have.</legend>
-                            <div class="mc_container">
-                                <input id="fever" type="checkbox" name="is_corona" value="fever">
-                                <label for="fever">Fever</label>
-                            </div>
-                            <div class="mc_container">
-                                <input id="dry_cough" type="checkbox" name="is_corona" value="dry_cough">
-                                <label for="dry_cough">Dry Cough</label>
-                            </div>
-                            <div class="mc_container">
-                                <input id="fatigue" type="checkbox" name="is_corona" value="fatigue">
-                                <label for="fatigue">Fatigue</label>
-                            </div>
-                            <div class="mc_container">
-                                <input id="phlegm" type="checkbox" name="is_corona" value="phlegm">
-                                <label for="phlegm">Phlegm</label>
-                            </div>
-                            <div class="mc_container">
-                                <input id="short_breath" type="checkbox" name="is_corona" value="short_breath">
-                                <label for="short_breath">Shortness of Breath</label>
-                            </div>
-                            <div class="mc_container">
-                                <input id="throat_headache" type="checkbox" name="is_corona" value="throat_headache">
-                                <label for="throat_headache">Sore Throat or Headache</label>
-                            </div>
-                            <div class="mc_container">
-                                <input id="chills" type="checkbox" name="is_corona" value="chills">
-                                <label for="chills">Chills</label>
-                            </div>
-                            <div class="mc_container">
-                                <input id="vomiting" type="checkbox" name="is_corona" value="vomiting">
-                                <label for="vomiting">Vomiting</label>
-                            </div>
-                            <div class="mc_container">
-                                <input id="nasal_congestion" type="checkbox" name="is_corona" value="nasal_congestion">
-                                <label for="nasal_congestion">Nasal Congestion</label>
-                            </div>
-                            <div class="mc_container">
-                                <input id="diarrhea" type="checkbox" name="is_corona" value="diarrhea">
-                                <label for="diarrhea">Diarrhea</label>
-                            </div>
-                        </fieldset>
-                        <fieldset class="form-group col-md-4">
-                            <legend>Do you have any of the following medical conditions? Please check all the apply</legend>
-                            <div class="mc_container">
-                                <input id="high_bp" type="checkbox" name="pre_conditions" value="high_bp">
-                                <label for="high_bp">High Blood Pressure</label>
-                            </div>
-                            <div class="mc_container">
-                                <input id="heart_problems" type="checkbox" name="pre_conditions" value="heart_problems">
-                                <label for="heart_problems">Heart Problems</label>
-                            </div>
-                            <div class="mc_container">
-                                <input id="diabetes" type="checkbox" name="pre_conditions" value="diabetes">
-                                <label for="diabetes">Diabetes</label>
-                            </div>
-                            <div class="mc_container">
-                                <input id="asthma" type="checkbox" name="pre_conditions" value="asthma">
-                                <label for="asthma">Asthma</label>
-                            </div>
-                            <div class="mc_container">
-                                <input id="smoking" type="checkbox" name="pre_conditions" value="smoking">
-                                <label for="smoking">Any smoking-related conditions</label>
-                            </div>
-                        </fieldset>
+                        <div class="form-group col-md-6">
+                            <label class="text_label" for="age">Age:</label>
+                            <input id="age" class="form-control"type="number" name="age"/>
+                        </div>
                     </div>
-
+                    <div class="form-group">
+                        <label class="text_label" for="street_address">Street Address:</label>
+                        <input id="street_address" class="form-control" type="text" name="street_address"/>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label class="text_label" for="city">City:</label>
+                            <input id="city" class="form-control" type="text" name="city"/>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="text_label" for="state">State</label>
+                            <input id="state" class="form-control" type="text" name="state"/>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="text_label" for="zipcode">Zip Code:</label>
+                            <input id="zipcode" class="form-control" type="text" name="zipcode"/>
+                        </div>
+                    </div>
+                    <fieldset id="transportation" class="form-group">
+                        <legend>What is your preferred method of transportation?</legend>
+                        <div class="mc_container">
+                            <input id="walking" type="radio" name="transportation" value="walking">
+                            <label for="walking">Walking</label>
+                        </div>
+                        <div class="mc_container">
+                            <input id="bicycling" type="radio" name="transportation" value="bicycling">
+                            <label for="bicycling">Bicycling</label>
+                        </div>
+                        <div class="mc_container">
+                            <input id="driving" type="radio" name="transportation" value="driving">
+                            <label for="driving">Driving</label>
+                        </div>
+                        <div class="mc_container">
+                            <input id="transit" type="radio" name="transportation" value="transit">
+                            <label for="transit">Transit</label>
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <legend>Do you believe you have coronavirus symptoms? Please check off all symptoms you may have.</legend>
+                        <div class="mc_container">
+                            <input id="fever" type="checkbox" name="is_corona" value="fever">
+                            <label for="fever">Fever</label>
+                        </div>
+                        <div class="mc_container">
+                            <input id="dry_cough" type="checkbox" name="is_corona" value="dry_cough">
+                            <label for="dry_cough">Dry Cough</label>
+                        </div>
+                        <div class="mc_container">
+                            <input id="fatigue" type="checkbox" name="is_corona" value="fatigue">
+                            <label for="fatigue">Fatigue</label>
+                        </div>
+                        <div class="mc_container">
+                            <input id="phlegm" type="checkbox" name="is_corona" value="phlegm">
+                            <label for="phlegm">Phlegm</label>
+                        </div>
+                        <div class="mc_container">
+                            <input id="short_breath" type="checkbox" name="is_corona" value="short_breath">
+                            <label for="short_breath">Shortness of Breath</label>
+                        </div>
+                        <div class="mc_container">
+                            <input id="throat_headache" type="checkbox" name="is_corona" value="throat_headache">
+                            <label for="throat_headache">Sore Throat or Headache</label>
+                        </div>
+                        <div class="mc_container">
+                            <input id="chills" type="checkbox" name="is_corona" value="chills">
+                            <label for="chills">Chills</label>
+                        </div>
+                        <div class="mc_container">
+                            <input id="vomiting" type="checkbox" name="is_corona" value="vomiting">
+                            <label for="vomiting">Vomiting</label>
+                        </div>
+                        <div class="mc_container">
+                            <input id="nasal_congestion" type="checkbox" name="is_corona" value="nasal_congestion">
+                            <label for="nasal_congestion">Nasal Congestion</label>
+                        </div>
+                        <div class="mc_container">
+                            <input id="diarrhea" type="checkbox" name="is_corona" value="diarrhea">
+                            <label for="diarrhea">Diarrhea</label>
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <legend>Do you have any of the following medical conditions? Please check all the apply</legend>
+                        <div class="mc_container">
+                            <input id="high_bp" type="checkbox" name="pre_conditions" value="high_bp">
+                            <label for="high_bp">High Blood Pressure</label>
+                        </div>
+                        <div class="mc_container">
+                            <input id="heart_problems" type="checkbox" name="pre_conditions" value="heart_problems">
+                            <label for="heart_problems">Heart Problems</label>
+                        </div>
+                        <div class="mc_container">
+                            <input id="diabetes" type="checkbox" name="pre_conditions" value="diabetes">
+                            <label for="diabetes">Diabetes</label>
+                        </div>
+                        <div class="mc_container">
+                            <input id="asthma" type="checkbox" name="pre_conditions" value="asthma">
+                            <label for="asthma">Asthma</label>
+                        </div>
+                        <div class="mc_container">
+                            <input id="smoking" type="checkbox" name="pre_conditions" value="smoking">
+                            <label for="smoking">Any smoking-related conditions</label>
+                        </div>
+                    </fieldset>
                 </div>
                 <div class="form_page">
                     <div class="form-group">

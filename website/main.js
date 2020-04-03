@@ -2710,8 +2710,16 @@ function durationToMinutes(string) {
     var splitString = string.split(" ");
     if (splitString.length > 2)
     {
-        ans += 60 * parseInt(splitString[0]);
-        ans += parseInt(splitString[2]);
+        if (string.indexOf('day') !== -1)
+        {
+            ans += 1440 * parseInt(splitString[0]);
+            ans += 60 * parseInt(splitString[2]);
+        }
+        else
+        {
+            ans += 60 * parseInt(splitString[0]);
+            ans += parseInt(splitString[2]);
+        }
     }
     else
     {
@@ -2721,9 +2729,16 @@ function durationToMinutes(string) {
 }
 
 function minutesToString(minutes) {
+    if (minutes >= 1440)
+    {
+        days = parseInt(minutes / 1440);
+        hours = parseInt((minutes % 1440) / 60);
+        return days + (days > 1 ? ' days' : ' day') + (hours === 0 ? '' : ' ' + hours + (hours > 1 ? ' hrs' : 'hr'));
+    }
     if (minutes >= 60)
     {
-        return parseInt(minutes / 60) + ' hr' + (minutes % 60 === 0 ? '' : ' ' + (minutes % 60) + ' min');
+        hours = parseInt(minutes / 60);
+        return hours + (hours > 1 ? ' hrs' : ' hr') + (minutes % 60 === 0 ? '' : ' ' + (minutes % 60) + ' min');
     }
     else
     {
@@ -2790,11 +2805,7 @@ function shortestDistances(address, travelMode)
             var originLatLng = new google.maps.LatLng({lat: latlng[0], lng: latlng[1]});
             map.fitBounds(bounds.extend(originLatLng));
 
-            var originMarker = new google.maps.Marker({
-                map: map,
-                position: originLatLng,
-                icon: 'http://maps.google.com/mapfiles/ms/icons/blue.png'
-            })
+
 
             var destinations = [];
             for(var i = 0; i < 10; i++) {
@@ -2838,6 +2849,11 @@ function shortestDistances(address, travelMode)
                     console.log(JSON.parse(data.body).Hospital);
                     hospitalRatings = JSON.parse(data.body).Hospital;
                     hospitalRatings.forEach((item, i) => {
+                        directionsLink = "https://www.google.com/maps/dir/?api=1&" +
+                            "origin=" + address.split(",").join("%2C").split(" ").join("+") +
+                            "&destination=" + item.Name.split(" ").join("+") +
+                            "&travelmode=" + travelModes[travelMode].toLowerCase();
+
                         $("#results").html($("#results").html() +
                             '<div class="location_result">' +
                                 '<p class="rating">' + item.Rating + '</p>' +
@@ -2847,6 +2863,7 @@ function shortestDistances(address, travelMode)
                                     ('' + item.Distance).substring(0, 3) + ' miles - ' +
                                     minutesToString(item.TravelTime) +
                                 '</p>' +
+                                '<a class="directions_link" href="' + directionsLink + '" target="_blank">Get Directions</a>' +
                             '</div>'
                         );
                     });
@@ -2878,6 +2895,20 @@ function shortestDistances(address, travelMode)
                         }
                     });
 
+                    var originMarker = new google.maps.Marker({
+                        map: map,
+                        position: originLatLng,
+                        icon: 'http://maps.google.com/mapfiles/ms/icons/blue.png',
+                        zIndex: google.maps.Marker.MAX_ZINDEX + 1
+                    })
+
+                    var originWindow = new google.maps.InfoWindow({
+                        content: '<div class="info_window">' +
+                                        '<h2>Your Location</h2>' +
+                                        '<p>' + address + '</p>' +
+                                  '</div>'
+                    });
+
                     for (var i = 0; i < hospitalRatings.length; i++) {
                         var myLatLng = new google.maps.LatLng({lat: hospitalRatings[i].Latitude, lng: hospitalRatings[i].Longitude});
                         map.fitBounds(bounds.extend(myLatLng));
@@ -2887,7 +2918,10 @@ function shortestDistances(address, travelMode)
                             icon: icons[i]
                         }));
 
-                        var link = "https://www.google.com/maps/search/?api=1&query=" + hospitalRatings[i].Name.split(" ").join("+");
+                        var link = "https://www.google.com/maps/dir/?api=1&" +
+                            "origin=" + address.split(",").join("%2C").split(" ").join("+") +
+                            "&destination=" + hospitalRatings[i].Name.split(" ").join("+") +
+                            "&travelmode=" + travelModes[travelMode].toLowerCase();
                         infoWindowsArray.push(new google.maps.InfoWindow({
                             content: '<div class="info_window">' +
                                             '<h2>' + hospitalRatings[i].Name + '</h2>' +
@@ -2900,10 +2934,18 @@ function shortestDistances(address, travelMode)
                                 infoWindowsArray.forEach((item, i) => {
                                     item.close();
                                 });
+                                originWindow.close();
                                 infoWindowsArray[i].open(map, markersArray[i]);
                             };
                         })(markersArray[i], i));
                     }
+
+                    originMarker.addListener('click', function() {
+                        infoWindowsArray.forEach((item, i) => {
+                            item.close();
+                        });
+                        originWindow.open(map, originMarker);
+                    });
                 });
             });
         }
@@ -2951,7 +2993,11 @@ $(function() {
         {
             var patientName = $("#patient_name").val();
             var patientAge = $("#age").val();
-            var patientAddress = $("#address").val();
+            var street_address = $("#street_address").val();
+            var city = $("#city").val();
+            var state = $("#state").val();
+            var zipcode = $("#zipcode").val();
+            var patientAddress = street_address + ', ' + city + ', ' + state + ' ' + zipcode;
             var transportation = $("input[name='transportation']:checked").val();
 
             if (patientName === "" || patientAge === "" || patientAddress === "" || transportation === "")

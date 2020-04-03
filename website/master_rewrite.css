@@ -1,0 +1,43 @@
+html, body {
+    height: 100%;
+    padding: 0px;
+    margin: 0px;
+    background: #000000;
+    color: #ffffff;
+}
+
+html *, body * {
+    margin: 0px;
+    padding: 0px;
+}
+
+#hospifind_bg {
+    position: relative;
+    opacity: 0.4;
+    background-image: url('../images/background_hospital.jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    text-align: center;
+    min-height: 100%;
+}
+
+#hospifind_bg * {
+    opacity: 1;
+}
+
+form {
+    width: 100%;
+    background: #404040;
+    color: #ffffff;
+}
+
+h1 {
+    color: #cc0000;
+}
+
+#info {
+    background: radial-gradient(circle, rgba(207,0,0,1) 0%, rgba(181,0,0,1) 100%);
+    padding: 2%;
+}

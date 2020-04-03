@@ -39,6 +39,10 @@ iframe {
     width: 49%;
 }
 
+#form_container {
+    margin-bottom: 2%;
+}
+
 button {
     background: inherit;
     color: #a91622;
@@ -75,10 +79,7 @@ input[type="text"]:focus, input[type="number"]:focus {
 
 form {
     background: #262626;
-    border: 1px solid #d31122;
-    border-radius: 5px;
-    margin: 0% 5%;
-    padding: 2%;
+    padding: 2% 20%;
 }
 
 label, legend {
@@ -126,11 +127,6 @@ footer {
     text-align: center;
     padding: 1% 0%;
 }
-
-#form_container {
-    margin-bottom: 2%;
-}
-
 #choose_form {
     text-align: center;
 }
@@ -169,6 +165,21 @@ footer {
     position: absolute;
     width: 85%;
     padding-left: 80%;
+}
+
+.directions_link {
+    font-size: 0.9em;
+    float: right;
+    color: #ffffff;
+    background: #404040;
+    padding: 0.5% 1%;
+    margin-top: 2.5%;
+}
+
+.directions_link:hover {
+    color: #ffffff;
+    text-decoration: none;
+    background: #4d4d4d;
 }
 
 .info_window {
