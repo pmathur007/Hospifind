@@ -3079,6 +3079,10 @@ $(function() {
             {
                 alert("Please fill out all fields");
             }
+            else if (capacity < 0 || beds < 0 || icus < 0 || ventilators < 0 || tests < 0 || covidPatients < 0)
+            {
+                alert("Invalid input!");
+            }
             else
             {
                 hospitalData = {
