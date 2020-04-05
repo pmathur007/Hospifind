@@ -83,6 +83,7 @@ form {
 }
 
 label, legend {
+    text-align: center;
     font-size: 1.2em;
 }
 
@@ -91,6 +92,7 @@ fieldset {
 }
 
 .mc_container {
+    display: inline-block;
     margin: 1% 2%;
 }
 
@@ -103,17 +105,15 @@ input[type="radio"], input[type="checkbox"] {
 input[type="radio"] + label, input[type="checkbox"] + label {
     text-align: center;
     width: 250px;
-    border: 1px solid #d31122;
-    border-radius: 5px;
+    background: #4d4d4d;
 }
 
 input[type="radio"] + label:hover, input[type="checkbox"] + label:hover {
-    background: #4d4d4d;
+    background: #808080;
 }
 
 input[type="radio"]:checked + label, input[type="checkbox"]:checked + label {
-    background: #4d4d4d;
-    border: 2px solid #d31122;
+    background: #808080;
 }
 
 .form_page > p {
@@ -127,6 +127,7 @@ footer {
     text-align: center;
     padding: 1% 0%;
 }
+
 #choose_form {
     text-align: center;
 }
