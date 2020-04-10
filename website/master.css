@@ -27,6 +27,7 @@ header > p {
 }
 
 small {
+    color: #ff0000;
     font-size: 0.7em;
     line-height: 1;
 }
