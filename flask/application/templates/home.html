@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>Hospifind</h1>
+    {% for hospital in hospitals %}
+        <h2>{{ hospital.name }}</h2>
+        <p>{{ hospital.address }}</p>
+        <p>{{ hospital.hex_id }}</p>
+    {% endfor %}
+{% endblock content %}
