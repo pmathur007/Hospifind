@@ -18,10 +18,9 @@
 </head>
 <body>
     <header class="site-header">
-<<<<<<< HEAD
-        <nav class="navbar navbar-expand-md fixed-top">
+        <nav class="navbar navbar-expand-md navbar-light bg-white fixed-top">
             <div class="container">
-                <a class="navbar-brand mr-4" href="/">
+                <a id="logo_title" class="navbar-brand" href="{{ url_for('home') }}">
                     <img src="{{ url_for('static', filename='logo.png') }}" alt="Hospifind Logo">
                     Hospifind
                 </a>
@@ -29,7 +28,7 @@
                 <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarToggle">
-                    <div class="navbar-nav mr-auto">
+                    <div class="navbar-nav">
                       <a class="nav-item nav-link" href="{{ url_for('home') }}">Home</a>
                       <a class="nav-item nav-link" href="{{ url_for('home') }}">Application</a>
                       <a class="nav-item nav-link" href="{{ url_for('home') }}">About</a>
@@ -41,54 +40,30 @@
                         <a class="nav-item nav-link" href="{{ url_for('home') }}">Account</a>
                         <a class="nav-item nav-link" href="{{ url_for('home') }}">Logout</a>
                       {% else %}
-                        <a class="nav-item nav-link" href="{{ url_for('home') }}">Login</a>
+                        <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
                         <a class="nav-item nav-link" href="{{ url_for('home') }}">Register</a>
                       {% endif %}
                     </div>
                 </div>
-=======
-      <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
-        <div class="container">
-          <a class="navbar-brand mr-4" href="/">Hospifind</a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarToggle">
-            <div class="navbar-nav mr-auto">
-              <a class="nav-item nav-link" href="{{ url_for('home') }}">Home</a>
-              <a class="nav-item nav-link" href="{{ url_for('home') }}">Application</a>
-              <a class="nav-item nav-link" href="{{ url_for('home') }}">About</a>
-            </div>
-            <!-- Navbar Right Side -->
-            <div class="navbar-nav">
-              {% if current_user.is_authenticated %}
-                <a class="nav-item nav-link" href="{{ url_for('home') }}">Input Data</a>
-                <a class="nav-item nav-link" href="{{ url_for('account') }}">Account</a>
-                <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
-              {% else %}
-                <a class="nav-item nav-link" href="{{ url_for('home') }}">Request Account</a>
-                <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
-              {% endif %}
->>>>>>> 6ef398f2fd505bda7ca464aabc0a5a56eb052ef2
             </div>
         </nav>
     </header>
     <main role="main" class="container">
-      <div class="row">
-        <div class="col-md-8">
-          {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-              {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">
-                  {{ message }}
-                </div>
-              {% endfor %}
-            {% endif %}
-          {% endwith %}
-          {% block content %}{% endblock %}
-        </div>
-      </div>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+      {% block content %}{% endblock %}
     </main>
+    <footer>
+        <p>Created by Aarav Bajaj, Arya Grayeli, Pranav Mathur, Ron Nachum, Amrita Sahu</p>
+        <p><a href="#">Legal</a> | <a href="#">Privacy</a></p>
+    </footer>
 
 
     <!-- Optional JavaScript -->
