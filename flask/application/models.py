@@ -7,38 +7,53 @@ import secrets
 
 
 @login_manager.user_loader
-def load_user(hospital_id):
-    return Hospital.query.get(int(hospital_id))
+def load_user(id):
+    return User.query.get(int(id))
 
 
 class Hospital(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
 
-    name = db.Column(db.String(20), unique=True, nullable=False)
+    name = db.Column(db.String(), nullable=False)
     address = db.Column(db.String(), nullable=False)
     state = db.Column(db.String(), nullable=False)
-    hex_id = db.Column(db.String(), nullable=False)
+    admin_hex_id = db.Column(db.String(), default=lambda: secrets.token_hex(32), unique=True, nullable=False)
+    normal_hex_id = db.Column(db.String(), default=lambda: secrets.token_hex(32), unique=True, nullable=False)
 
-    email = db.Column(db.String(120), unique=True, nullable=True)
-    password = db.Column(db.String(60), nullable=True)
+    data = db.relationship('Data', backref='input', lazy=True)
 
-    data = db.relationship('Data', backref='hospital', lazy=True)
+    # def get_reset_token(self, expires_sec=1800):
+    #     s = Serializer(current_app.config['SECRET_KEY'], expires_sec)
+    #     return s.dumps({'hospital_id': self.id}).decode('utf-8')
+    #
+    # @staticmethod
+    # def verify_reset_token(token):
+    #     s = Serializer(current_app.config['SECRET_KEY'])
+    #     try:
+    #         hospital_id = s.loads(token)['hospital_id']
+    #     except:
+    #         return None
+    #     return Hospital.query.get(hospital_id)
 
-    def get_reset_token(self, expires_sec=1800):
-        s = Serializer(current_app.config['SECRET_KEY'], expires_sec)
-        return s.dumps({'hospital_id': self.id}).decode('utf-8')
-
-    @staticmethod
-    def verify_reset_token(token):
-        s = Serializer(current_app.config['SECRET_KEY'])
-        try:
-            hospital_id = s.loads(token)['hospital_id']
-        except:
-            return None
-        return Hospital.query.get(hospital_id)
+    def regenerate_hex_id(self):
+        self.admin_hex_id = secrets.token_hex(32)
+        self.normal_hex_id = secrets.token_hex(32)
 
     def __repr__(self):
         return f"Hospital('{self.id}', '{self.name}', '{self.state}')"
+
+
+class User(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+
+    username = db.Column(db.String(), unique=True, nullable=False)
+    email = db.Column(db.String(), unique=True, nullable=False)
+    is_admin = db.Column(db.Boolean(), nullable=False)
+    password = db.Column(db.String(), nullable=False)
+    hospital = db.Column(db.Integer, db.ForeignKey('hospital.id'), nullable=False)
+
+    def __repr__(self):
+        return f"User('{self.username}', '{self.hospital}')"
 
 
 class Data(db.Model):
@@ -50,7 +65,7 @@ class Data(db.Model):
     ventilators_available = db.Column(db.Integer(), nullable=False)
     coronavirus_tests_available = db.Column(db.Integer(), nullable=False)
     coronavirus_patients = db.Column(db.Integer(), nullable=False)
-    hospital_id = db.Column(db.Integer, db.ForeignKey('hospital.id'), nullable=False)
+    hospital = db.Column(db.Integer, db.ForeignKey('hospital.id'), nullable=False)
 
     def __repr__(self):
-        return f"Data('{self.hospital_id}', '{self.date}')"
+        return f"Data('{self.hospital}', '{self.date}')"
