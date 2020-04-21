@@ -1,8 +1,20 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h1>Hospifind</h1>
-    {% for hospital in hospitals %}
-        <h2>{{ hospital.name }}</h2>
-        <p>{{ hospital.address }}</p>
-    {% endfor %}
+    <section>
+        <div id="map"></div>
+        {% for hospital in hospitals %}
+            <div class="hospital_result">
+                <p>Rating</p>
+                <h3>{{ hospital.name }}</h3>
+                <p>{{ hospital.address }}</p>
+                <a href="{{ hospital.directions_link }}">Get directions</a>
+            </div>
+        {% endfor %}
+    </section>
+    <section>
+        <h2>About</h2>
+    </section>
+    <section>
+        <h2>Contact</h2>
+    </section>
 {% endblock content %}
