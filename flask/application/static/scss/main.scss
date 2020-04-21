@@ -1,0 +1,17 @@
+@import 'config';
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    margin-top: 5rem;
+}
+
+header {
+    img {
+        width: 2em;
+        height: 2em;
+    }
+}
