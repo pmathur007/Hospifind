@@ -34,11 +34,11 @@
             <div class="navbar-nav">
               {% if current_user.is_authenticated %}
                 <a class="nav-item nav-link" href="{{ url_for('home') }}">Input Data</a>
-                <a class="nav-item nav-link" href="{{ url_for('home') }}">Account</a>
-                <a class="nav-item nav-link" href="{{ url_for('home') }}">Logout</a>
+                <a class="nav-item nav-link" href="{{ url_for('account') }}">Account</a>
+                <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
               {% else %}
-                <a class="nav-item nav-link" href="{{ url_for('home') }}">Login</a>
-                <a class="nav-item nav-link" href="{{ url_for('home') }}">Register</a>
+                <a class="nav-item nav-link" href="{{ url_for('home') }}">Request Account</a>
+                <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
               {% endif %}
             </div>
           </div>

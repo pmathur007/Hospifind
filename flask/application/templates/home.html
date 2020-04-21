@@ -4,6 +4,7 @@
     {% for hospital in hospitals %}
         <h2>{{ hospital.name }}</h2>
         <p>{{ hospital.address }}</p>
-        <p>{{ hospital.hex_id }}</p>
+        <p>{{ hospital.admin_hex_id }}</p>
+        <p>{{ hospital.normal_hex_id }}</p>
     {% endfor %}
 {% endblock content %}
