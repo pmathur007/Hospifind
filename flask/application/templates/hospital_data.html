@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>{{ heading }}</h1>
+    {% for d in data %}
+        <article class="media content-section">
+            <div class="media-body">
+                <h1>{{ d.date.strftime('%m-%d-%Y') }} Data</h1>
+                <h3>Bed Capacity: {{ d.bed_capacity }}</h3>
+                <h3>Beds Available: {{ d.beds_available }}</h3>
+                <h3>ICUs Available: {{ d.icus_available }}</h3>
+                <h3>Ventilators Available: {{ d.ventilators_available }}</h3>
+                <h3>Coronavirus Tests Available: {{ d.coronavirus_tests_available }}</h3>
+                <h3>Coronavirus Patients: {{ d.coronavirus_patients }}</h3>
+            </div>
+        </article>
+    {% endfor %}
+{% endblock content %}

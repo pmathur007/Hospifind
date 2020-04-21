@@ -1,8 +1,8 @@
 from flask import render_template, flash, request, url_for, redirect
 from flask_login import login_user, current_user, logout_user, login_required
 from application import app, bcrypt, db
-from application.models import Hospital, User
-from application.forms import RegistrationForm, LoginForm
+from application.models import Hospital, User, Data
+from application.forms import RegistrationForm, LoginForm, DataForm
 
 
 @app.route("/")
@@ -77,8 +77,29 @@ def login():
 @login_required
 @app.route("/account")
 def account():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
     hospital_name = Hospital.query.get(current_user.hospital).name
     if current_user.is_admin:
         return render_template('admin_account.html', title='Account', hospital_name=hospital_name)
     else:
         return render_template('normal_account.html', title='Account', hospital_name=hospital_name)
+
+
+@app.route("/hospital/data/<int:hospital_id>")
+def hospital_data(hospital_id):
+    data = Data.query.filter_by(hospital=hospital_id).order_by(Data.date.desc()).all()
+    return render_template('hospital_data.html', title='Hospital Data', heading='Hospital Data - ' + Hospital.query.get(hospital_id).name, data=data)
+
+
+@login_required
+@app.route("/hospital/data_input", methods=["GET", "POST"])
+def data_input():
+    form = DataForm()
+    if form.validate_on_submit():
+        data = Data(bed_capacity=form.bed_capacity.data, beds_available=form.beds_available.data, icus_available=form.icus_available.data, ventilators_available=form.ventilators_available.data, coronavirus_tests_available=form.coronavirus_tests_available.data, coronavirus_patients=form.coronavirus_patients.data, hospital=current_user.hospital)
+        db.session.add(data)
+        db.session.commit()
+        flash('Your data has been successfully uploaded to the server!', 'success')
+        return redirect(url_for('home'))
+    return render_template('data_input.html', title='Data Input', heading='Data Input - ' + Hospital.query.get(current_user.hospital).name, form=form)

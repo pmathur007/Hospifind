@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
-from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, NumberRange
 from flask_login import current_user
 from application.models import User
 
@@ -29,3 +29,13 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     remember = BooleanField('Remember Me')
     submit = SubmitField('Login')
+
+
+class DataForm(FlaskForm):
+    bed_capacity = IntegerField('Total Beds', validators=[DataRequired(), NumberRange(0, 10000)])
+    beds_available = IntegerField('Beds Available', validators=[DataRequired(), NumberRange(0, 10000)])
+    icus_available = IntegerField('ICUs Available', validators=[DataRequired(), NumberRange(0, 10000)])
+    ventilators_available = IntegerField('Ventilators Available', validators=[DataRequired(), NumberRange(0, 10000)])
+    coronavirus_tests_available = IntegerField('Coronavirus Tests Available (or Daily Average)', validators=[DataRequired(), NumberRange(0, 10000)])
+    coronavirus_patients = IntegerField('Coronavirus Patients', validators=[DataRequired(), NumberRange(0, 10000)])
+    submit = SubmitField('Submit')
