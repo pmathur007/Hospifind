@@ -5,7 +5,8 @@ import pandas as pd
 db.drop_all()
 db.create_all()
 
-csv_file = "C:\\Users\\Ron\\Hospifind\\decision_tree\\us_data.csv"
+# csv_file = "C:\\Users\\Ron\\Hospifind\\decision_tree\\us_data.csv"
+csv_file = "/Users/pranav/Documents/Development/WHOCorona/decision_tree/us_data.csv"
 
 data = pd.read_csv(csv_file)
 
