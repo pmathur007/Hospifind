@@ -12,6 +12,7 @@ def home():
     return render_template('home.html', hospitals=hospitals)
 
 
+@app.route("/<string:state>")
 @app.route("/home/<string:state>")
 def home_state(state):
     hospitals = Hospital.query.filter_by(state=state).all()

@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, NumberRange
 from flask_login import current_user
 from application.models import User
@@ -39,3 +39,8 @@ class DataForm(FlaskForm):
     coronavirus_tests_available = IntegerField('Coronavirus Tests Available (or Daily Average)', validators=[DataRequired(), NumberRange(0, 10000)])
     coronavirus_patients = IntegerField('Coronavirus Patients', validators=[DataRequired(), NumberRange(0, 10000)])
     submit = SubmitField('Submit')
+
+
+class HospitalNameForm(FlaskForm):
+    hospital_name = StringField('Hospital Name', validators=[DataRequired()])
+    submit = SubmitField('Request Account')

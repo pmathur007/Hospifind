@@ -7,8 +7,8 @@ import secrets
 
 
 @login_manager.user_loader
-def load_user(id):
-    return User.query.get(int(id))
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 
 class Hospital(db.Model, UserMixin):
@@ -17,8 +17,10 @@ class Hospital(db.Model, UserMixin):
     name = db.Column(db.String(), nullable=False)
     address = db.Column(db.String(), nullable=False)
     state = db.Column(db.String(), nullable=False)
-    admin_hex_id = db.Column(db.String(), default=lambda: secrets.token_hex(32), unique=True, nullable=False)
-    normal_hex_id = db.Column(db.String(), default=lambda: secrets.token_hex(32), unique=True, nullable=False)
+    latitude = db.Column(db.Integer(), nullable=True)
+    longitude = db.Column(db.Integer(), nullable=True)
+    admin_hex_id = db.Column(db.String(), default=lambda: secrets.token_hex(32), unique=True, nullable=True)
+    normal_hex_id = db.Column(db.String(), default=lambda: secrets.token_hex(32), unique=True, nullable=True)
 
     data = db.relationship('Data', backref='input', lazy=True)
 

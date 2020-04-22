@@ -17,5 +17,5 @@ state = [a.split(" ")[-2] for a in address]
 
 for i in range(len(names)):
     if len(state[i]) == 2:
-        db.session.add(Hospital(name=names[i], address=address[i], state=state[i]))
+        db.session.add(Hospital(name=names[i], address=address[i], latitude = latitude[i], longitude = longitude[i], state=state[i]))
 db.session.commit()
