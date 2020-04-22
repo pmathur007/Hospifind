@@ -1,12 +1,16 @@
 from application import db
 from application.models import Hospital
 import pandas as pd
+import os
+import time
 
 db.drop_all()
 db.create_all()
 
-# csv_file = "C:\\Users\\Ron\\Hospifind\\decision_tree\\us_data.csv"
-csv_file = "/Users/pranav/Documents/Development/WHOCorona/decision_tree/us_data.csv"
+csv_file = os.path.join(os.path.dirname(os.getcwd()), "decision_tree", "us_data.csv")
+print(csv_file)
+time.sleep(10000)
+
 
 data = pd.read_csv(csv_file)
 
