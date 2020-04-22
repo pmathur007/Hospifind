@@ -1,22 +1,50 @@
-from flask import render_template, flash, request, url_for, redirect
+from flask import render_template, flash, request, url_for, redirect, jsonify, session
 from flask_login import login_user, current_user, logout_user, login_required
 from application import app, bcrypt, db
 from application.models import Hospital, User, Data
 from application.forms import RegistrationForm, LoginForm, DataForm
+import geocoder
+import numpy as np
+import math
 
 
 @app.route("/")
-@app.route("/home")
+@app.route("/home", methods=['GET'])
 def home():
-    hospitals = Hospital.query.all()
-    return render_template('home.html', hospitals=hospitals)
+    # print("IP:", request.environ.get('HTTP_X_REAL_IP', request.remote_addr))
+    ip = '71.191.46.159'
+    # g = geocoder.ip(str(request.remote_addr))
+    # print(g)
+    state = 'VA' # g.state()
+    session['latitude'] = 38.8809
+    session['longitude'] = -77.3008 # g.latlng()
+    # print(state, latitude, longitude)
+    return redirect(url_for('home_state', state=state))
+
+
+def distance(lat1, lon1, lat2, lon2):
+    R = 6373.0
+
+    lat1 = np.deg2rad(lat1)
+    lat2 = np.deg2rad(lat2)
+    lon1 = np.deg2rad(lon1)
+    lon2 = np.deg2rad(lon2)
+
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+
+    a = math.sin(dlat / 2) ** 2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2) ** 2
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+
+    return R * c
 
 
 @app.route("/<string:state>")
 @app.route("/home/<string:state>")
 def home_state(state):
     hospitals = Hospital.query.filter_by(state=state).all()
-    return render_template('home.html', hospitals=hospitals)
+    hospitals.sort(key=lambda x: distance(session['latitude'], session['longitude'], x.latitude, x.longitude))
+    return render_template('home.html', hospitals=hospitals[0:10])
 
 
 @app.route("/hospital/register/admin/<string:admin_hex_id>", methods=['GET', 'POST'])
@@ -102,6 +130,7 @@ def data_input():
         flash('Your data has been successfully uploaded to the server!', 'success')
         return redirect(url_for('home'))
     return render_template('data_input.html', title='Data Input', heading='Data Input - ' + Hospital.query.get(current_user.hospital).name, form=form)
+
 
 @app.route("/patient_form", methods=["GET", "POST"])
 def patient_form():
