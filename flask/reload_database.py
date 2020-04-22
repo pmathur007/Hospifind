@@ -8,10 +8,6 @@ db.drop_all()
 db.create_all()
 
 csv_file = os.path.join(os.path.dirname(os.getcwd()), "decision_tree", "us_data.csv")
-print(csv_file)
-time.sleep(10000)
-
-
 data = pd.read_csv(csv_file)
 
 names = list(data['Name'])
