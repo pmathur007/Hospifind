@@ -2,4 +2,8 @@
 {% block content %}
     <h1>{{ current_user.username }}</h1>
     <h2>{{ hospital_name }} - Admin</h2>
+    <h2>Data</h2>
+    <a href="{{ url_for('data_input') }}">Input Data</a>
+    <h2>System</h2>
+    <h2>Users</h2>
 {% endblock content %}

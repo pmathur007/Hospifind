@@ -78,8 +78,6 @@ def login():
 @login_required
 @app.route("/account")
 def account():
-    if current_user.is_authenticated:
-        return redirect(url_for('home'))
     hospital_name = Hospital.query.get(current_user.hospital).name
     if current_user.is_admin:
         return render_template('admin_account.html', title='Account', hospital_name=hospital_name)
@@ -104,3 +102,7 @@ def data_input():
         flash('Your data has been successfully uploaded to the server!', 'success')
         return redirect(url_for('home'))
     return render_template('data_input.html', title='Data Input', heading='Data Input - ' + Hospital.query.get(current_user.hospital).name, form=form)
+
+@app.route("/patient_form", methods=["GET", "POST"])
+def patient_form():
+    return render_template('patient_form.html', title='Personalized Results')
