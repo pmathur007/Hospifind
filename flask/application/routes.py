@@ -78,11 +78,12 @@ def login():
 @login_required
 @app.route("/account")
 def account():
-    hospital_name = Hospital.query.get(current_user.hospital).name
+    hospital = Hospital.query.get(current_user.hospital)
     if current_user.is_admin:
-        return render_template('admin_account.html', title='Account', hospital_name=hospital_name)
+        users = User.query.filter_by(hospital=current_user.hospital)
+        return render_template('admin_account.html', title='Account', hospital=hospital, users=users)
     else:
-        return render_template('normal_account.html', title='Account', hospital_name=hospital_name)
+        return render_template('normal_account.html', title='Account', hospital_name=hospital.name)
 
 
 @app.route("/hospital/data/<int:hospital_id>")
@@ -106,3 +107,12 @@ def data_input():
 @app.route("/patient_form", methods=["GET", "POST"])
 def patient_form():
     return render_template('patient_form.html', title='Personalized Results')
+
+@app.route("/users/<int:user_id>")
+def view_user(user_id):
+    requested_user = User.query.filter_by(id=user_id).first()
+    if requested_user.id == current_user.id or (current_user.is_admin and requested_user.hospital == current_user.hospital):
+        return render_template('user.html', user=requested_user)
+    else:
+        flash('You are not authorized to access that user.', 'danger')
+        return redirect(url_for('account'))

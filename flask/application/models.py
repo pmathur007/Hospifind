@@ -67,6 +67,7 @@ class Data(db.Model):
     ventilators_available = db.Column(db.Integer(), nullable=False)
     coronavirus_tests_available = db.Column(db.Integer(), nullable=False)
     coronavirus_patients = db.Column(db.Integer(), nullable=False)
+    user = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     hospital = db.Column(db.Integer, db.ForeignKey('hospital.id'), nullable=False)
 
     def __repr__(self):
