@@ -44,3 +44,7 @@ class DataForm(FlaskForm):
 class HospitalNameForm(FlaskForm):
     hospital_name = StringField('Hospital Name', validators=[DataRequired()])
     submit = SubmitField('Request Account')
+
+
+class PatientForm(FlaskForm):
+    pass

@@ -12,8 +12,8 @@ import math
 @app.route("/home", methods=['GET'])
 def home():
     # print("IP:", request.environ.get('HTTP_X_REAL_IP', request.remote_addr))
-    ip = '71.191.46.159'
-    # g = geocoder.ip(str(request.remote_addr))
+    ip = '71.191.46.159' # str(request.remote_addr)
+    # g = geocoder.ip(ip)
     # print(g)
     state = 'VA' # g.state()
     session['latitude'] = 38.8809
@@ -137,9 +137,10 @@ def data_input():
 def patient_form():
     return render_template('patient_form.html', title='Personalized Results')
 
+
 @app.route("/users/<int:user_id>")
 def view_user(user_id):
-    requested_user = User.query.filter_by(id=user_id).first()
+    requested_user = User.query.filter_by(id=user_id).first_or_404()
     if requested_user.id == current_user.id or (current_user.is_admin and requested_user.hospital == current_user.hospital):
         return render_template('user.html', user=requested_user)
     else:
