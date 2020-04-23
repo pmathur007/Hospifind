@@ -1,5 +1,6 @@
 import random
 import operator
+from application.models import Hospital
 
 
 class Patient:
@@ -29,8 +30,9 @@ class Hospital:
 
 
 class HomeDecision:
-    def __init__(self, hospitals):
+    def __init__(self, hospitals, data):
         self.hospitals = hospitals
+        self.data = data
         self.ratings = {}
 
         # hyperparams
@@ -51,7 +53,7 @@ class HomeDecision:
         tests = self.scale_tests()
         ratings = {}
 
-        for i in range(len(self.hospitals)):
+        for i in range(len(self.data)):
             ncap = self.capacity_weight * capacities[i]
             nbeds = self.beds_weight * beds[i]
             nicus = self.icus_weight * icus[i]
@@ -75,20 +77,20 @@ class HomeDecision:
             ndis = self.distance_weight * distances[i]
             rating = self.ratings[self.hospitals[i]]
             nrating = ndis + rating
-            nratings[nrating] = self.hospitals[i]
+            nratings[self.hospitals[i]] = nrating
 
-        nratings = sorted(nratings.items(), reverse=True, key=operator.itemgetter(0))
+        nratings = sorted(nratings.items(), reverse=True, key=operator.itemgetter(1))
 
         out = {}
         for h in nratings:
-            out[h[1]] = round(h[0],2)
+            out[h[0]] = round(h[1],2)
         return out
 
     def scale_capacity(self):
-        max = min = self.hospitals[0].capacity
+        max = min = self.data[0].bed_capacity
         list = [max]
-        for i in range(1,len(self.hospitals)):
-            n = self.hospitals[i].capacity
+        for i in range(1,len(self.data)):
+            n = self.data[i].bed_capacity
             list.append(n)
             if n > max:
                 max = n
@@ -100,10 +102,10 @@ class HomeDecision:
         return out
 
     def scale_beds(self):
-        max = min = self.hospitals[0].beds
+        max = min = self.data[0].beds_available
         list = [max]
-        for i in range(1,len(self.hospitals)):
-            n = self.hospitals[i].beds
+        for i in range(1,len(self.data)):
+            n = self.data[i].beds_available
             list.append(n)
             if n > max:
                 max = n
@@ -115,10 +117,10 @@ class HomeDecision:
         return out
 
     def scale_icus(self):
-        max = min = self.hospitals[0].icus
+        max = min = self.data[0].icus_available
         list = [max]
-        for i in range(1,len(self.hospitals)):
-            n = self.hospitals[i].icus
+        for i in range(1,len(self.data)):
+            n = self.data[i].icus_available
             list.append(n)
             if n > max:
                 max = n
@@ -130,10 +132,10 @@ class HomeDecision:
         return out
 
     def scale_vents(self):
-        max = min = self.hospitals[0].vents
+        max = min = self.data[0].ventilators_available
         list = [max]
-        for i in range(1,len(self.hospitals)):
-            n = self.hospitals[i].vents
+        for i in range(1,len(self.data)):
+            n = self.data[i].ventilators_available
             list.append(n)
             if n > max:
                 max = n
@@ -145,10 +147,10 @@ class HomeDecision:
         return out
 
     def scale_tests(self):
-        max = min = self.hospitals[0].tests
+        max = min = self.data[0].coronavirus_tests_available
         list = [max]
-        for i in range(1,len(self.hospitals)):
-            n = self.hospitals[i].tests
+        for i in range(1,len(self.data)):
+            n = self.data[i].coronavirus_tests_available
             list.append(n)
             if n > max:
                 max = n
@@ -360,22 +362,22 @@ for i in range(10):
     hospitals.append(hosp)
     times_dict[hosp] = random.randint(5,50)
 
-h = HomeDecision(hospitals)
-p = PersonalDecision(patient,hospitals,times_dict)
-hr = h.get_rating()
-hrt = h.get_rating_with_distance(times_dict)
-pr = p.get_rating()
-
-for i in hr.keys():
-    print(i.info(),hr[i])
-print("---------------")
-print("---------------")
-print("---------------")
-for i in hrt.keys():
-    print(i.info(),times_dict[i],hrt[i])
-print("---------------")
-print("---------------")
-print("---------------")
-print(patient.info())
-for i in pr.keys():
-    print(i.info(),times_dict[i],pr[i])
+# h = HomeDecision(hospitals)
+# p = PersonalDecision(patient,hospitals,times_dict)
+# hr = h.get_rating()
+# hrt = h.get_rating_with_distance(times_dict)
+# pr = p.get_rating()
+#
+# for i in hr.keys():
+#     print(i.info(),hr[i])
+# print("---------------")
+# print("---------------")
+# print("---------------")
+# for i in hrt.keys():
+#     print(i.info(),times_dict[i],hrt[i])
+# print("---------------")
+# print("---------------")
+# print("---------------")
+# print(patient.info())
+# for i in pr.keys():
+#     print(i.info(),times_dict[i],pr[i])

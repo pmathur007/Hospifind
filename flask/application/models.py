@@ -14,13 +14,13 @@ def load_user(user_id):
 class Hospital(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
 
-    name = db.Column(db.String(), nullable=False)
-    address = db.Column(db.String(), nullable=False)
-    state = db.Column(db.String(), nullable=False)
-    latitude = db.Column(db.Integer(), nullable=True)
-    longitude = db.Column(db.Integer(), nullable=True)
-    admin_hex_id = db.Column(db.String(), default=lambda: secrets.token_hex(32), unique=True, nullable=True)
-    normal_hex_id = db.Column(db.String(), default=lambda: secrets.token_hex(32), unique=True, nullable=True)
+    name = db.Column(db.String, nullable=False)
+    address = db.Column(db.String, nullable=False)
+    state = db.Column(db.String, nullable=False)
+    latitude = db.Column(db.Integer, nullable=True)
+    longitude = db.Column(db.Integer, nullable=True)
+    admin_hex_id = db.Column(db.String, default=lambda: secrets.token_hex(32), unique=True, nullable=True)
+    normal_hex_id = db.Column(db.String, default=lambda: secrets.token_hex(32), unique=True, nullable=True)
 
     data = db.relationship('Data', backref='input', lazy=True)
 
@@ -46,12 +46,12 @@ class Hospital(db.Model, UserMixin):
 
 
 class User(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer(), primary_key=True)
 
-    username = db.Column(db.String(), unique=True, nullable=False)
-    email = db.Column(db.String(), unique=True, nullable=False)
-    is_admin = db.Column(db.Boolean(), nullable=False)
-    password = db.Column(db.String(), nullable=False)
+    username = db.Column(db.String, unique=True, nullable=False)
+    email = db.Column(db.String, unique=True, nullable=False)
+    is_admin = db.Column(db.Boolean, nullable=False)
+    password = db.Column(db.String, nullable=False)
     hospital = db.Column(db.Integer, db.ForeignKey('hospital.id'), nullable=False)
 
     def __repr__(self):
@@ -60,13 +60,15 @@ class User(db.Model, UserMixin):
 
 class Data(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+
     date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    bed_capacity = db.Column(db.Integer(), nullable=False)
-    beds_available = db.Column(db.Integer(), nullable=False)
-    icus_available = db.Column(db.Integer(), nullable=False)
-    ventilators_available = db.Column(db.Integer(), nullable=False)
-    coronavirus_tests_available = db.Column(db.Integer(), nullable=False)
-    coronavirus_patients = db.Column(db.Integer(), nullable=False)
+    bed_capacity = db.Column(db.Integer, nullable=False)
+    beds_available = db.Column(db.Integer, nullable=False)
+    icus_available = db.Column(db.Integer, nullable=False)
+    ventilators_available = db.Column(db.Integer, nullable=False)
+    coronavirus_tests_available = db.Column(db.Integer, nullable=False)
+    coronavirus_patients = db.Column(db.Integer, nullable=False)
+    coronavirus_patient_percent = db.Column(db.Float, nullable=False)
     user = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     hospital = db.Column(db.Integer, db.ForeignKey('hospital.id'), nullable=False)
 
