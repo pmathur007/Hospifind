@@ -136,7 +136,18 @@ def account():
     hospital = Hospital.query.get(current_user.hospital)
     if current_user.is_admin:
         users = User.query.filter_by(hospital=current_user.hospital)
-        return render_template('admin_account.html', title='Account', hospital=hospital, users=users)
+        data = Data.query.filter_by(hospital=current_user.hospital)
+        bed_capacity = []; beds_available = []; icus_available = []; ventilators_available = []
+        coronavirus_tests_available = []; coronavirus_patients = []; coronavirus_patient_percent = []; dates = []
+        for d in data:
+            bed_capacity.append(d.bed_capacity); beds_available.append(d.beds_available)
+            icus_available.append(d.icus_available); ventilators_available.append(d.ventilators_available)
+            coronavirus_tests_available.append(d.coronavirus_tests_available); coronavirus_patients.append(d.coronavirus_patients)
+            coronavirus_patient_percent.append(d.coronavirus_patient_percent); dates.append(d.date)
+        return render_template('admin_account.html', title='Account', hospital=hospital, data=data, users=users, bed_capacity=bed_capacity,
+                               beds_available=beds_available, icus_available=icus_available, ventilators_available=ventilators_available,
+                               coronavirus_tests_available=coronavirus_tests_available, coronavirus_patients=coronavirus_patients,
+                               coronavirus_patient_percent=coronavirus_patient_percent, dates=dates)
     else:
         return render_template('normal_account.html', title='Account', hospital_name=hospital.name)
 
