@@ -1,18 +1,228 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h1>{{ current_user.username }}</h1>
+    <h1>{{ current_user.name }} (Username: {{ current_user.username }})</h1>
     <h2>{{ hospital.name }} - Admin</h2>
-    <h2>Data</h2>
-    <a href="{{ url_for('data_input') }}">Input Data</a>
-    <h2>System</h2>
-    <h2>Users</h2>
-    {% for user in users %}
-        <p>
-            <a href="{{ url_for('view_user', user_id=user.id) }}">{{ user.username }}</a>
-            {% if user.is_admin %}
-                - Admin
-            {% endif %}
-        </p>
-    {% endfor %}
+    <h3 class="border-bottom mb-4">Account Information</h3>
+    <form method="POST" action="" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <div class="form-group">
+                    {{ form.name.label(class="form-control-label") }}
 
+                    {% if form.name.errors %}
+                        {{ form.name(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.name.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.name(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.username.label(class="form-control-label") }}
+
+                    {% if form.username.errors %}
+                        {{ form.username(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.username.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.username(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.email.label(class="form-control-label") }}
+                    {% if form.email.errors %}
+                        {{ form.email(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.email.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.email(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+            </fieldset>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-white") }}
+            </div>
+        </form>
+    <div>
+      <h3 class="border-bottom mb-4">Users </h3>
+      <table class="sortable" style="width:1000px;" border=1 frame=void rules=rows>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Username</th>
+            <th>User Type</th>
+            <th>Data Inputs</th>
+            <th>Last Input</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for user, username, num_input, last_input in user_info %}
+            <tr>
+                <td>{{ user.name }}</td>
+                <td><a href="{{ url_for('view_user', user_id=user.id) }}">{{ username }}</a></td>
+                {% if user.is_admin %}
+                    <td>Admin</td>
+                {% else %}
+                    <td>Normal</td>
+                {% endif %}
+                <td>{{ num_input }}</td>
+                <td>{{ last_input }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+        <p>Invite More User | Invite More Admins | Reset Invite Links | Close System</p>
+    </div>
+    <div>
+        <h3 class="border-bottom mb-4">Graphs</h3>
+        <div class="row">
+              <div class="column">
+                  <canvas id="beds_available" width="500" height="200"></canvas>
+              </div>
+              <div class="column">
+                  <canvas id="icus_available" width="500" height="200"></canvas>
+              </div>
+        </div>
+        <div class="row">
+              <div class="column">
+                  <canvas id="ventilators_available" width="500" height="200"></canvas>
+              </div>
+              <div class="column">
+                  <canvas id="coronavirus_tests_available" width="500" height="200"></canvas>
+              </div>
+        </div>
+        <div class="row">
+              <div class="column">
+                  <canvas id="coronavirus_patients" width="500" height="200"></canvas>
+              </div>
+              <div class="column">
+                  <canvas id="coronavirus_patient_proportion" width="500" height="200"></canvas>
+              </div>
+        </div>
+    </div>
+    <div>
+        <h3 class="border-bottom mb-4">Data</h3>
+        <a href="{{ url_for('data_input') }}">Input Data</a>
+        <table class="sortable" style="width:90%;" border=1 frame=void rules=rows>
+          <thead>
+           <tr>
+            <th>Date</th>
+            <th>User</th>
+            <th>Capacity</th>
+            <th>Beds</th>
+            <th>ICUs</th>
+            <th>Ventilators</th>
+            <th>COVID-19 Tests</th>
+            <th>COVID-19 Patients</th>
+            <th>COVID-19 Patient %</th>
+           </tr>
+         </thead>
+         <tbody>
+            {% for d in data %}
+                <tr>
+                    <td>{{ d.date.strftime('%m/%d/%y') }}</td>
+                    <td><a class="mr-2" href="{{ url_for('view_user', user_id=d.user) }}">{{ d.user }}</a></td>
+                    <td><p class="article-content">{{ d.bed_capacity }}</p></td>
+                    <td><p class="article-content">{{ d.beds_available }}</p></td>
+                    <td><p class="article-content">{{ d.icus_available }}</p></td>
+                    <td><p class="article-content">{{ d.ventilators_available }}</p></td>
+                    <td><p class="article-content">{{ d.coronavirus_tests_available }}</p></td>
+                    <td><p class="article-content">{{ d.coronavirus_patients }}</p></td>
+                    <td><p class="article-content">{{ d.coronavirus_patient_percent * 100 }}</p></td>
+                </tr>
+            {% endfor %}
+         </tbody>
+        </table>
+    </div>
+    <script>
+        function create_graph(canvas_name, times, title, label, data, color1, color2, color3, color4, text_color, left, right, top, bottom){
+            var ctx = document.getElementById(canvas_name).getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: times,
+                    datasets: [{
+                        label: title,
+                        data: data,
+                        backgroundColor: 'rgba(' + color1 + ', ' + color2 +', ' + color3 + ', ' + color4 + ')',
+                        borderColor: 'rgba(' + color1 + ', ' + color2 +', ' + color3 + ', 1)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: title,
+                        fontSize: 18,
+                        fontColor: text_color,
+                        fontFamily: 'Helvetica'
+                    },
+                    legend: {
+                        display: false
+                    },
+                    tooltips: {
+                        callbacks: {
+                            title: function(tooltipItems, data){
+                                date = new Date(parseInt(tooltipItems[0].xLabel) * 1000);
+                                return (date.getMonth()+1) + "/" + date.getDate();
+                             }
+                        }
+                    },
+                    layout: {
+                        padding: {
+                            left: left,
+                            right: right,
+                            top: top,
+                            bottom: bottom
+                        }
+                    },
+                    scales: {
+                        xAxes: [{
+                            ticks: {
+                                fontColor: text_color,
+                                maxTicksLimit: 6,
+                                maxRotation: 30,
+                                evenLabelSpacing: true,
+                                callback: function(value, index, values) {
+                                    date = new Date(value * 1000);
+                                    return (date.getMonth()+1) + "/" + date.getDate();
+                                }
+                            },
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                                fontColor: text_color,
+                                maxTicksLimit: 5
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: label,
+                                fontSize: 12,
+                                fontColor: text_color
+                            }
+                        }]
+                    }
+                }
+            });
+        }
+    </script>
+    <script>
+        color = 'white'
+        create_graph('beds_available', {{dates}}, 'Beds Available', 'Beds Available', {{beds_available}}, 255, 30, 50, 0.3, color, 0, 0, 0, 0)
+        create_graph('icus_available', {{dates}}, 'ICU Beds Available', 'ICUs Available', {{icus_available}}, 255, 130, 31, 0.3, color, 0, 0, 0, 0)
+        create_graph('ventilators_available', {{dates}}, 'Ventilators Available', 'Ventilators Available', {{ventilators_available}}, 255, 255, 50, 0.3, color, 0, 0, 0, 0)
+        create_graph('coronavirus_tests_available', {{dates}}, 'Coronavirus Tests Available', 'COVID-19 Tests Available', {{coronavirus_tests_available}}, 30, 255, 30, 0.3, color, 0, 0, 0, 0)
+        create_graph('coronavirus_patients', {{dates}}, 'Coronavirus Patients', 'COVID-19 Patients', {{coronavirus_patients}}, 100, 185, 255, 0.3, color, 0, 0, 0, 0)
+        create_graph('coronavirus_patient_proportion', {{dates}}, 'Coronavirus Patient Percent', 'COVID-19 Patient %', {{coronavirus_patient_percent}}, 255, 50, 255, 0.3, color, 0, 0, 0, 0)
+    </script>
 {% endblock content %}
