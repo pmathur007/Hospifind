@@ -2,7 +2,7 @@ from flask import render_template, flash, request, url_for, redirect, jsonify, s
 from flask_login import login_user, current_user, logout_user, login_required
 from application import app, bcrypt, db
 from application.models import Hospital, User, Data
-from application.forms import RegistrationForm, LoginForm, DataForm
+from application.forms import RegistrationForm, LoginForm, DataForm, UpdateAccountForm
 import geocoder
 import numpy as np
 import math
@@ -83,7 +83,7 @@ def hospital_admin_register(admin_hex_id):
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = User(username=form.username.data, email=form.email.data, password=hashed_password, hospital=hospital.id, is_admin=True)
+        user = User(name=form.name.data, username=form.username.data, email=form.email.data, password=hashed_password, hospital=hospital.id, is_admin=True)
         db.session.add(user)
         db.session.commit()
         flash('Your account has been created! You are now able to log in.', 'success')
@@ -99,7 +99,7 @@ def hospital_normal_register(normal_hex_id):
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = User(username=form.username.data, email=form.email.data, password=hashed_password, hospital=hospital.id, is_admin=False)
+        user = User(name=form.name.data, username=form.username.data, email=form.email.data, password=hashed_password, hospital=hospital.id, is_admin=False)
         db.session.add(user)
         db.session.commit()
         flash('Your account has been created! You are now able to log in.', 'success')
@@ -124,7 +124,7 @@ def login():
             hospital_name = Hospital.query.get(user.hospital).name
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
-            flash(f'You are now logged in as {user.username} - {hospital_name}!', 'success')
+            flash(f'Hello {user.name}! You are now logged in as {user.username} - {hospital_name}!', 'success')
             return redirect(next_page) if next_page else redirect(url_for('home'))
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
@@ -132,9 +132,22 @@ def login():
 
 
 @login_required
-@app.route("/account")
+@app.route("/account", methods=['GET', 'POST'])
 def account():
     hospital = Hospital.query.get(current_user.hospital)
+    form = UpdateAccountForm()
+    if form.validate_on_submit():
+        current_user.name = form.name.data
+        current_user.username = form.username.data
+        current_user.email = form.email.data
+        db.session.commit()
+        flash('Your account has been updated!', 'success')
+        return redirect(url_for('account'))
+    elif request.method == 'GET':
+        form.name.data = current_user.name
+        form.username.data = current_user.username
+        form.email.data = current_user.email
+
     if current_user.is_admin:
         users = User.query.filter_by(hospital=current_user.hospital).order_by(not User.is_admin).all()
         data = Data.query.filter_by(hospital=current_user.hospital)
@@ -155,12 +168,13 @@ def account():
                 last = Data.query.filter_by(user=user.id).filter_by(hospital=hospital.id).order_by(Data.date.desc()).first().date.strftime('%m/%d/%y')
             user_info.append((user, user.username, num, last))
 
-        return render_template('admin_account.html', title='Account', hospital=hospital, data=data, users=users, bed_capacity=bed_capacity,
-                               beds_available=beds_available, icus_available=icus_available, ventilators_available=ventilators_available,
-                               coronavirus_tests_available=coronavirus_tests_available, coronavirus_patients=coronavirus_patients,
-                               coronavirus_patient_percent=coronavirus_patient_percent, dates=dates, user_info=user_info)
+        return render_template('admin_account.html', title='Account', form=form, hospital=hospital, data=data, users=users,
+                               bed_capacity=bed_capacity, beds_available=beds_available, icus_available=icus_available,
+                               ventilators_available=ventilators_available, coronavirus_tests_available=coronavirus_tests_available,
+                               coronavirus_patients=coronavirus_patients, coronavirus_patient_percent=coronavirus_patient_percent,
+                               dates=dates, user_info=user_info)
     else:
-        return render_template('normal_account.html', title='Account', hospital_name=hospital.name)
+        return render_template('normal_account.html', title='Account', hospital_name=hospital.name, form=form)
 
 
 @app.route("/hospital/data/<int:hospital_id>")

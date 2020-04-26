@@ -48,6 +48,7 @@ class Hospital(db.Model, UserMixin):
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer(), primary_key=True)
 
+    name = db.Column(db.String, nullable=False)
     username = db.Column(db.String, unique=True, nullable=False)
     email = db.Column(db.String, unique=True, nullable=False)
     is_admin = db.Column(db.Boolean, nullable=False)

@@ -1,16 +1,63 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h1>{{ current_user.username }}</h1>
+    <h1>{{ current_user.name }} (Username: {{ current_user.username }})</h1>
     <h2>{{ hospital.name }} - Admin</h2>
-    <h2>Account</h2>
-    <h4>Update Email</h4>
-    <h4>Update Username</h4>
-    <h4>Update Password</h4>
-    <h2>Users</h2>
+    <h3 class="border-bottom mb-4">Account Information</h3>
+    <form method="POST" action="" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <div class="form-group">
+                    {{ form.name.label(class="form-control-label") }}
+
+                    {% if form.name.errors %}
+                        {{ form.name(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.name.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.name(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.username.label(class="form-control-label") }}
+
+                    {% if form.username.errors %}
+                        {{ form.username(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.username.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.username(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.email.label(class="form-control-label") }}
+                    {% if form.email.errors %}
+                        {{ form.email(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.email.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.email(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+            </fieldset>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-white") }}
+            </div>
+        </form>
     <div>
+      <h3 class="border-bottom mb-4">Users </h3>
       <table class="sortable" style="width:1000px;" border=1 frame=void rules=rows>
         <thead>
           <tr>
+            <th>Name</th>
             <th>Username</th>
             <th>User Type</th>
             <th>Data Inputs</th>
@@ -20,6 +67,7 @@
         <tbody>
         {% for user, username, num_input, last_input in user_info %}
             <tr>
+                <td>{{ user.name }}</td>
                 <td><a href="{{ url_for('view_user', user_id=user.id) }}">{{ username }}</a></td>
                 {% if user.is_admin %}
                     <td>Admin</td>
@@ -32,37 +80,37 @@
         {% endfor %}
         </tbody>
       </table>
-        <h3>Invite More Users</h3>
-        <h3>Invite More Admins</h3>
-        <h3>Reset Invite Links</h3>
-        <h3>Close System</h3>
-    </div>
-    <div class="row">
-          <div class="column">
-              <canvas id="beds_available" width="500" height="200"></canvas>
-          </div>
-          <div class="column">
-              <canvas id="icus_available" width="500" height="200"></canvas>
-          </div>
-    </div>
-    <div class="row">
-          <div class="column">
-              <canvas id="ventilators_available" width="500" height="200"></canvas>
-          </div>
-          <div class="column">
-              <canvas id="coronavirus_tests_available" width="500" height="200"></canvas>
-          </div>
-    </div>
-    <div class="row">
-          <div class="column">
-              <canvas id="coronavirus_patients" width="500" height="200"></canvas>
-          </div>
-          <div class="column">
-              <canvas id="coronavirus_patient_proportion" width="500" height="200"></canvas>
-          </div>
+        <p>Invite More User | Invite More Admins | Reset Invite Links | Close System</p>
     </div>
     <div>
-        <h2>Data</h2>
+        <h3 class="border-bottom mb-4">Graphs</h3>
+        <div class="row">
+              <div class="column">
+                  <canvas id="beds_available" width="500" height="200"></canvas>
+              </div>
+              <div class="column">
+                  <canvas id="icus_available" width="500" height="200"></canvas>
+              </div>
+        </div>
+        <div class="row">
+              <div class="column">
+                  <canvas id="ventilators_available" width="500" height="200"></canvas>
+              </div>
+              <div class="column">
+                  <canvas id="coronavirus_tests_available" width="500" height="200"></canvas>
+              </div>
+        </div>
+        <div class="row">
+              <div class="column">
+                  <canvas id="coronavirus_patients" width="500" height="200"></canvas>
+              </div>
+              <div class="column">
+                  <canvas id="coronavirus_patient_proportion" width="500" height="200"></canvas>
+              </div>
+        </div>
+    </div>
+    <div>
+        <h3 class="border-bottom mb-4">Data</h3>
         <a href="{{ url_for('data_input') }}">Input Data</a>
         <table class="sortable" style="width:90%;" border=1 frame=void rules=rows>
           <thead>
