@@ -37,4 +37,3 @@ for i in range(len(names)):
 
         count += 1
 db.session.commit()
-

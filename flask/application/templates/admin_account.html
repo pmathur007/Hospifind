@@ -80,7 +80,7 @@
         {% endfor %}
         </tbody>
       </table>
-        <p>Invite More User | Invite More Admins | Reset Invite Links | Close System</p>
+      <p>Invite More User | Invite More Admins | Reset Invite Links | Close System</p>
     </div>
     <div>
         <h3 class="border-bottom mb-4">Graphs</h3>
@@ -112,7 +112,8 @@
     <div>
         <h3 class="border-bottom mb-4">Data</h3>
         <a href="{{ url_for('data_input') }}">Input Data</a>
-        <table class="sortable" style="width:90%;" border=1 frame=void rules=rows>
+        <div id="data_table"></div>
+        <!-- <table class="sortable" style="width:90%;" border=1 frame=void rules=rows>
           <thead>
            <tr>
             <th>Date</th>
@@ -141,7 +142,7 @@
                 </tr>
             {% endfor %}
          </tbody>
-        </table>
+        </table> -->
     </div>
     <script>
         function create_graph(canvas_name, times, title, label, data, color1, color2, color3, color4, text_color, left, right, top, bottom){
@@ -217,7 +218,7 @@
         }
     </script>
     <script>
-        color = 'white'
+        color = 'black'
         create_graph('beds_available', {{dates}}, 'Beds Available', 'Beds Available', {{beds_available}}, 255, 30, 50, 0.3, color, 0, 0, 0, 0)
         create_graph('icus_available', {{dates}}, 'ICU Beds Available', 'ICUs Available', {{icus_available}}, 255, 130, 31, 0.3, color, 0, 0, 0, 0)
         create_graph('ventilators_available', {{dates}}, 'Ventilators Available', 'Ventilators Available', {{ventilators_available}}, 255, 255, 50, 0.3, color, 0, 0, 0, 0)

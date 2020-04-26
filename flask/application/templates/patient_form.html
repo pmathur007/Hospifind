@@ -1,7 +1,47 @@
 {% extends "layout.html" %}
 {% block content %}
     <h1>Get Personalized Results</h1>
-    <div id="patient_form"></div>
+    <form id="pform" action="#" method="post">
+        <fieldset class="pfield">
+            <legend>Are you in a serious/life-threatening condition?</legend>
+            <label class="plabel"><input type="radio" name="emergency"> Yes</label>
+            <label class="plabel"><input type="radio" name="emergency"> No</label>
+        </fieldset>
+        <fieldset class="pfield">
+            <legend>Age</legend>
+            <label class="plabel"><input type="radio" name="age"> Younger than 18</label>
+            <label class="plabel"><input type="radio" name="age"> 18-64</label>
+            <label class="plabel"><input type="radio" name="age"> 65+</label>
+        </fieldset>
+        <fieldset class="pfield">
+            <legend>Which, if any, of the following symptoms do you have?</legend>
+            <label class="plabel"><input type="checkbox" name="symptoms"> Fever</label>
+            <label class="plabel"><input type="checkbox" name="symptoms"> Dry Cough</label>
+            <label class="plabel"><input type="checkbox" name="symptoms"> Fatigue</label>
+            <label class="plabel"><input type="checkbox" name="symptoms"> Phlegm</label>
+            <label class="plabel"><input type="checkbox" name="symptoms"> Shortness of Breath</label>
+            <label class="plabel"><input type="checkbox" name="symptoms"> Sore Throat or Headache</label>
+            <label class="plabel"><input type="checkbox" name="symptoms"> Chills</label>
+            <label class="plabel"><input type="checkbox" name="symptoms"> Vomiting</label>
+            <label class="plabel"><input type="checkbox" name="symptoms"> Nasal Congestion</label>
+            <label class="plabel"><input type="checkbox" name="symptoms"> Diarrhea</label>
+        </fieldset>
+        <fieldset class="pfield">
+            <legend>Which, if any, of the following underlying conditions do you have?</legend>
+            <label class="plabel"><input type="checkbox" name="conditions"> High Blood Pressure</label>
+            <label class="plabel"><input type="checkbox" name="conditions"> Heart Problems</label>
+            <label class="plabel"><input type="checkbox" name="conditions"> Diabetes</label>
+            <label class="plabel"><input type="checkbox" name="conditions"> Asthma</label>
+            <label class="plabel"><input type="checkbox" name="conditions"> Any smoking-related condition</label>
+        </fieldset>
+        <fieldset class="pfield">
+            <legend>Have you been in an area where COVID‑19 is widespread or have you been in contact with someone known to have COVID-19?</legend>
+            <label class="plabel"><input type="radio" name="near_covid"> Yes</label>
+            <label class="plabel"><input type="radio" name="near_covid"> No</label>
+            <label class="plabel"><input type="radio" name="near_covid"> I don't know</label>
+        </fieldset>
+        <input type="submit" class="btn btn-light" value="Submit">
+    </form>
 {% endblock content %}
 {% block scripts %}
     <script type="text/javascript" src="{{ url_for('static', filename='js/patient_form.js') }}"></script>

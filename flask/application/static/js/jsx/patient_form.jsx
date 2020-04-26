@@ -3,6 +3,20 @@ import { Formik } form 'formik';
 
 'use_strict';
 
+const PatientForm = () => {
+    const formik = useFormik({
+        onSubmit: values => {
+
+        },
+    })
+
+    return (
+        <form onSubmit={formik.handleSubmit}>
+
+        </form>
+    )
+}
+
 function RadioInput(props) {
     return (
         <label>
@@ -48,14 +62,17 @@ class RadioField extends React.Component {
     }
 }
 
-class CheckboxField extends React.Component {
-
-}
-
 class PatientForm extends React.Component {
+    constructor(props) {
+        this.state = {
+
+        }
+    }
+
     render() {
         return (
             <form>
+
             </form>
         );
     }

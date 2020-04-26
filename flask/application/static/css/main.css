@@ -2,7 +2,6 @@
   font-family: Ubuntu;
   margin: 0;
   padding: 0;
-  color: white;
 }
 
 table.sortable thead{
@@ -15,7 +14,6 @@ a:hover {
 }
 
 body {
-  background: black;
   margin-top: 5rem;
 }
 
@@ -32,8 +30,9 @@ header {
 }
 
 .hospital_result {
+  padding-bottom: 10px;
   margin-bottom: 1vh;
-  border-left: 2px solid #d9d9d9;
+  border-bottom: 2px solid #d9d9d9;
 }
 .hospital_result h3 {
   font-size: 1.2em;
@@ -50,4 +49,23 @@ header {
   text-decoration: none;
 }
 
+.pfield {
+    text-align: center;
+}
+
+.plabel {
+    text-align: center;
+    padding: auto;
+    display: block;
+    background: #f2f2f2;
+    border-radius: 3px;
+}
+
+.plabel input {
+    display: none;
+}
+
+footer {
+    text-align: center;
+}
 /*# sourceMappingURL=main.css.map */
