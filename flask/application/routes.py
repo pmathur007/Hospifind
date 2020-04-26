@@ -7,6 +7,7 @@ import geocoder
 import numpy as np
 import math
 from application.data_analysis import HomeDecision, PersonalDecision
+from datetime import datetime
 
 
 @app.route("/")
@@ -143,7 +144,7 @@ def account():
             bed_capacity.append(d.bed_capacity); beds_available.append(d.beds_available)
             icus_available.append(d.icus_available); ventilators_available.append(d.ventilators_available)
             coronavirus_tests_available.append(d.coronavirus_tests_available); coronavirus_patients.append(d.coronavirus_patients)
-            coronavirus_patient_percent.append(d.coronavirus_patient_percent*100); dates.append(d.date)
+            coronavirus_patient_percent.append(d.coronavirus_patient_percent*100); dates.append((d.date-datetime.utcfromtimestamp(0)).total_seconds())
         return render_template('admin_account.html', title='Account', hospital=hospital, data=data, users=users, bed_capacity=bed_capacity,
                                beds_available=beds_available, icus_available=icus_available, ventilators_available=ventilators_available,
                                coronavirus_tests_available=coronavirus_tests_available, coronavirus_patients=coronavirus_patients,
