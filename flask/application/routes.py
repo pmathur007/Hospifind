@@ -136,7 +136,7 @@ def login():
 def account():
     hospital = Hospital.query.get(current_user.hospital)
     if current_user.is_admin:
-        users = User.query.filter_by(hospital=current_user.hospital)
+        users = User.query.filter_by(hospital=current_user.hospital).order_by(not User.is_admin).all()
         data = Data.query.filter_by(hospital=current_user.hospital)
         bed_capacity = []; beds_available = []; icus_available = []; ventilators_available = []
         coronavirus_tests_available = []; coronavirus_patients = []; coronavirus_patient_percent = []; dates = []
@@ -145,21 +145,20 @@ def account():
             icus_available.append(d.icus_available); ventilators_available.append(d.ventilators_available)
             coronavirus_tests_available.append(d.coronavirus_tests_available); coronavirus_patients.append(d.coronavirus_patients)
             coronavirus_patient_percent.append(d.coronavirus_patient_percent*100); dates.append((d.date-datetime.utcfromtimestamp(0)).total_seconds())
-        num_inputs = []
-        last_input = []
+        user_info = []
         for user in users:
             inputs = Data.query.filter_by(user=user.id).filter_by(hospital=hospital.id).all()
-            num_inputs.append(len(inputs))
+            num = len(inputs)
             if len(inputs) == 0:
-                last_input.append("N/A")
+                last = ("N/A")
             else:
-                last_input.append(Data.query.filter_by(user=user.id).filter_by(hospital=hospital.id).order_by(Data.date.desc()).first().date)
+                last = Data.query.filter_by(user=user.id).filter_by(hospital=hospital.id).order_by(Data.date.desc()).first().date.strftime('%m/%d/%y')
+            user_info.append((user, user.username, num, last))
 
-        print(num_inputs, last_input, sep="\n")
         return render_template('admin_account.html', title='Account', hospital=hospital, data=data, users=users, bed_capacity=bed_capacity,
                                beds_available=beds_available, icus_available=icus_available, ventilators_available=ventilators_available,
                                coronavirus_tests_available=coronavirus_tests_available, coronavirus_patients=coronavirus_patients,
-                               coronavirus_patient_percent=coronavirus_patient_percent, dates=dates, num_inputs=num_inputs, last_input=last_input)
+                               coronavirus_patient_percent=coronavirus_patient_percent, dates=dates, user_info=user_info)
     else:
         return render_template('normal_account.html', title='Account', hospital_name=hospital.name)
 

@@ -5,6 +5,11 @@
   color: white;
 }
 
+table.sortable thead{
+    background-color:#a9a9a9;
+    cursor: default;
+}
+
 a:hover {
   text-decoration: none;
 }
