@@ -2,7 +2,7 @@ from flask import render_template, flash, request, url_for, redirect, jsonify, s
 from flask_login import login_user, current_user, logout_user, login_required
 from application import app, bcrypt, db
 from application.models import Hospital, User, Data
-from application.forms import RegistrationForm, LoginForm, DataForm, UpdateAccountForm
+from application.forms import RegistrationForm, LoginForm, DataForm, UpdateAccountForm, OpenSystemForm, CloseSystemForm, RegenerateForm
 import geocoder
 import numpy as np
 import math
@@ -131,11 +131,14 @@ def login():
     return render_template('login.html', title='Login', form=form)
 
 
-@login_required
 @app.route("/account", methods=['GET', 'POST'])
+@login_required
 def account():
     hospital = Hospital.query.get(current_user.hospital)
     form = UpdateAccountForm()
+    open_button = OpenSystemForm()
+    close_button = CloseSystemForm()
+    regenerate_button = RegenerateForm()
     if form.validate_on_submit():
         current_user.name = form.name.data
         current_user.username = form.username.data
@@ -149,6 +152,16 @@ def account():
         form.email.data = current_user.email
 
     if current_user.is_admin:
+        if open_button.validate_on_submit() or regenerate_button.validate_on_submit():
+            print('here')
+            hospital.regenerate_hex_id()
+            db.session.commit()
+            return redirect('account')
+        elif close_button.validate_on_submit():
+            hospital.close_system()
+            db.session.commit()
+            return redirect('account')
+
         users = User.query.filter_by(hospital=current_user.hospital).order_by(not User.is_admin).all()
         data = Data.query.filter_by(hospital=current_user.hospital)
         bed_capacity = []; beds_available = []; icus_available = []; ventilators_available = []
@@ -163,16 +176,20 @@ def account():
             inputs = Data.query.filter_by(user=user.id).filter_by(hospital=hospital.id).all()
             num = len(inputs)
             if len(inputs) == 0:
-                last = ("N/A")
+                last = "N/A"
             else:
                 last = Data.query.filter_by(user=user.id).filter_by(hospital=hospital.id).order_by(Data.date.desc()).first().date.strftime('%m/%d/%y')
             user_info.append((user, user.username, num, last))
+
+        admin_invite_link = "127.0.0.1:5000/hospital/register/admin/" + hospital.admin_hex_id
+        user_invite_link = "127.0.0.1:5000/hospital/register/" + hospital.normal_hex_id
 
         return render_template('admin_account.html', title='Account', form=form, hospital=hospital, data=data, users=users,
                                bed_capacity=bed_capacity, beds_available=beds_available, icus_available=icus_available,
                                ventilators_available=ventilators_available, coronavirus_tests_available=coronavirus_tests_available,
                                coronavirus_patients=coronavirus_patients, coronavirus_patient_percent=coronavirus_patient_percent,
-                               dates=dates, user_info=user_info)
+                               dates=dates, user_info=user_info, admin_invite_link=admin_invite_link, user_invite_link=user_invite_link,
+                               open_button=open_button, close_button=close_button, regenerate_button=regenerate_button)
     else:
         return render_template('normal_account.html', title='Account', hospital_name=hospital.name, form=form)
 
@@ -204,8 +221,24 @@ def patient_form():
 @app.route("/users/<int:user_id>")
 def view_user(user_id):
     requested_user = User.query.filter_by(id=user_id).first_or_404()
-    if requested_user.id == current_user.id or (current_user.is_admin and requested_user.hospital == current_user.hospital):
+    if not current_user is None and (requested_user.id == current_user.id or (current_user.is_admin and requested_user.hospital == current_user.hospital)):
         return render_template('user.html', user=requested_user)
     else:
         flash('You are not authorized to access that user.', 'danger')
-        return redirect(url_for('account'))
+        return redirect(url_for('home'))
+
+
+@app.errorhandler(404)
+def error_404(error):
+    return render_template('errors/404.html'), 404
+
+
+@app.errorhandler(403)
+def error_403(error):
+    return render_template('errors/403.html'), 403
+
+
+@app.errorhandler(500)
+def error_500(error):
+    return render_template('errors/500.html'), 500
+

@@ -18,7 +18,8 @@ body {
 }
 
 header {
-  color: #e60000;
+  background: black;
+  color: white;
 }
 
 #logo_title {
