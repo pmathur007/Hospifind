@@ -33,52 +33,95 @@
     <p>Coronavirus Tests Available Data: {{ coronavirus_tests_available }}</p>
     <p>Coronavirus Patients: {{ coronavirus_patients }}</p>
     <p>Coronavirus Patient Proportion: {{ coronavirus_patient_percent }}</p> -->
-    <canvas id="chart" width="400" height="100"></canvas>
+    <div class="row">
+          <div class="column">
+              <canvas id="beds_available" width="400" height="150"></canvas>
+          </div>
+          <div class="column">
+              <canvas id="icus_available" width="400" height="150"></canvas>
+          </div>
+    </div>
+    <div class="row">
+          <div class="column">
+              <canvas id="ventilators_available" width="400" height="150"></canvas>
+          </div>
+          <div class="column">
+              <canvas id="coronavirus_tests_available" width="400" height="150"></canvas>
+          </div>
+    </div>
+    <div class="row">
+          <div class="column">
+              <canvas id="coronavirus_patients" width="400" height="150"></canvas>
+          </div>
+          <div class="column">
+              <canvas id="coronavirus_patient_proportion" width="400" height="150"></canvas>
+          </div>
+    </div>
     <script>
-        const ctx = document.getElementById('chart').getContext('2d');
-        const myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-                datasets: [{
-                    label: 'Beds Available',
-                    data: {{ beds_available }},
-                    backgroundColor: 'rgba(255, 99, 132, 0.3)',
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    borderWidth: 2,
-                }]
-            },
-            options: {
-                title: {
-                    display: true,
-                    text: "Beds Available",
-                    fontSize: 24,
-                    fontColor: 'rgba(0, 0, 0, 1)'
-                },
-                legend: {
-                    display: false
-                },
-                layout: {
-                    padding: {
-                        left: 0,
-                        right: 0,
-                        top: 0,
-                        bottom: 0
-                    }
-                },
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true,
-                        },
-                        scaleLabel: {
-                            display: true,
-                            labelString: '# of Beds Available',
-                            fontSize: 16
-                        }
+        function create_graph(canvas_name, title, label, data, color1, color2, color3, color4, text_color, left, right, top, bottom){
+            var ctx = document.getElementById(canvas_name).getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                    datasets: [{
+                        label: title,
+                        data: data,
+                        backgroundColor: 'rgba(' + color1 + ', ' + color2 +', ' + color3 + ', ' + color4 + ')',
+                        borderColor: 'rgba(' + color1 + ', ' + color2 +', ' + color3 + ', 1)',
+                        borderWidth: 2
                     }]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: title,
+                        fontSize: 18,
+                        fontColor: text_color,
+                        fontFamily: 'Helvetica'
+                    },
+                    legend: {
+                        display: false
+                    },
+                    layout: {
+                        padding: {
+                            left: left,
+                            right: right,
+                            top: top,
+                            bottom: bottom
+                        }
+                    },
+                    scales: {
+                        xAxes: [{
+                            ticks: {
+                                fontColor: text_color
+                            }
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                                fontColor: text_color,
+                                maxTicksLimit: 5
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: label,
+                                fontSize: 12,
+                                fontColor: text_color
+                            }
+                        }]
+                    }
                 }
-            }
-        });
+            });
+        }
+    </script>
+    <script>
+        color = 'white'
+        create_graph('beds_available', 'Beds Available', 'Beds Available', {{beds_available}}, 255, 30, 50, 0.3, color, 0, 0, 0, 0)
+        create_graph('icus_available', 'ICU Beds Available', 'ICUs Available', {{icus_available}}, 255, 130, 31, 0.3, color, 0, 0, 0, 0)
+        create_graph('ventilators_available', 'Ventilators Available', 'Ventilators Available', {{ventilators_available}}, 255, 255, 50, 0.3, color, 0, 0, 0, 0)
+        create_graph('coronavirus_tests_available', 'Coronavirus Tests Available', 'COVID-19 Tests Available', {{coronavirus_tests_available}}, 30, 255, 30, 0.3, color, 0, 0, 0, 0)
+        create_graph('coronavirus_patients', 'Coronavirus Patients', 'COVID-19 Patients', {{coronavirus_patients}}, 100, 185, 255, 0.3, color, 0, 0, 0, 0)
+        create_graph('coronavirus_patient_proportion', 'Coronavirus Patient Percent', 'COVID-19 Patient %', {{coronavirus_patient_percent}}, 255, 50, 255, 0.3, color, 0, 0, 0, 0)
     </script>
 {% endblock content %}
