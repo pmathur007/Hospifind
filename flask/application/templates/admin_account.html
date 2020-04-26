@@ -3,14 +3,27 @@
     <h1>{{ current_user.username }}</h1>
     <h2>{{ hospital.name }} - Admin</h2>
     <h2>Users</h2>
-    {% for user in users %}
-        <p>
-            <a href="{{ url_for('view_user', user_id=user.id) }}">{{ user.username }}</a>
-            {% if user.is_admin %}
-                - Admin
-            {% endif %}
-        </p>
-    {% endfor %}
+    <div>
+      <table style="width:1000px;" border=1 frame=void rules=rows>
+          <tr>
+            <th>Username</th>
+            <th>User Type</th>
+            <th>Data Inputs</th>
+            <th>Last Input</th>
+          </tr>
+        {% for user in users %}
+            <tr>
+                <td><a href="{{ url_for('view_user', user_id=user.id) }}">{{ user.username }}</a></td>
+                {% if user.is_admin %}
+                    <td>Admin</td>
+                {% else %}
+                    <td>Normal</td>
+                {% endif %}
+                <td>Get from num_inputs</td>
+                <td>Get from last_input</td>
+        {% endfor %}
+      </table>
+    </div>
     <div class="row">
           <div class="column">
               <canvas id="beds_available" width="500" height="150"></canvas>
