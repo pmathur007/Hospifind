@@ -21,6 +21,7 @@ class Hospital(db.Model, UserMixin):
     longitude = db.Column(db.Integer, nullable=True)
     admin_hex_id = db.Column(db.String, default=lambda: secrets.token_hex(32), unique=True, nullable=True)
     normal_hex_id = db.Column(db.String, default=lambda: secrets.token_hex(32), unique=True, nullable=True)
+    system_open = db.Column(db.Boolean, default=True)
 
     data = db.relationship('Data', backref='input', lazy=True)
 
@@ -40,6 +41,10 @@ class Hospital(db.Model, UserMixin):
     def regenerate_hex_id(self):
         self.admin_hex_id = secrets.token_hex(32)
         self.normal_hex_id = secrets.token_hex(32)
+
+    def close_system(self):
+        self.admin_hex_id = None
+        self.normal_hex_id = None
 
     def __repr__(self):
         return f"Hospital('{self.id}', '{self.name}', '{self.state}')"
