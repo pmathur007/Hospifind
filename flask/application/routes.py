@@ -221,7 +221,7 @@ def patient_form():
 @app.route("/users/<int:user_id>")
 def view_user(user_id):
     requested_user = User.query.filter_by(id=user_id).first_or_404()
-    if not current_user and (requested_user.id == current_user.id or (current_user.is_admin and requested_user.hospital == current_user.hospital)):
+    if not current_user is None and (requested_user.id == current_user.id or (current_user.is_admin and requested_user.hospital == current_user.hospital)):
         return render_template('user.html', user=requested_user)
     else:
         flash('You are not authorized to access that user.', 'danger')

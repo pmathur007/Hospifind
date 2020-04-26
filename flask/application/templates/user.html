@@ -1,4 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h1>{{ user.username }}</h1>
+    <h1>{{ current_user.name }} (Username: {{ current_user.username }})</h1>
+    <h2>{{ hospital_name }}</h2>
+
 {% endblock content %}
