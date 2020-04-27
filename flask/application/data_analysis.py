@@ -23,7 +23,7 @@ class Hospital:
         self.icus = icus
         self.vents = vents
         self.tests = tests
-        self.corona_percent = corona_percent
+        self.corona_percent = corona_percent/100
 
     def info(self):
         return ""+str(self.capacity)+","+str(self.beds)+","+str(self.icus)+","+str(self.vents)+","+str(self.tests)+","+str(self.corona_percent)

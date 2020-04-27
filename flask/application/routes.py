@@ -181,7 +181,7 @@ def account():
                                bed_capacity=bed_capacity, beds_available=beds_available, icus_available=icus_available,
                                ventilators_available=ventilators_available, coronavirus_tests_available=coronavirus_tests_available,
                                coronavirus_patients=coronavirus_patients, coronavirus_patient_percent=coronavirus_patient_percent,
-                               dates=dates, user_info=user_info, admin_invite_link=admin_invite_link, user_invite_link=user_invite_link)
+                               dates=dates[::-1], user_info=user_info, admin_invite_link=admin_invite_link, user_invite_link=user_invite_link)
     else:
         return render_template('normal_account.html', title='Account', hospital_name=hospital.name, form=form)
 
@@ -220,15 +220,17 @@ def view_user(user_id):
         return redirect(url_for('home'))
 
 
-@app.route("/hospital/data/<int:data_id>/delete", methods=['POST'])
+@app.route("/hospital/data/<int:data_id>/delete", methods=['POST', 'GET'])
 @login_required
 def delete_data(data_id):
     data = Data.query.get_or_404(data_id)
     if (current_user is None) or (current_user != User.query.get(data.user) and not (current_user.is_admin and data.hospital == current_user.hospital)):
         abort(403)
+    date = data.date
+    user = User.query.get(data.user).name
     db.session.delete(data)
     db.session.commit()
-    flash('Your post has been deleted!', 'success')
+    flash(f'Your data submitted on {date.strftime("%m/%d")} by {user} has been deleted!', 'success')
     return redirect(url_for('account'))
 
 
