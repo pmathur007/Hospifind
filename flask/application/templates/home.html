@@ -3,7 +3,7 @@
     <section id="react_container"></section>
     <section>
         <h2>Get the Care You Need</h2>
-        <p>Hospifind shows you which hospitals have the capcity to treat you to ensure you get the care you need. Scroll down to see nearby hospitals and their treatment capacities. For personalized results, click the button below.</p>
+        <p>Hospifind shows you which hospitals have the capacity to treat you to ensure you get the care you need. Scroll down to see nearby hospitals and their treatment capacities. For personalized results, click the button below.</p>
         <a href="{{ url_for('patient_form') }}">Get Personalized Results</a>
     </section>
     <section>
@@ -12,7 +12,9 @@
             <div class="hospital_result">
                 <h3>{{ hospital.name }}</h3>
                 <p>{{ hospital.address }}</p>
-                <a href="{{ hospital.directions_link }}">Get directions</a>
+                <!-- <p>{{ hospital.admin_hex_id }}</p>
+                <p>{{ hospital.normal_hex_id }}</p> -->
+                <a href="{{ hospital.directions_link }}" class="btn btn-dark">Get directions</a>
             </div>
         {% endfor %}
     </section>

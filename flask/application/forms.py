@@ -68,15 +68,3 @@ class UpdateAccountForm(FlaskForm):
             user = User.query.filter_by(email=email.data).first()
             if user:
                 raise ValidationError('That email is taken. Please choose a different one!')
-
-
-class OpenSystemForm(FlaskForm):
-    submit = SubmitField('Open System')
-
-
-class CloseSystemForm(FlaskForm):
-    submit = SubmitField('Close System')
-
-
-class RegenerateForm(FlaskForm):
-    submit = SubmitField('Regenerate Links')

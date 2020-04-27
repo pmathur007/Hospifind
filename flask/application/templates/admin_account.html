@@ -3,7 +3,8 @@
     <h1>{{ current_user.name }} (Username: {{ current_user.username }})</h1>
     <h2>{{ hospital.name }} - Admin</h2>
     <h3 class="border-bottom mb-4">Account Information</h3>
-    <form method="POST" action="" enctype="multipart/form-data">
+    <div>
+        <form method="POST" action="" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
                 <div class="form-group">
@@ -52,6 +53,7 @@
                 {{ form.submit(class="btn btn-light") }}
             </div>
         </form>
+    </div>
     <div>
       <h3 class="border-bottom mb-4">Users </h3>
       <table class="sortable border-bottom" style="width:1000px;" border=1 frame=void rules=rows>
@@ -80,38 +82,20 @@
         {% endfor %}
         </tbody>
       </table>
-<<<<<<< HEAD
-      <p>Invite More User | Invite More Admins | Reset Invite Links | Close System</p>
-=======
-        <a href='{{ admin_invite_link }}'>{{ admin_invite_link }}</a>
-        <a href='{{ user_invite_link }}'>{{ user_invite_link }}</a>
-        <div class="row">
-            <div class="column">
-                <form method="POST" action="" enctype="multipart/form-data">
-                    {{ form.hidden_tag() }}
-                    <fieldset class="form-group">
-                        <div class="form-group">
-                            <div class="form-group">
-                                {{ regenerate_button.submit(class="ml-2 mt-2 btn btn-light") }}
-                            </div>
-                        </div>
-                    </fieldset>
-                </form>
+        {% if hospital.system_open %}
+            <a href='{{ admin_invite_link }}'>{{ admin_invite_link }}</a>
+            <a href='{{ user_invite_link }}'>{{ user_invite_link }}</a>
+            <div class="row">
+                <div class="column">
+                    <button class="ml-3 mt-2 mb-2 btn btn-light" data-toggle="modal" data-target="#regenerateModal">Regenerate Links</button>
+                </div>
+                <div class="column">
+                    <button class="ml-3 mt-2 mb-2 btn btn-light" data-toggle="modal" data-target="#closeModal">Close System</button>
+                </div>
             </div>
-            <div class="column">
-                <form method="POST" action="" enctype="multipart/form-data">
-                    {{ form.hidden_tag() }}
-                    <fieldset class="form-group">
-                        <div class="form-group">
-                            <div class="form-group">
-                                {{ close_button.submit(class="ml-2 mt-2 btn btn-light") }}
-                            </div>
-                        </div>
-                    </fieldset>
-                </form>
-            </div>
-
->>>>>>> da869ef01ba54ebf79cb46a6c2eb047eec61c0fd
+            {% else %}
+                <button class="mt-2 mb-2 btn btn-light" data-toggle="modal" data-target="#openModal">Open System</button>
+            {% endif %}
     </div>
     <div>
         <h3 class="border-bottom mb-4">Graphs</h3>
@@ -143,12 +127,8 @@
     <div>
         <h3 class="border-bottom mb-4">Data</h3>
         <a href="{{ url_for('data_input') }}">Input Data</a>
-<<<<<<< HEAD
         <div id="data_table"></div>
-        <!-- <table class="sortable" style="width:90%;" border=1 frame=void rules=rows>
-=======
         <table class="sortable border-bottom" style="width:90%;" border=1 frame=void rules=rows>
->>>>>>> da869ef01ba54ebf79cb46a6c2eb047eec61c0fd
           <thead>
            <tr>
             <th>Date</th>
@@ -167,17 +147,18 @@
                 <tr>
                     <td>{{ d.date.strftime('%m/%d/%y') }}</td>
                     <td><a class="mr-2" href="{{ url_for('view_user', user_id=d.user) }}">{{ d.user }}</a></td>
-                    <td><p class="article-content">{{ d.bed_capacity }}</p></td>
-                    <td><p class="article-content">{{ d.beds_available }}</p></td>
-                    <td><p class="article-content">{{ d.icus_available }}</p></td>
-                    <td><p class="article-content">{{ d.ventilators_available }}</p></td>
-                    <td><p class="article-content">{{ d.coronavirus_tests_available }}</p></td>
-                    <td><p class="article-content">{{ d.coronavirus_patients }}</p></td>
-                    <td><p class="article-content">{{ d.coronavirus_patient_percent * 100 }}</p></td>
+                    <td><p>{{ d.bed_capacity }}</p></td>
+                    <td><p>{{ d.beds_available }}</p></td>
+                    <td><p>{{ d.icus_available }}</p></td>
+                    <td><p>{{ d.ventilators_available }}</p></td>
+                    <td><p>{{ d.coronavirus_tests_available }}</p></td>
+                    <td><p>{{ d.coronavirus_patients }}</p></td>
+                    <td><p>{{ d.coronavirus_patient_percent * 100 }}</p></td>
+                    <td><a href="{{ url_for('delete_data', data_id=d.id) }}" class="mt-1 mb-1 btn btn-danger">Delete</a></td>
                 </tr>
             {% endfor %}
          </tbody>
-        </table> -->
+        </table>
     </div>
     <script>
         function create_graph(canvas_name, times, title, label, data, color1, color2, color3, color4, text_color, left, right, top, bottom){
@@ -199,8 +180,8 @@
                         display: true,
                         text: title,
                         fontSize: 18,
-                        fontColor: text_color,
-                        fontFamily: 'Helvetica'
+                        fontFamily: 'Ubuntu',
+                        fontColor: text_color
                     },
                     legend: {
                         display: false
@@ -225,6 +206,7 @@
                         xAxes: [{
                             ticks: {
                                 fontColor: text_color,
+                                fontFamily: 'Ubuntu',
                                 maxTicksLimit: 6,
                                 maxRotation: 30,
                                 evenLabelSpacing: true,
@@ -238,13 +220,15 @@
                             ticks: {
                                 beginAtZero: true,
                                 fontColor: text_color,
+                                fontFamily: 'Ubuntu',
                                 maxTicksLimit: 5
                             },
                             scaleLabel: {
                                 display: true,
                                 labelString: label,
                                 fontSize: 12,
-                                fontColor: text_color
+                                fontColor: text_color,
+                                fontFamily: 'Ubuntu'
                             }
                         }]
                     }
@@ -253,7 +237,7 @@
         }
     </script>
     <script>
-        color = 'black'
+        color = 'white'
         create_graph('beds_available', {{dates}}, 'Beds Available', 'Beds Available', {{beds_available}}, 255, 30, 50, 0.3, color, 0, 0, 0, 0)
         create_graph('icus_available', {{dates}}, 'ICU Beds Available', 'ICUs Available', {{icus_available}}, 255, 130, 31, 0.3, color, 0, 0, 0, 0)
         create_graph('ventilators_available', {{dates}}, 'Ventilators Available', 'Ventilators Available', {{ventilators_available}}, 255, 255, 50, 0.3, color, 0, 0, 0, 0)
@@ -261,4 +245,58 @@
         create_graph('coronavirus_patients', {{dates}}, 'Coronavirus Patients', 'COVID-19 Patients', {{coronavirus_patients}}, 100, 185, 255, 0.3, color, 0, 0, 0, 0)
         create_graph('coronavirus_patient_proportion', {{dates}}, 'Coronavirus Patient Percent', 'COVID-19 Patient %', {{coronavirus_patient_percent}}, 255, 50, 255, 0.3, color, 0, 0, 0, 0)
     </script>
+    <div class="modal custom fade" id="regenerateModal" tabindex="-1" role="dialog" aria-labelledby="regenerateModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="regenerateModalLabel">Are you sure you want to regenerate links? This will deactivate all current invitation links and generate new ones instead.</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+              <form action="{{ url_for('regenerate_links', hospital_id=hospital.id) }}" method="POST">
+                <input class="btn btn-primary" type="submit" value="Regenerate">
+              </form>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="modal custom fade" id="closeModal" tabindex="-1" role="dialog" aria-labelledby="closeModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="closeModalLabel">Are you sure you want to close your system? This will deactivate all current invitation links and prevent any new users from joining until the system is reopened.</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+              <form action="{{ url_for('close_system', hospital_id=hospital.id) }}" method="POST">
+                <input class="btn btn-danger" type="submit" value="Close System">
+              </form>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="modal custom fade" id="openModal" tabindex="-1" role="dialog" aria-labelledby="openModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="openModalLabel">Are you sure you want to open your system? This will reactive your most recent invitation links and allow new users to join.</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+              <form action="{{ url_for('open_system', hospital_id=hospital.id) }}" method="POST">
+                <input class="btn btn-success" type="submit" value="Open System">
+              </form>
+            </div>
+          </div>
+        </div>
+    </div>
 {% endblock content %}
