@@ -1,3 +1,4 @@
 .idea
 hospifindvenv
 flask/application/static/js/node_modules
+flask/application/templates/site.db
