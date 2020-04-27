@@ -2,6 +2,7 @@
   font-family: Ubuntu;
   margin: 0;
   padding: 0;
+  color: white;
 }
 
 table.sortable thead{
@@ -14,6 +15,7 @@ a:hover {
 }
 
 body {
+  background: black;
   margin-top: 5rem;
 }
 
@@ -58,12 +60,37 @@ header {
     text-align: center;
     padding: auto;
     display: block;
-    background: #f2f2f2;
+    background: #333333;
     border-radius: 3px;
 }
 
 .plabel input {
     display: none;
+}
+
+.modal-header {
+    background-color: black;
+    color: white;
+}
+
+.modal-content {
+    background-color: black;
+    color: white;
+}
+
+.modal-body {
+    background-color: black;
+    color: white;
+}
+
+.modal-footer {
+    background-color: black;
+    color: white;
+}
+
+.modal-footer {
+    background-color: black;
+    color: white;
 }
 
 footer {

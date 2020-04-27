@@ -1,8 +1,8 @@
-from flask import render_template, flash, request, url_for, redirect, jsonify, session
+from flask import render_template, flash, request, url_for, redirect, jsonify, session, abort
 from flask_login import login_user, current_user, logout_user, login_required
 from application import app, bcrypt, db
 from application.models import Hospital, User, Data
-from application.forms import RegistrationForm, LoginForm, DataForm, UpdateAccountForm, OpenSystemForm, CloseSystemForm, RegenerateForm
+from application.forms import RegistrationForm, LoginForm, DataForm, UpdateAccountForm
 import geocoder
 import numpy as np
 import math
@@ -135,10 +135,9 @@ def login():
 @login_required
 def account():
     hospital = Hospital.query.get(current_user.hospital)
+    print(hospital.id)
     form = UpdateAccountForm()
-    open_button = OpenSystemForm()
-    close_button = CloseSystemForm()
-    regenerate_button = RegenerateForm()
+
     if form.validate_on_submit():
         current_user.name = form.name.data
         current_user.username = form.username.data
@@ -152,18 +151,8 @@ def account():
         form.email.data = current_user.email
 
     if current_user.is_admin:
-        if open_button.validate_on_submit() or regenerate_button.validate_on_submit():
-            print('here')
-            hospital.regenerate_hex_id()
-            db.session.commit()
-            return redirect('account')
-        elif close_button.validate_on_submit():
-            hospital.close_system()
-            db.session.commit()
-            return redirect('account')
-
-        users = User.query.filter_by(hospital=current_user.hospital).order_by(not User.is_admin).all()
-        data = Data.query.filter_by(hospital=current_user.hospital)
+        users = User.query.filter_by(hospital=current_user.hospital).order_by(User.is_admin.desc()).all()
+        data = Data.query.filter_by(hospital=current_user.hospital).order_by(Data.date.desc()).all()
         bed_capacity = []; beds_available = []; icus_available = []; ventilators_available = []
         coronavirus_tests_available = []; coronavirus_patients = []; coronavirus_patient_percent = []; dates = []
         for d in data:
@@ -181,15 +170,18 @@ def account():
                 last = Data.query.filter_by(user=user.id).filter_by(hospital=hospital.id).order_by(Data.date.desc()).first().date.strftime('%m/%d/%y')
             user_info.append((user, user.username, num, last))
 
-        admin_invite_link = "127.0.0.1:5000/hospital/register/admin/" + hospital.admin_hex_id
-        user_invite_link = "127.0.0.1:5000/hospital/register/" + hospital.normal_hex_id
+        if hospital.system_open:
+            admin_invite_link = "127.0.0.1:5000/hospital/register/admin/" + hospital.admin_hex_id
+            user_invite_link = "127.0.0.1:5000/hospital/register/" + hospital.normal_hex_id
+        else:
+            admin_invite_link = ""
+            user_invite_link = ""
 
         return render_template('admin_account.html', title='Account', form=form, hospital=hospital, data=data, users=users,
                                bed_capacity=bed_capacity, beds_available=beds_available, icus_available=icus_available,
                                ventilators_available=ventilators_available, coronavirus_tests_available=coronavirus_tests_available,
                                coronavirus_patients=coronavirus_patients, coronavirus_patient_percent=coronavirus_patient_percent,
-                               dates=dates, user_info=user_info, admin_invite_link=admin_invite_link, user_invite_link=user_invite_link,
-                               open_button=open_button, close_button=close_button, regenerate_button=regenerate_button)
+                               dates=dates[::-1], user_info=user_info, admin_invite_link=admin_invite_link, user_invite_link=user_invite_link)
     else:
         return render_template('normal_account.html', title='Account', hospital_name=hospital.name, form=form)
 
@@ -205,11 +197,11 @@ def hospital_data(hospital_id):
 def data_input():
     form = DataForm()
     if form.validate_on_submit():
-        data = Data(bed_capacity=form.bed_capacity.data, beds_available=form.beds_available.data, icus_available=form.icus_available.data, ventilators_available=form.ventilators_available.data, coronavirus_tests_available=form.coronavirus_tests_available.data, coronavirus_patients=form.coronavirus_patients.data, hospital=current_user.hospital)
+        data = Data(bed_capacity=form.bed_capacity.data, beds_available=form.beds_available.data, icus_available=form.icus_available.data, ventilators_available=form.ventilators_available.data, coronavirus_tests_available=form.coronavirus_tests_available.data, coronavirus_patients=form.coronavirus_patients.data, coronavirus_patient_percent=form.coronavirus_patients.data/(form.bed_capacity.data-form.beds_available.data), user=current_user, hospital=current_user.hospital)
         db.session.add(data)
         db.session.commit()
         flash('Your data has been successfully uploaded to the server!', 'success')
-        return redirect(url_for('home'))
+        return redirect(url_for('account'))
     return render_template('data_input.html', title='Data Input', heading='Data Input - ' + Hospital.query.get(current_user.hospital).name, form=form)
 
 
@@ -226,6 +218,59 @@ def view_user(user_id):
     else:
         flash('You are not authorized to access that user.', 'danger')
         return redirect(url_for('home'))
+
+
+@app.route("/hospital/data/<int:data_id>/delete", methods=['POST', 'GET'])
+@login_required
+def delete_data(data_id):
+    data = Data.query.get_or_404(data_id)
+    if (current_user is None) or (current_user != User.query.get(data.user) and not (current_user.is_admin and data.hospital == current_user.hospital)):
+        abort(403)
+    date = data.date
+    user = User.query.get(data.user).name
+    db.session.delete(data)
+    db.session.commit()
+    flash(f'Your data submitted on {date.strftime("%m/%d")} by {user} has been deleted!', 'success')
+    return redirect(url_for('account'))
+
+
+@app.route("/hospital/regenerate/<int:hospital_id>", methods=["GET", "POST"])
+@login_required
+def regenerate_links(hospital_id):
+    print('here')
+    hospital = Hospital.query.get_or_404(hospital_id)
+    if current_user is None or not current_user.is_admin or current_user.hospital != hospital.id:
+        abort(403)
+    hospital.regenerate_hex_ids()
+    db.session.commit()
+    flash('Your links have been regenerated! Your previous links are now inactive.', 'success')
+    return redirect(url_for('account'))
+
+
+@app.route("/hospital/close/<int:hospital_id>", methods=["GET", "POST"])
+@login_required
+def close_system(hospital_id):
+    print('here')
+    hospital = Hospital.query.get_or_404(hospital_id)
+    if current_user is None or not current_user.is_admin or current_user.hospital != hospital.id:
+        abort(403)
+    hospital.close_system()
+    db.session.commit()
+    flash('Your hospital system is now closed! Your previous links are now inactive and no new users can join.', 'success')
+    return redirect(url_for('account'))
+
+
+@app.route("/hospital/open/<int:hospital_id>", methods=["GET", "POST"])
+@login_required
+def open_system(hospital_id):
+    print('here')
+    hospital = Hospital.query.get_or_404(hospital_id)
+    if current_user is None or not current_user.is_admin or current_user.hospital != hospital.id:
+        abort(403)
+    hospital.open_system()
+    db.session.commit()
+    flash('Your hospital system is now open! Your most recent invitation links have been reactivated and new users can now join.', 'success')
+    return redirect(url_for('account'))
 
 
 @app.errorhandler(404)

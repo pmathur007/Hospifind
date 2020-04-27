@@ -4,7 +4,7 @@ from flask import current_app
 from application import db, login_manager
 from flask_login import UserMixin
 import secrets
-
+import copy
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -22,6 +22,8 @@ class Hospital(db.Model, UserMixin):
     admin_hex_id = db.Column(db.String, default=lambda: secrets.token_hex(32), unique=True, nullable=True)
     normal_hex_id = db.Column(db.String, default=lambda: secrets.token_hex(32), unique=True, nullable=True)
     system_open = db.Column(db.Boolean, default=True)
+    old_admin_hex_id = db.Column(db.String, default=None, nullable=True)
+    old_normal_hex_id = db.Column(db.String, default=None, nullable=True)
 
     data = db.relationship('Data', backref='input', lazy=True)
 
@@ -38,13 +40,21 @@ class Hospital(db.Model, UserMixin):
     #         return None
     #     return Hospital.query.get(hospital_id)
 
-    def regenerate_hex_id(self):
+    def regenerate_hex_ids(self):
         self.admin_hex_id = secrets.token_hex(32)
         self.normal_hex_id = secrets.token_hex(32)
 
     def close_system(self):
+        self.old_admin_hex_id = copy.deepcopy(self.admin_hex_id)
+        self.old_normal_hex_id = copy.deepcopy(self.normal_hex_id)
         self.admin_hex_id = None
         self.normal_hex_id = None
+        self.system_open = False
+
+    def open_system(self):
+        self.admin_hex_id = self.old_admin_hex_id
+        self.normal_hex_id = self.old_normal_hex_id
+        self.system_open = True
 
     def __repr__(self):
         return f"Hospital('{self.id}', '{self.name}', '{self.state}')"
