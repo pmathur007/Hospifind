@@ -52,20 +52,8 @@ header {
   text-decoration: none;
 }
 
-.pfield {
-    text-align: center;
-}
-
 .plabel {
-    text-align: center;
-    padding: auto;
     display: block;
-    background: #333333;
-    border-radius: 3px;
-}
-
-.plabel input {
-    display: none;
 }
 
 .modal-header {

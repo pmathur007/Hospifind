@@ -1,5 +1,5 @@
 import React from 'react';
-import { Formik } form 'formik';
+import { Formik } from 'formik';
 
 'use_strict';
 
@@ -61,21 +61,3 @@ class RadioField extends React.Component {
         );
     }
 }
-
-class PatientForm extends React.Component {
-    constructor(props) {
-        this.state = {
-
-        }
-    }
-
-    render() {
-        return (
-            <form>
-
-            </form>
-        );
-    }
-}
-
-ReactDOM.render(<PatientForm/>, document.getElementById('patient_form'));
