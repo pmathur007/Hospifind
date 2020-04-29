@@ -3,11 +3,11 @@ from flask_login import login_user, current_user, logout_user, login_required
 from application import app, bcrypt, db
 from application.models import Hospital, User, Data
 from application.forms import RegistrationForm, LoginForm, DataForm, UpdateAccountForm
-import geocoder
+import geocoder, math, json
 import numpy as np
-import math
 from application.data_analysis import HomeDecision, PersonalDecision
 from datetime import datetime
+from sqlalchemy_json_querybuilder.querybuilder.search import Search
 
 
 @app.route("/")
@@ -40,6 +40,24 @@ def distance(lat1, lon1, lat2, lon2):
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
 
     return R * c
+
+@app.route("/db", methods=['POST'])
+def query_db():
+    tables = {
+        'Hospital': Hospital,
+        'User': User,
+        'Data': Data
+    }
+
+    req_data = request.get_json()
+
+    filter_by = req_data['filter_by']
+
+    raw_results = Search(db.session, 'application.models', (tables[req_data['table_name']],), filter_by=filter_by, all=True).results['data']
+
+    dict_results = [{c.name: str(getattr(result, c.name)) for c in result.__table__.columns} for result in raw_results]
+
+    return json.dumps(dict_results)
 
 
 @app.route("/<string:state>/<string:sort>")
@@ -207,6 +225,9 @@ def data_input():
 
 @app.route("/patient_form", methods=["GET", "POST"])
 def patient_form():
+    if request.method == "POST":
+        # handle form data
+        return redirect(url_for('home'))
     return render_template('patient_form.html', title='Personalized Results')
 
 
@@ -272,7 +293,6 @@ def open_system(hospital_id):
     flash('Your hospital system is now open! Your most recent invitation links have been reactivated and new users can now join.', 'success')
     return redirect(url_for('account'))
 
-
 @app.errorhandler(404)
 def error_404(error):
     return render_template('errors/404.html'), 404
@@ -286,4 +306,3 @@ def error_403(error):
 @app.errorhandler(500)
 def error_500(error):
     return render_template('errors/500.html'), 500
-

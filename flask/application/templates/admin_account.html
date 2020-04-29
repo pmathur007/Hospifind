@@ -82,36 +82,6 @@
         {% endfor %}
         </tbody>
       </table>
-<<<<<<< HEAD
-        <a href='{{ admin_invite_link }}'>{{ admin_invite_link }}</a>
-        <a href='{{ user_invite_link }}'>{{ user_invite_link }}</a>
-        <div class="row">
-            <div class="column">
-                <form method="POST" action="" enctype="multipart/form-data">
-                    {{ form.hidden_tag() }}
-                    <fieldset class="form-group">
-                        <div class="form-group">
-                            <div class="form-group">
-                                {{ regenerate_button.submit(class="ml-2 mt-2 btn btn-light") }}
-                            </div>
-                        </div>
-                    </fieldset>
-                </form>
-            </div>
-            <div class="column">
-                <form method="POST" action="" enctype="multipart/form-data">
-                    {{ form.hidden_tag() }}
-                    <fieldset class="form-group">
-                        <div class="form-group">
-                            <div class="form-group">
-                                {{ close_button.submit(class="ml-2 mt-2 btn btn-light") }}
-                            </div>
-                        </div>
-                    </fieldset>
-                </form>
-            </div>
-
-=======
         {% if hospital.system_open %}
             <a href='{{ admin_invite_link }}'>{{ admin_invite_link }}</a>
             <a href='{{ user_invite_link }}'>{{ user_invite_link }}</a>
@@ -126,7 +96,6 @@
             {% else %}
                 <button class="mt-2 mb-2 btn btn-light" data-toggle="modal" data-target="#openModal">Open System</button>
             {% endif %}
->>>>>>> 704c5f8a5d2524d11ada889112bad8ee373279be
     </div>
     <div>
         <h3 class="border-bottom mb-4">Graphs</h3>
@@ -158,10 +127,7 @@
     <div>
         <h3 class="border-bottom mb-4">Data</h3>
         <a href="{{ url_for('data_input') }}">Input Data</a>
-<<<<<<< HEAD
-=======
         <div id="data_table"></div>
->>>>>>> 704c5f8a5d2524d11ada889112bad8ee373279be
         <table class="sortable border-bottom" style="width:90%;" border=1 frame=void rules=rows>
           <thead>
            <tr>
@@ -352,3 +318,6 @@
         </div>
     </div>
 {% endblock content %}
+{% block scripts %}
+    <script src="../static/js/hospital_table.js"></script>
+{% endblock scripts %}

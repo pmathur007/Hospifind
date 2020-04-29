@@ -46,17 +46,17 @@
 //     }
 // }
 
-$(function() {
+$(function () {
     toSend = {
-    	"table_name": "Data",
-    	"filter_by": [{
-    		"field_name": "Data.id",
-    		"operator": "equals",
-    		"field_value": 2
-	    }]
+        "table_name": "Data",
+        "filter_by": [{
+            "field_name": "Data.id",
+            "operator": "equals",
+            "field_value": 2
+        }]
     };
 
-    $.post("http://127.0.0.1:5000/db", JSON.stringify(toSend), (data, status) => {
+    $.post("http://127.0.0.1:5000/db", JSON.stringify(toSend), function (data, status) {
         console.log(data);
     });
-})
+});
