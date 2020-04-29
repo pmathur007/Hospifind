@@ -93,6 +93,23 @@ header {
     color: white;
 }
 
+table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+th {
+  vertical-align: middle;
+  text-align: center;
+  width: 10%;
+}
+
+td {
+  vertical-align: middle;
+  text-align: center;
+  width: 10%;
+}
+
 footer {
     text-align: center;
 }

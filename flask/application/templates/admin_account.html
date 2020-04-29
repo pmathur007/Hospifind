@@ -145,16 +145,16 @@
          <tbody>
             {% for d in data %}
                 <tr>
-                    <td valign="center">{{ d.date.strftime('%m/%d/%y') }}</td>
-                    <td valign="center"><a class="mr-2" href="{{ url_for('view_user', user_id=d.user) }}">{{ d.user }}</a></td>
-                    <td valign="center"><p>{{ d.bed_capacity }}</p></td>
-                    <td valign="center"><p>{{ d.beds_available }}</p></td>
-                    <td valign="center"><p>{{ d.icus_available }}</p></td>
-                    <td valign="center"><p>{{ d.ventilators_available }}</p></td>
-                    <td valign="center"><p>{{ d.coronavirus_tests_available }}</p></td>
-                    <td valign="center"><p>{{ d.coronavirus_patients }}</p></td>
-                    <td valign="center"><p>{{ d.coronavirus_patient_percent }}</p></td>
-                    <td valign="center"><a href="{{ url_for('delete_data', data_id=d.id) }}" class="mt-1 mb-1 btn btn-danger" style="font-size:10px;">Delete</a></td>
+                    <td>{{ d.date.strftime('%m/%d/%y') }}</td>
+                    <td><a class="mr-2" href="{{ url_for('view_user', user_id=d.user) }}">{{ d.user }}</a></td>
+                    <td><p>{{ d.bed_capacity }}</p></td>
+                    <td><p>{{ d.beds_available }}</p></td>
+                    <td><p>{{ d.icus_available }}</p></td>
+                    <td><p>{{ d.ventilators_available }}</p></td>
+                    <td><p>{{ d.coronavirus_tests_available }}</p></td>
+                    <td><p>{{ d.coronavirus_patients }}</p></td>
+                    <td><p>{{ d.coronavirus_patient_percent }}</p></td>
+                    <td><a href="{{ url_for('delete_data', data_id=d.id) }}" class="mt-1 mb-1 btn btn-danger" style="font-size:10px;">Delete</a></td>
                 </tr>
             {% endfor %}
          </tbody>

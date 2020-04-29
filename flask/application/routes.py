@@ -237,7 +237,6 @@ def delete_data(data_id):
 @app.route("/hospital/regenerate/<int:hospital_id>", methods=["GET", "POST"])
 @login_required
 def regenerate_links(hospital_id):
-    print('here')
     hospital = Hospital.query.get_or_404(hospital_id)
     if current_user is None or not current_user.is_admin or current_user.hospital != hospital.id:
         abort(403)
