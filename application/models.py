@@ -58,7 +58,7 @@ class Hospital(db.Model, UserMixin):
         self.system_open = True
 
     def __repr__(self):
-        return "Hospital('" + self.id + "', '" + self.name + "', '" + self.state + "')"
+        return "Hospital('" + str(self.id) + "', '" + self.name + "', '" + self.state + "')"
 
 
 class User(db.Model, UserMixin):
@@ -72,7 +72,7 @@ class User(db.Model, UserMixin):
     hospital = db.Column(db.Integer, db.ForeignKey('hospital.id'), nullable=False)
 
     def __repr__(self):
-        return "User('" + self.username + "', '" +  self.hospital + "')"
+        return "User('" + self.username + "', '" + self.hospital + "')"
 
 
 class Data(db.Model):
