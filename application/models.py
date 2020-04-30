@@ -3,8 +3,9 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app
 from application import db, login_manager
 from flask_login import UserMixin
-import secrets
+from os import urandom
 import copy
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -19,8 +20,8 @@ class Hospital(db.Model, UserMixin):
     state = db.Column(db.String, nullable=False)
     latitude = db.Column(db.Integer, nullable=True)
     longitude = db.Column(db.Integer, nullable=True)
-    admin_hex_id = db.Column(db.String, default=lambda: secrets.token_hex(32), unique=True, nullable=True)
-    normal_hex_id = db.Column(db.String, default=lambda: secrets.token_hex(32), unique=True, nullable=True)
+    admin_hex_id = db.Column(db.String, default=lambda: urandom(32).hex(), unique=True, nullable=True)
+    normal_hex_id = db.Column(db.String, default=lambda: urandom(32).hex(), unique=True, nullable=True)
     system_open = db.Column(db.Boolean, default=True)
     old_admin_hex_id = db.Column(db.String, default=None, nullable=True)
     old_normal_hex_id = db.Column(db.String, default=None, nullable=True)
@@ -41,8 +42,8 @@ class Hospital(db.Model, UserMixin):
     #     return Hospital.query.get(hospital_id)
 
     def regenerate_hex_ids(self):
-        self.admin_hex_id = secrets.token_hex(32)
-        self.normal_hex_id = secrets.token_hex(32)
+        self.admin_hex_id = urandom(32).hex()
+        self.normal_hex_id = urandom(32).hex()
 
     def close_system(self):
         self.old_admin_hex_id = copy.deepcopy(self.admin_hex_id)
@@ -57,7 +58,7 @@ class Hospital(db.Model, UserMixin):
         self.system_open = True
 
     def __repr__(self):
-        return f"Hospital('{self.id}', '{self.name}', '{self.state}')"
+        return "Hospital('" + self.id + "', '" + self.name + "', '" + self.state + "')"
 
 
 class User(db.Model, UserMixin):
@@ -71,7 +72,7 @@ class User(db.Model, UserMixin):
     hospital = db.Column(db.Integer, db.ForeignKey('hospital.id'), nullable=False)
 
     def __repr__(self):
-        return f"User('{self.username}', '{self.hospital}')"
+        return "User('" + self.username + "', '" +  self.hospital + "')"
 
 
 class Data(db.Model):
@@ -89,4 +90,5 @@ class Data(db.Model):
     hospital = db.Column(db.Integer, db.ForeignKey('hospital.id'), nullable=False)
 
     def __repr__(self):
-        return f"Data(Hospital: '{self.hospital}', User: '{self.user}', Date: '{self.date}') \nBed Capacity:{self.bed_capacity}\nBeds Available: {self.beds_available}\nICUs Available: {self.icus_available}\nVentilators Available: {self.ventilators_available}\nCoronavirus Tests Available: {self.coronavirus_tests_available}\nCoronavirus Patients: {self.coronavirus_patients}\nCoronavirus Patient Percent: {self.coronavirus_patient_percent}'"
+        return "Data('" + self.hospital + "', '" + self.user + "', '" + self.date + "')"
+        #f"Data(Hospital: '{self.hospital}', User: '{self.user}', Date: '{self.date}') \nBed Capacity:{self.bed_capacity}\nBeds Available: {self.beds_available}\nICUs Available: {self.icus_available}\nVentilators Available: {self.ventilators_available}\nCoronavirus Tests Available: {self.coronavirus_tests_available}\nCoronavirus Patients: {self.coronavirus_patients}\nCoronavirus Patient Percent: {self.coronavirus_patient_percent}'"

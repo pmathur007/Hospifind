@@ -13,7 +13,7 @@ from sqlalchemy_json_querybuilder.querybuilder.search import Search
 @app.route("/")
 @app.route("/home", methods=['GET'])
 def home():
-    # print("IP:", request.environ.get('HTTP_X_REAL_IP', request.remote_addr))
+    print("IP:", request.environ.get(request.remote_addr))
     ip = '71.191.46.159' # str(request.remote_addr)
     # g = geocoder.ip(ip)
     # print(g)
@@ -142,7 +142,7 @@ def login():
             hospital_name = Hospital.query.get(user.hospital).name
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
-            flash(f'Hello {user.name}! You are now logged in as {user.username} - {hospital_name}!', 'success')
+            flash('Hello ' + user.name + '! You are now logged in as ' + user.username + ' - ' + hospital_name + '!', 'success')
             return redirect(next_page) if next_page else redirect(url_for('home'))
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
@@ -251,7 +251,7 @@ def delete_data(data_id):
     user = User.query.get(data.user).name
     db.session.delete(data)
     db.session.commit()
-    flash(f'Your data submitted on {date.strftime("%m/%d")} by {user} has been deleted!', 'success')
+    flash('Your data submitted on ' + date.strftime("%m/%d") + ' by {user} has been deleted!', 'success')
     return redirect(url_for('account'))
 
 
