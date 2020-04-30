@@ -7,7 +7,7 @@ import geocoder, math, json
 import numpy as np
 from application.data_analysis import HomeDecision, PersonalDecision
 from datetime import datetime
-from sqlalchemy_json_querybuilder.querybuilder.search import Search
+# from sqlalchemy_json_querybuilder.querybuilder.search import Search
 
 
 @app.route("/")
@@ -41,23 +41,24 @@ def distance(lat1, lon1, lat2, lon2):
 
     return R * c
 
-@app.route("/db", methods=['POST'])
-def query_db():
-    tables = {
-        'Hospital': Hospital,
-        'User': User,
-        'Data': Data
-    }
 
-    req_data = request.get_json()
-
-    filter_by = req_data['filter_by']
-
-    raw_results = Search(db.session, 'application.models', (tables[req_data['table_name']],), filter_by=filter_by, all=True).results['data']
-
-    dict_results = [{c.name: str(getattr(result, c.name)) for c in result.__table__.columns} for result in raw_results]
-
-    return json.dumps(dict_results)
+# @app.route("/db", methods=['POST'])
+# def query_db():
+#     tables = {
+#         'Hospital': Hospital,
+#         'User': User,
+#         'Data': Data
+#     }
+#
+#     req_data = request.get_json()
+#
+#     filter_by = req_data['filter_by']
+#
+#     raw_results = Search(db.session, 'application.models', (tables[req_data['table_name']],), filter_by=filter_by, all=True).results['data']
+#
+#     dict_results = [{c.name: str(getattr(result, c.name)) for c in result.__table__.columns} for result in raw_results]
+#
+#     return json.dumps(dict_results)
 
 
 @app.route("/<string:state>/<string:sort>")
