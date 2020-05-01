@@ -42,15 +42,6 @@ class DataForm(FlaskForm):
     submit = SubmitField('Submit')
 
 
-class HospitalNameForm(FlaskForm):
-    hospital_name = StringField('Hospital Name', validators=[DataRequired()])
-    submit = SubmitField('Request Account')
-
-
-class PatientForm(FlaskForm):
-    pass
-
-
 class UpdateAccountForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])

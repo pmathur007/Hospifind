@@ -22,5 +22,7 @@ app.config['MAIL_USERNAME'] = os.environ.get('EMAIL_USER')
 app.config['MAIL_PASSWORD'] = os.environ.get('EMAIL_PASS')
 mail = Mail()
 
-from application import routes
-
+from application.main import routes
+from application.patient import routes
+from application.hospital import routes
+from application.errors import handlers
