@@ -17,8 +17,37 @@ def home():
     session['latitude'] = 38.8809
     session['longitude'] = -77.3008  # g.latlng()
     # print(state, latitude, longitude)
+    hospitals = Hospital.query.all()
+    hospitals.sort(key=lambda x: distance(session['latitude'], session['longitude'], x.latitude, x.longitude))
+    hospitals = hospitals[:10]
 
-    return redirect(url_for('home_state', state=state, sort="distance"))
+    sort = ""
+    if sort == "rating":
+        data = [Data.query.filter_by(hospital=hospital.id).order_by(Data.date.desc()).first() for hospital in hospitals]
+        decision_maker = HomeDecision(hospitals, data)
+        results = decision_maker.get_rating()
+        hospitals = []
+        ratings = []
+        for hospital in results:
+            hospitals.append(hospital)
+            ratings.append(results[hospital])
+            print(hospital, results[hospital])
+        return render_template('home.html', hospitals=hospitals, ratings=ratings)
+    elif sort == "distance_and_rating" or sort == "rating_and_distance":
+        data = [Data.query.filter_by(hospital=hospital.id).order_by(Data.date.desc()).first() for hospital in hospitals]
+        decision_maker = HomeDecision(hospitals, data)
+        distances_dict = {h: distance(session['latitude'], session['longitude'], h.latitude, h.longitude) for h in
+                          hospitals}
+        results = decision_maker.get_rating_with_distance(distances_dict)
+        hospitals = []
+        ratings = []
+        for hospital in results:
+            hospitals.append(hospital)
+            ratings.append(results[hospital])
+            print(hospital, results[hospital], distances_dict[hospital])
+        return render_template('home.html', hospitals=hospitals, ratings=ratings)
+    else:
+        return render_template('home.html', hospitals=hospitals, ratings=None)
 
 
 def distance(lat1, lon1, lat2, lon2):
@@ -55,39 +84,3 @@ def distance(lat1, lon1, lat2, lon2):
 #     dict_results = [{c.name: str(getattr(result, c.name)) for c in result.__table__.columns} for result in raw_results]
 #
 #     return json.dumps(dict_results)
-
-
-@app.route("/<string:state>/<string:sort>")
-@app.route("/home/<string:state>/<string:sort>")
-def home_state(state, sort):
-    print(session['latitude'], session['longitude'])
-    hospitals = Hospital.query.filter_by(state=state).all()
-    hospitals.sort(key=lambda x: distance(session['latitude'], session['longitude'], x.latitude, x.longitude))
-    hospitals = hospitals[:10]
-
-    if sort == "rating":
-        data = [Data.query.filter_by(hospital=hospital.id).order_by(Data.date.desc()).first() for hospital in hospitals]
-        decision_maker = HomeDecision(hospitals, data)
-        results = decision_maker.get_rating()
-        hospitals = []
-        ratings = []
-        for hospital in results:
-            hospitals.append(hospital)
-            ratings.append(results[hospital])
-            print(hospital, results[hospital])
-        return render_template('home.html', hospitals=hospitals, ratings=ratings)
-    elif sort == "distance_and_rating" or sort == "rating_and_distance":
-        data = [Data.query.filter_by(hospital=hospital.id).order_by(Data.date.desc()).first() for hospital in hospitals]
-        decision_maker = HomeDecision(hospitals, data)
-        distances_dict = {h: distance(session['latitude'], session['longitude'], h.latitude, h.longitude) for h in
-                          hospitals}
-        results = decision_maker.get_rating_with_distance(distances_dict)
-        hospitals = []
-        ratings = []
-        for hospital in results:
-            hospitals.append(hospital)
-            ratings.append(results[hospital])
-            print(hospital, results[hospital], distances_dict[hospital])
-        return render_template('home.html', hospitals=hospitals, ratings=ratings)
-    else:
-        return render_template('home.html', hospitals=hospitals, ratings=None)
