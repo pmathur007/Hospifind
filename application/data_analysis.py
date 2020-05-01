@@ -87,78 +87,33 @@ class HomeDecision:
         return out
 
     def scale_capacity(self):
-        max = min = self.data[0].bed_capacity
-        list = [max]
-        for i in range(1,len(self.data)):
-            n = self.data[i].bed_capacity
-            list.append(n)
-            if n > max:
-                max = n
-            if n < min:
-                min = n
-        out = []
-        for n in list:
-            out.append((n - min) / (max - min))
+        lst = [self.data[i].bed_capacity for i in range(len(self.data))]
+        max_val = max(lst); min_val = min(lst)
+        out = [(n - min_val) / (max_val - min_val) for n in lst]
         return out
 
     def scale_beds(self):
-        max = min = self.data[0].beds_available
-        list = [max]
-        for i in range(1,len(self.data)):
-            n = self.data[i].beds_available
-            list.append(n)
-            if n > max:
-                max = n
-            if n < min:
-                min = n
-        out = []
-        for n in list:
-            out.append((n - min) / (max - min))
+        lst = [self.data[i].beds_available for i in range(len(self.data))]
+        max_val = max(lst); min_val = min(lst)
+        out = [(n - min_val) / (max_val - min_val) for n in lst]
         return out
 
     def scale_icus(self):
-        max = min = self.data[0].icus_available
-        list = [max]
-        for i in range(1,len(self.data)):
-            n = self.data[i].icus_available
-            list.append(n)
-            if n > max:
-                max = n
-            if n < min:
-                min = n
-        out = []
-        for n in list:
-            out.append((n - min) / (max - min))
+        lst = [self.data[i].icus_available for i in range(len(self.data))]
+        max_val = max(lst); min_val = min(lst)
+        out = [(n - min_val) / (max_val - min_val) for n in lst]
         return out
 
     def scale_vents(self):
-        max = min = self.data[0].ventilators_available
-        list = [max]
-        for i in range(1,len(self.data)):
-            n = self.data[i].ventilators_available
-            list.append(n)
-            if n > max:
-                max = n
-            if n < min:
-                min = n
-        out = []
-        for n in list:
-            out.append((n - min) / (max - min))
+        lst = [self.data[i].ventilators_available for i in range(len(self.data))]
+        max_val = max(lst); min_val = min(lst)
+        out = [(n - min_val) / (max_val - min_val) for n in lst]
         return out
 
     def scale_tests(self):
-        max = min = self.data[0].coronavirus_tests_available
-        list = [max]
-        for i in range(1,len(self.data)):
-            n = self.data[i].coronavirus_tests_available
-            list.append(n)
-            if n > max:
-                max = n
-            if n < min:
-                min = n
-        out = []
-        for n in list:
-            out.append((n - min) / (max - min))
+        lst = [self.data[i].coronavirus_tests_available for i in range(len(self.data))]
+        max_val = max(lst); min_val = min(lst)
+        out = [(n - min_val) / (max_val - min_val) for n in lst]
         return out
 
     def scale_distance(self, distances_dict):
@@ -184,10 +139,10 @@ class HomeDecision:
 
 
 class PersonalDecision:
-    def __init__(self, patient, hospitals, times_dict):
-        self.patient = patient
+    def __init__(self, hospitals, data, patient):
         self.hospitals = hospitals
-        self.times_dict = times_dict
+        self.data = data
+        self.patient = patient
         self.ratings = {}
 
         # hyperparams
@@ -204,14 +159,14 @@ class PersonalDecision:
 
         self.base = 1.1
 
-    def get_rating(self):
+    def get_rating(self, distance_dict):
         capacities = self.scale_capacity()
         beds = self.scale_beds()
         icus = self.scale_icus()
         vents = self.scale_vents()
         tests = self.scale_tests()
         corona_percents = self.scale_corona_percents()
-        times = self.scale_times()
+        distances = self.scale_distance(distance_dict)
         ratings = {}
 
         for i in range(len(self.hospitals)):
@@ -221,146 +176,78 @@ class PersonalDecision:
             nvents = self.vents_weight * vents[i]
             ntests = self.tests_weight * tests[i]
             ncorona_percents = self.corona_weight * corona_percents[i]
-            ntimes = self.times_weight * times[i]
-            rating = ncap + nbeds + nicus + nvents + ntests + ncorona_percents + ntimes
+            ndistances = self.times_weight * distances[i]
+            rating = ncap + nbeds + nicus + nvents + ntests + ncorona_percents + ndistances
             ratings[self.hospitals[i]] = rating
 
         ratings = sorted(ratings.items(), reverse=True, key=operator.itemgetter(1))
         for i in ratings:
-            self.ratings[i[0]] = round(i[1],2)
+            self.ratings[i[0]] = round(i[1], 2)
         return self.ratings
 
     def scale_capacity(self):
-        max = min = self.hospitals[0].capacity
-        list = [max]
-        for i in range(1,len(self.hospitals)):
-            n = self.hospitals[i].capacity
-            list.append(n)
-            if n > max:
-                max = n
-            if n < min:
-                min = n
-        out = []
-        for n in list:
-            out.append((n - min) / (max - min))
+        lst = [self.data[i].bed_capacity for i in range(len(self.data))]
+        max_val = max(lst); min_val = min(lst)
+        out = [(n - min_val) / (max_val - min_val) for n in lst]
         return out
 
     def scale_beds(self):
-        max = min = self.hospitals[0].beds
-        list = [max]
-        for i in range(1,len(self.hospitals)):
-            n = self.hospitals[i].beds
-            list.append(n)
-            if n > max:
-                max = n
-            if n < min:
-                min = n
-        out = []
-        for n in list:
-            out.append((n - min) / (max - min))
+        lst = [self.data[i].beds_available for i in range(len(self.data))]
+        max_val = max(lst); min_val = min(lst)
+        out = [(n - min_val) / (max_val - min_val) for n in lst]
         return out
 
     def scale_icus(self):
-        max = min = self.hospitals[0].icus
-        list = [max]
-        for i in range(1,len(self.hospitals)):
-            n = self.hospitals[i].icus
-            list.append(n)
-            if n > max:
-                max = n
-            if n < min:
-                min = n
-        out = []
-        for n in list:
-            out.append((n - min) / (max - min))
+        lst = [self.data[i].icus_available for i in range(len(self.data))]
+        max_val = max(lst); min_val = min(lst)
+        out = [(n - min_val) / (max_val - min_val) for n in lst]
         return out
 
     def scale_vents(self):
-        max = min = self.hospitals[0].vents
-        list = [max]
-        for i in range(1,len(self.hospitals)):
-            n = self.hospitals[i].vents
-            list.append(n)
-            if n > max:
-                max = n
-            if n < min:
-                min = n
-        out = []
-        for n in list:
-            out.append((n - min) / (max - min))
+        lst = [self.data[i].ventilators_available for i in range(len(self.data))]
+        max_val = max(lst); min_val = min(lst)
+        out = [(n - min_val) / (max_val - min_val) for n in lst]
         return out
 
     def scale_tests(self):
-        max = min = self.hospitals[0].tests
-        list = [max]
-        for i in range(1,len(self.hospitals)):
-            n = self.hospitals[i].tests
-            list.append(n)
-            if n > max:
-                max = n
-            if n < min:
-                min = n
-        out = []
-        for n in list:
-            out.append((n - min) / (max - min))
+        lst = [self.data[i].coronavirus_tests_available for i in range(len(self.data))]
+        max_val = max(lst); min_val = min(lst)
+        out = [(n - min_val) / (max_val - min_val) for n in lst]
         return out
 
     def scale_corona_percents(self):
-        symps = {"fever":0.879, "dry cough":0.677, "fatigue":0.381, "phlegm":0.334, "shortness of breath":0.186,
+        symptoms = {"fever":0.879, "dry cough":0.677, "fatigue":0.381, "phlegm":0.334, "shortness of breath":0.186,
                  "sore throat, headache": 0.139, "chills": 0.114, "vomiting":0.05, "nasal congestion":0.048, "diarrhea":0.037}
-        sval = 0
+        symptom_val = 0
         for s in self.patient.symptoms:
-            sval+=symps[s]
-        symptoms = sval > self.symptoms_cutoff # if a person has high symptoms, true is high, false if low (use symptom score to calc)
-        risk = self.patient.age + (20 * self.patient.under_conditions) > self.risk_cutoff # if a person is risky, true if risky, false if not (use age and underlying conditions to calc)
+            symptom_val += symptoms[s]
+        symptoms = symptom_val > self.symptoms_cutoff # if a person has high symptoms, true is high, false if low (use symptom score to calc)
+        risk = self.patient.age + self.patient.under_conditions + self.patient.area > self.risk_cutoff # if a person is risky, true if risky, false if not (use age and underlying conditions to calc)
 
-        max = min = self.hospitals[0].corona_percent
-        list = [max]
-        for i in range(1,len(self.hospitals)):
-            n = self.hospitals[i].corona_percent
-            list.append(n)
-            if n > max:
-                max = n
-            if n < min:
-                min = n
-        out = []
-        for n in list:
-            out.append((n - min) / (max - min))
-            if risk or (not symptoms): # could be 'and' instead of 'or'
-                out.append(1 - n)
+        lst = [self.data[i].coronavirus_patient_percent for i in range(len(self.data))]
+        max_val = max(lst); min_val = min(lst)
+        out = [(n - min_val) / (max_val - min_val) if risk or (not symptoms) else (1-n) for n in lst] # could be 'and' instead of 'or'
         return out
 
-    def scale_times(self):
-        iterator = iter(self.times_dict.items())
-        max = min = next(iterator)[1]
-        list = [-1*(self.base**max)]
-        for i in range(1,len(self.hospitals)):
-            n = next(iterator)[1]
-            #linear
-            #list.append(-1*n)
-            #exponential
-            list.append(-1*(self.base**n))
-            if n > max:
-                max = n
-            if n < min:
-                min = n
-        out = []
-        max = self.base**max
-        min = self.base**min
-        for n in list:
-            out.append((n + max) / (max - min))
+    def scale_distance(self, distance_dict):
+        min_val = min(distance_dict.values())
+        max_val = max(distance_dict.values())
+        lst = [-1*(self.base**distance_dict[i]) for i in range(len(distance_dict))]
+        max_val = self.base**max_val
+        min_val = self.base**min_val
+        out = [(n + max_val) / (max_val - min_val) for n in lst]
         return out
 
 
 # for testing purposes (hyperparam tuning)
 
-hospitals = []
-patient = Patient(["fever","fatigue"],random.randint(10,80),random.randint(0,3))
-times_dict = {}
-for i in range(10):
-    hosp = Hospital(random.randint(500,1500),random.randint(10,30),random.randint(10,30),random.randint(10,30),random.randint(100,200),random.random())
-    hospitals.append(hosp)
-    times_dict[hosp] = random.randint(5,50)
+# hospitals = []
+# patient = Patient(["fever","fatigue"],random.randint(10,80),random.randint(0,3))
+# times_dict = {}
+# for i in range(10):
+#     hosp = Hospital(random.randint(500,1500),random.randint(10,30),random.randint(10,30),random.randint(10,30),random.randint(100,200),random.random())
+#     hospitals.append(hosp)
+#     times_dict[hosp] = random.randint(5,50)
 
 # h = HomeDecision(hospitals)
 # p = PersonalDecision(patient,hospitals,times_dict)

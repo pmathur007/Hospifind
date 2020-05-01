@@ -295,6 +295,7 @@ def open_system(hospital_id):
     flash('Your hospital system is now open! Your most recent invitation links have been reactivated and new users can now join.', 'success')
     return redirect(url_for('account'))
 
+
 @app.errorhandler(404)
 def error_404(error):
     return render_template('errors/404.html'), 404
