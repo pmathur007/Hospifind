@@ -22,6 +22,8 @@ app.config['MAIL_USERNAME'] = os.environ.get('EMAIL_USER')
 app.config['MAIL_PASSWORD'] = os.environ.get('EMAIL_PASS')
 mail = Mail()
 
+app.config['TEMPLATES_AUTO_RELOAD'] = True
+
 from application.main import routes
 from application.patient import routes
 from application.hospital import routes
