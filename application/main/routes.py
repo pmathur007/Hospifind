@@ -29,9 +29,12 @@ def distance(lat1, lon1, lat2, lon2):
 def home():
     print("IP: " + str(request.remote_addr))
     session['IP'] = str(request.remote_addr)
-    # g = geocoder.ip(session['IP'])
-    # session['ADDRESS'] = g.address()
-    latlng = [38.8809, -77.3008] # g.latlng()
+    g = geocoder.ip(session['IP'])
+    if g.ok:
+        session['ADDRESS'] = g.address
+        latlng = g.latlng
+    else:
+        latlng = [38.8809, -77.3008]
     session['LATITUDE'] = latlng[0]
     session['LONGITUDE'] = latlng[1]
     # print(state, latitude, longitude)
