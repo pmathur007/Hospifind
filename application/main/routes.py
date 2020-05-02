@@ -29,9 +29,9 @@ def distance(lat1, lon1, lat2, lon2):
 def home():
     print("IP: " + str(request.remote_addr))
     session['IP'] = str(request.remote_addr)
-    g = geocoder.ip(session['IP'])
+    # g = geocoder.ip(session['IP'])
     # session['ADDRESS'] = g.address()
-    latlng = g.latlng()
+    latlng = [38.8809, -77.3008] # g.latlng()
     session['LATITUDE'] = latlng[0]
     session['LONGITUDE'] = latlng[1]
     # print(state, latitude, longitude)
@@ -76,7 +76,7 @@ def home():
             hospitals.append(hospital)
             new_ratings.append(ratings[hospital])
         results = {hospitals[i]: new_ratings[i] for i in range(len(hospitals))}
-        return render_template('home.html', results=results, header="Hospitals Sorted by Distance AND Rating", latitude=session['LATITUDE'])
+        return render_template('home.html', results=results, header="Hospitals Sorted by Distance AND Rating", ip=session['IP'])
     else:
         hospitals = [Hospital.query.get(hospital) for hospital in session['HOSPITALS']]
         new_ratings = [ratings[hospital] for hospital in hospitals]
