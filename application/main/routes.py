@@ -1,9 +1,10 @@
-import math
+import math, json
 import numpy as np
 from flask import render_template, request, url_for, redirect, session
-from application import app
+from application import app, db
 from application.data_analysis import HomeDecision
-from application.models import Hospital, Data
+from application.models import User, Hospital, Data
+from sqlalchemy_json_querybuilder.querybuilder.search import Search
 
 
 @app.route("/")
@@ -36,8 +37,7 @@ def home():
     elif sort == "distance_and_rating" or sort == "rating_and_distance":
         data = [Data.query.filter_by(hospital=hospital.id).order_by(Data.date.desc()).first() for hospital in hospitals]
         decision_maker = HomeDecision(hospitals, data)
-        distances_dict = {h: distance(session['latitude'], session['longitude'], h.latitude, h.longitude) for h in
-                          hospitals}
+        distances_dict = {h: distance(session['latitude'], session['longitude'], h.latitude, h.longitude) for h in hospitals}
         results = decision_maker.get_rating_with_distance(distances_dict)
         hospitals = []
         ratings = []
@@ -67,20 +67,16 @@ def distance(lat1, lon1, lat2, lon2):
     return R * c
 
 
-# @app.route("/db", methods=['POST'])
-# def query_db():
-#     tables = {
-#         'Hospital': Hospital,
-#         'User': User,
-#         'Data': Data
-#     }
-#
-#     req_data = request.get_json()
-#
-#     filter_by = req_data['filter_by']
-#
-#     raw_results = Search(db.session, 'application.models', (tables[req_data['table_name']],), filter_by=filter_by, all=True).results['data']
-#
-#     dict_results = [{c.name: str(getattr(result, c.name)) for c in result.__table__.columns} for result in raw_results]
-#
-#     return json.dumps(dict_results)
+@app.route("/db", methods=['POST'])
+def query_db():
+    tables = {
+        'Hospital': Hospital,
+        'User': User,
+        'Data': Data
+    }
+
+    req_data = request.get_json()
+    filter_by = req_data['filter_by']
+    raw_results = Search(db.session, 'application.models', (tables[req_data['table_name']],), filter_by=filter_by, all=True).results['data']
+    dict_results = [{c.name: str(getattr(result, c.name)) for c in result.__table__.columns} for result in raw_results]
+    return json.dumps(dict_results)
