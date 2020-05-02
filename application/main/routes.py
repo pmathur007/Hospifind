@@ -32,6 +32,9 @@ def home():
     g = geocoder.ip(session['IP'])
     if g.ok and len(g.latlng) == 2 and g.latlng[0] is not None and g.latlng[1] is not None:
         session['ADDRESS'] = g.city + ", " + g.state + ", " + g.country
+        session['CITY'] = g.city
+        session['STATE'] = g.state
+        session['COUNTRY'] = g.country
         latlng = g.latlng
     else:
         session['ADDRESS'] = "FAILURE"

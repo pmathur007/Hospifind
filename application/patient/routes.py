@@ -1,8 +1,9 @@
-from flask import render_template, request, url_for, redirect, session
+from flask import render_template, request, url_for, redirect, session, flash
 from application import app
 from application.models import Hospital, Data
 from application.data_analysis import PersonalDecision
 from application.main.routes import distance
+from application.patient.forms import InputLocationForm
 
 
 class Patient:
@@ -52,6 +53,31 @@ def patient_results():
         ratings.append(rating)
     results = {hospitals[i]: ratings[i] for i in range(len(hospitals))}
     return render_template('patient_results.html', title='Personalized Results', results=results)
+
+
+@app.route("/input_location")
+def input_location():
+    form = InputLocationForm()
+    if form.validate_on_submit():
+        session['STREET_ADDRESS'] = form.street_address.data
+        session['CITY'] = form.city.data
+        session['STATE'] = form.state.data
+        session['COUNTRY'] = form.country.data
+        session['ZIP_CODE'] = form.zip_code.data
+        flash('Your location has been updated!', 'success')
+        return redirect(url_for('home'))
+    elif request.method == 'GET':
+        if session.get('STREET_ADDRESS') is not None:
+            form.street_address.data = session['STREET_ADDRESS']
+        if session.get('CITY') is not None:
+            form.city.data = session['CITY']
+        if session.get('STATE') is not None:
+            form.state.data = session['STATE']
+        if session.get('COUNTRY') is not None:
+            form.country.data = session['COUNTRY']
+        if session.get('ZIP_CODE') is not None:
+            form.zip_code.data = session['ZIP_CODE']
+    return render_template('input_location.html', form=form)
 
 
 @app.route("/call_911")

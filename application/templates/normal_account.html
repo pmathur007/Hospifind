@@ -3,6 +3,7 @@
     <h1>{{ current_user.name }} (Username: {{ current_user.username }})</h1>
     <h2>{{ hospital_name }}</h2>
     <h3 class="border-bottom mb-4">Account Information</h3>
+    <div>
         <form method="POST" action="" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
@@ -38,5 +39,5 @@
                 {{ form.submit(class="btn btn-outline-white") }}
             </div>
         </form>
-    <div>
+    </div>
 {% endblock content %}
