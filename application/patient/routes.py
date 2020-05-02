@@ -4,6 +4,8 @@ from application.models import Hospital, Data
 from application.data_analysis import PersonalDecision
 from application.main.routes import distance
 from application.patient.forms import InputLocationForm
+import geocoder
+import os
 
 
 class Patient:
@@ -55,17 +57,28 @@ def patient_results():
     return render_template('patient_results.html', title='Personalized Results', results=results)
 
 
-@app.route("/input_location")
+@app.route("/input_location", methods=['GET', 'POST'])
 def input_location():
     form = InputLocationForm()
     if form.validate_on_submit():
-        session['STREET_ADDRESS'] = form.street_address.data
-        session['CITY'] = form.city.data
-        session['STATE'] = form.state.data
-        session['COUNTRY'] = form.country.data
-        session['ZIP_CODE'] = form.zip_code.data
-        flash('Your location has been updated!', 'success')
-        return redirect(url_for('home'))
+        address = form.street_address.data + ", " + form.city.data + ", " + form.state.data + ", " + form.country.data + " " + form.zip_code.data
+        print(address)
+        g = geocoder.google(address, key=os.environ.get('GOOGLE_API_KEY'))
+        print(g)
+        if g.ok and len(g.latlng) == 2 and g.latlng[0] is not None and g.latlng[1] is not None:
+            session['ADDRESS'] = address
+            session['STREET_ADDRESS'] = form.street_address.data
+            session['CITY'] = form.city.data
+            session['STATE'] = form.state.data
+            session['COUNTRY'] = form.country.data
+            session['ZIP_CODE'] = form.zip_code.data
+            session['LATITUDE'] = g.latlng[0]
+            session['LONGITUDE'] = g.latlng[1]
+            flash('Your location has been updated!', 'success')
+            return redirect(url_for('home'))
+        else:
+            flash("We couldn't find the address you entered! Please try again.", 'danger')
+            return redirect(url_for('input_location'))
     elif request.method == 'GET':
         if session.get('STREET_ADDRESS') is not None:
             form.street_address.data = session['STREET_ADDRESS']

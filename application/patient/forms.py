@@ -7,9 +7,9 @@ from application.models import User
 
 
 class InputLocationForm(FlaskForm):
-    street_address = StringField('Street Address')
-    city = StringField('City')
-    state = StringField('State')
-    country = StringField('Country')
-    zip_code = StringField('Zip Code')
-    submit = SubmitField('Update Location')
+    street_address = StringField('Street Address', validators=[DataRequired()])
+    city = StringField('City', validators=[DataRequired()])
+    state = StringField('State', validators=[DataRequired()])
+    country = StringField('Country', validators=[DataRequired()])
+    zip_code = StringField('Zip Code', validators=[DataRequired()])
+    submit = SubmitField('Update Location', validators=[DataRequired()])

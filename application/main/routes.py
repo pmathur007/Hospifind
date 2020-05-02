@@ -27,20 +27,22 @@ def distance(lat1, lon1, lat2, lon2):
 @app.route("/")
 @app.route("/home", methods=['GET'])
 def home():
-    print("IP: " + str(request.remote_addr))
-    session['IP'] = str(request.remote_addr)
-    g = geocoder.ip(session['IP'])
-    if g.ok and len(g.latlng) == 2 and g.latlng[0] is not None and g.latlng[1] is not None:
-        session['ADDRESS'] = g.city + ", " + g.state + ", " + g.country
-        session['CITY'] = g.city
-        session['STATE'] = g.state
-        session['COUNTRY'] = g.country
-        latlng = g.latlng
-    else:
-        session['ADDRESS'] = "FAILURE"
-        latlng = [38.8809, -77.3008]
-    session['LATITUDE'] = latlng[0]
-    session['LONGITUDE'] = latlng[1]
+    if session['ADDRESS'] is None:
+        session['IP'] = str(request.remote_addr)
+        g = geocoder.ip(session['IP'])
+        if g.ok and len(g.latlng) == 2 and g.latlng[0] is not None and g.latlng[1] is not None:
+            session['ADDRESS'] = g.city + ", " + g.state + ", " + g.country
+            session['CITY'] = g.city
+            session['STATE'] = g.state
+            session['COUNTRY'] = g.country
+            latlng = g.latlng
+        else:
+            session['ADDRESS'] = "FAILURE"
+            latlng = [38.8809, -77.3008]
+        session['LATITUDE'] = latlng[0]
+        session['LONGITUDE'] = latlng[1]
+    print(session['LATITUDE'])
+    print(session['LONGITUDE'])
     # print(state, latitude, longitude)
 
     if session.get('HOSPITALS') is None or session.get('DATA') is None or session.get('DISTANCES') is None:
