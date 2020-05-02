@@ -80,15 +80,15 @@ def input_location():
             flash("We couldn't find the address you entered! Please try again.", 'danger')
             return redirect(url_for('input_location'))
     elif request.method == 'GET':
-        if 'STREET_ADDRESS' not in session:
+        if 'STREET_ADDRESS' in session:
             form.street_address.data = session['STREET_ADDRESS']
-        if 'CITY' not in session:
+        if 'CITY' in session:
             form.city.data = session['CITY']
-        if 'STATE' not in session:
+        if 'STATE' in session:
             form.state.data = session['STATE']
-        if 'COUNTRY' not in session:
+        if 'COUNTRY' in session:
             form.country.data = session['COUNTRY']
-        if 'ZIP_CODE' not in session:
+        if 'ZIP_CODE' in session:
             form.zip_code.data = session['ZIP_CODE']
     return render_template('input_location.html', form=form)
 
