@@ -27,7 +27,7 @@ def distance(lat1, lon1, lat2, lon2):
 @app.route("/")
 @app.route("/home", methods=['GET'])
 def home():
-    if session['ADDRESS'] is None:
+    if session.get('ADDRESS') is None:
         session['IP'] = str(request.remote_addr)
         g = geocoder.ip(session['IP'])
         if g.ok and len(g.latlng) == 2 and g.latlng[0] is not None and g.latlng[1] is not None:
