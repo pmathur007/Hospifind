@@ -128,37 +128,6 @@
         <h3 class="border-bottom mb-4">Data</h3>
         <a href="{{ url_for('data_input') }}">Input Data</a>
         <div id="data_table"></div>
-        <table class="sortable border-bottom" style="width:90%;" border=1 frame=void rules=rows>
-          <thead>
-           <tr>
-            <th>Date</th>
-            <th>User</th>
-            <th>Capacity</th>
-            <th>Beds</th>
-            <th>ICUs</th>
-            <th>Ventilators</th>
-            <th>COVID-19 Tests</th>
-            <th>COVID-19 Patients</th>
-            <th>COVID-19 Patient %</th>
-           </tr>
-         </thead>
-         <tbody>
-            {% for d in data %}
-                <tr>
-                    <td>{{ d.date.strftime('%m/%d/%y') }}</td>
-                    <td><a class="mr-2" href="{{ url_for('view_user', user_id=d.user) }}">{{ d.user }}</a></td>
-                    <td><p>{{ d.bed_capacity }}</p></td>
-                    <td><p>{{ d.beds_available }}</p></td>
-                    <td><p>{{ d.icus_available }}</p></td>
-                    <td><p>{{ d.ventilators_available }}</p></td>
-                    <td><p>{{ d.coronavirus_tests_available }}</p></td>
-                    <td><p>{{ d.coronavirus_patients }}</p></td>
-                    <td><p>{{ d.coronavirus_patient_percent }}</p></td>
-                    <td><a href="{{ url_for('delete_data', data_id=d.id) }}" class="mt-1 mb-1 btn btn-danger" style="font-size:10px;">Delete</a></td>
-                </tr>
-            {% endfor %}
-         </tbody>
-        </table>
     </div>
     <script>
         function create_graph(canvas_name, times, title, label, data, color1, color2, color3, color4, text_color, left, right, top, bottom){

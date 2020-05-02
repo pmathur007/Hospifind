@@ -1,7 +1,7 @@
-import math
+import math, json
 import numpy as np
 from flask import render_template, request, url_for, redirect, session
-from application import app
+from application import app, db
 from application.data_analysis import HomeDecision
 from application.models import Hospital, Data
 import geocoder
