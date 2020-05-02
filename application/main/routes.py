@@ -27,7 +27,7 @@ def distance(lat1, lon1, lat2, lon2):
 @app.route("/")
 @app.route("/home", methods=['GET'])
 def home():
-    if session.get('ADDRESS') is None:
+    if 'ADDRESS' not in session:
         session['IP'] = str(request.remote_addr)
         g = geocoder.ip(session['IP'])
         if g.ok and len(g.latlng) == 2 and g.latlng[0] is not None and g.latlng[1] is not None:
@@ -45,7 +45,7 @@ def home():
     print(session['LONGITUDE'])
     # print(state, latitude, longitude)
 
-    if session.get('HOSPITALS') is None or session.get('DATA') is None or session.get('DISTANCES') is None:
+    if 'HOSPITALS' not in session or 'DATA' not in session or 'DISTANCES' not in session:
         hospitals = Hospital.query.all()
         hospitals.sort(key=lambda x: distance(session['LATITUDE'], session['LONGITUDE'], x.latitude, x.longitude))
         hospitals = hospitals[:10]
