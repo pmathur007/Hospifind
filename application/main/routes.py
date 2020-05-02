@@ -30,7 +30,7 @@ def home():
     print("IP: " + str(request.remote_addr))
     session['IP'] = str(request.remote_addr)
     g = geocoder.ip(session['IP'])
-    if g.ok:
+    if g.ok and len(g.latlng) == 2:
         session['ADDRESS'] = g.address
         latlng = g.latlng
     else:
@@ -79,7 +79,7 @@ def home():
             hospitals.append(hospital)
             new_ratings.append(ratings[hospital])
         results = {hospitals[i]: new_ratings[i] for i in range(len(hospitals))}
-        return render_template('home.html', results=results, header="Hospitals Sorted by Distance AND Rating", ip=session['IP'])
+        return render_template('home.html', results=results, header="Hospitals Sorted by Distance AND Rating", ip=session['IP'], adresss=session.get('ADDRESS'), lat=session['LATITUDE'], long=session['LONGITUDE'])
     else:
         hospitals = [Hospital.query.get(hospital) for hospital in session['HOSPITALS']]
         new_ratings = [ratings[hospital] for hospital in hospitals]
