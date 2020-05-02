@@ -90,5 +90,4 @@ class Data(db.Model):
     hospital = db.Column(db.Integer, db.ForeignKey('hospital.id'), nullable=False)
 
     def __repr__(self):
-        return "Data('" + self.hospital + "', '" + self.user + "', '" + self.date + "')"
-        #f"Data(Hospital: '{self.hospital}', User: '{self.user}', Date: '{self.date}') \nBed Capacity:{self.bed_capacity}\nBeds Available: {self.beds_available}\nICUs Available: {self.icus_available}\nVentilators Available: {self.ventilators_available}\nCoronavirus Tests Available: {self.coronavirus_tests_available}\nCoronavirus Patients: {self.coronavirus_patients}\nCoronavirus Patient Percent: {self.coronavirus_patient_percent}'"
+        return f"Data(Hospital: '{self.hospital}', User: '{self.user}', Date: '{self.date}' -- {self.bed_capacity}, {self.beds_available}, {self.icus_available}, {self.ventilators_available}, {self.coronavirus_tests_available}, {self.coronavirus_patients}, {self.coronavirus_patient_percent})"

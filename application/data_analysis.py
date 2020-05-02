@@ -62,15 +62,14 @@ class HomeDecision:
             rating = ncap + nbeds + nicus + nvents + ntests
             ratings[self.hospitals[i]] = rating
 
-        ratings = sorted(ratings.items(), reverse=True, key=operator.itemgetter(1))
-        for i in ratings:
-            self.ratings[i[0]] = round(i[1],2)
+        self.ratings = sorted(ratings.items(), reverse=True, key=operator.itemgetter(1))
+        self.ratings = {hosp[0]: hosp[1] for hosp in self.ratings}
         return self.ratings
 
-    def get_rating_with_distance(self, distances_dict):
+    def get_rating_with_distance(self, distance_dict):
         if not bool(self.ratings):
             self.get_rating()
-        distances = self.scale_distance(distances_dict)
+        distances = self.scale_distance(distance_dict)
 
         nratings = {}
         for i in range(len(self.hospitals)):
@@ -83,7 +82,7 @@ class HomeDecision:
 
         out = {}
         for h in nratings:
-            out[h[0]] = round(h[1],2)
+            out[h[0]] = round(h[1], 2)
         return out
 
     def scale_capacity(self):
@@ -116,25 +115,13 @@ class HomeDecision:
         out = [(n - min_val) / (max_val - min_val) for n in lst]
         return out
 
-    def scale_distance(self, distances_dict):
-        iterator = iter(distances_dict.items())
-        max = min = next(iterator)[1]
-        list = [-1*(self.base**max)]
-        for i in range(1,len(self.hospitals)):
-            n = next(iterator)[1]
-            #linear
-            #list.append(-1*n)
-            #exponential
-            list.append(-1*(self.base**n))
-            if n > max:
-                max = n
-            if n < min:
-                min = n
-        out = []
-        max = self.base**max
-        min = self.base**min
-        for n in list:
-            out.append((n + max) / (max - min))
+    def scale_distance(self, distances):
+        min_val = min(distances)
+        max_val = max(distances)
+        lst = [-1*(self.base**distances[i]) for i in range(len(distances))]
+        max_val = self.base**max_val
+        min_val = self.base**min_val
+        out = [(n + max_val) / (max_val - min_val) for n in lst]
         return out
 
 
@@ -159,14 +146,14 @@ class PersonalDecision:
 
         self.base = 1.1
 
-    def get_rating(self, distance_dict):
+    def get_rating(self, distances):
         capacities = self.scale_capacity()
         beds = self.scale_beds()
         icus = self.scale_icus()
         vents = self.scale_vents()
         tests = self.scale_tests()
         corona_percents = self.scale_corona_percents()
-        distances = self.scale_distance(distance_dict)
+        distances = self.scale_distance(distances)
         ratings = {}
 
         for i in range(len(self.hospitals)):
@@ -180,9 +167,8 @@ class PersonalDecision:
             rating = ncap + nbeds + nicus + nvents + ntests + ncorona_percents + ndistances
             ratings[self.hospitals[i]] = rating
 
-        ratings = sorted(ratings.items(), reverse=True, key=operator.itemgetter(1))
-        for i in ratings:
-            self.ratings[i[0]] = round(i[1], 2)
+        self.ratings = sorted(ratings.items(), reverse=True, key=operator.itemgetter(1))
+        self.ratings = {hosp[0]: hosp[1] for hosp in self.ratings}
         return self.ratings
 
     def scale_capacity(self):
@@ -216,23 +202,23 @@ class PersonalDecision:
         return out
 
     def scale_corona_percents(self):
-        symptoms = {"fever":0.879, "dry cough":0.677, "fatigue":0.381, "phlegm":0.334, "shortness of breath":0.186,
-                 "sore throat, headache": 0.139, "chills": 0.114, "vomiting":0.05, "nasal congestion":0.048, "diarrhea":0.037}
+        symptoms = {"0": 0.879, "1": 0.677, "2": 0.381, "3": 0.334, "4": 0.186,
+                    "5": 0.139, "6": 0.114, "7": 0.05, "8": 0.048, "9": 0.037}
         symptom_val = 0
         for s in self.patient.symptoms:
             symptom_val += symptoms[s]
         symptoms = symptom_val > self.symptoms_cutoff # if a person has high symptoms, true is high, false if low (use symptom score to calc)
-        risk = self.patient.age + self.patient.under_conditions + self.patient.area > self.risk_cutoff # if a person is risky, true if risky, false if not (use age and underlying conditions to calc)
+        risk = self.patient.age + self.patient.conditions + self.patient.near_covid > self.risk_cutoff # if a person is risky, true if risky, false if not (use age and underlying conditions to calc)
 
         lst = [self.data[i].coronavirus_patient_percent for i in range(len(self.data))]
         max_val = max(lst); min_val = min(lst)
         out = [(n - min_val) / (max_val - min_val) if risk or (not symptoms) else (1-n) for n in lst] # could be 'and' instead of 'or'
         return out
 
-    def scale_distance(self, distance_dict):
-        min_val = min(distance_dict.values())
-        max_val = max(distance_dict.values())
-        lst = [-1*(self.base**distance_dict[i]) for i in range(len(distance_dict))]
+    def scale_distance(self, distances):
+        min_val = min(distances)
+        max_val = max(distances)
+        lst = [-1*(self.base**distances[i]) for i in range(len(distances))]
         max_val = self.base**max_val
         min_val = self.base**min_val
         out = [(n + max_val) / (max_val - min_val) for n in lst]
