@@ -6,50 +6,6 @@ from application.data_analysis import HomeDecision
 from application.models import Hospital, Data
 
 
-@app.route("/")
-@app.route("/home", methods=['GET'])
-def home():
-    print("IP: " + str(request.remote_addr))
-    ip = '71.191.46.159'  # str(request.remote_addr)
-    # g = geocoder.ip(ip)
-    # print(g)
-    state = 'VA'  # g.state()
-    session['latitude'] = 38.8809
-    session['longitude'] = -77.3008  # g.latlng()
-    # print(state, latitude, longitude)
-    hospitals = Hospital.query.all()
-    hospitals.sort(key=lambda x: distance(session['latitude'], session['longitude'], x.latitude, x.longitude))
-    hospitals = hospitals[:10]
-
-    sort = ""
-    if sort == "rating":
-        data = [Data.query.filter_by(hospital=hospital.id).order_by(Data.date.desc()).first() for hospital in hospitals]
-        decision_maker = HomeDecision(hospitals, data)
-        results = decision_maker.get_rating()
-        hospitals = []
-        ratings = []
-        for hospital in results:
-            hospitals.append(hospital)
-            ratings.append(results[hospital])
-            print(hospital, results[hospital])
-        return render_template('home.html', hospitals=hospitals, ratings=ratings)
-    elif sort == "distance_and_rating" or sort == "rating_and_distance":
-        data = [Data.query.filter_by(hospital=hospital.id).order_by(Data.date.desc()).first() for hospital in hospitals]
-        decision_maker = HomeDecision(hospitals, data)
-        distances_dict = {h: distance(session['latitude'], session['longitude'], h.latitude, h.longitude) for h in
-                          hospitals}
-        results = decision_maker.get_rating_with_distance(distances_dict)
-        hospitals = []
-        ratings = []
-        for hospital in results:
-            hospitals.append(hospital)
-            ratings.append(results[hospital])
-            print(hospital, results[hospital], distances_dict[hospital])
-        return render_template('home.html', hospitals=hospitals, ratings=ratings)
-    else:
-        return render_template('home.html', hospitals=hospitals, ratings=None)
-
-
 def distance(lat1, lon1, lat2, lon2):
     R = 6373.0
 
@@ -65,6 +21,66 @@ def distance(lat1, lon1, lat2, lon2):
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
 
     return R * c
+
+
+@app.route("/")
+@app.route("/home", methods=['GET'])
+def home():
+    print("IP: " + str(request.remote_addr))
+    session['IP'] = '71.191.46.159'  # str(request.remote_addr)
+    # g = geocoder.ip(ip)
+    # print(g)
+    state = 'VA'  # g.state()
+    session['LATITUDE'] = 38.8809
+    session['LONGITUDE'] = -77.3008  # g.latlng()
+    # print(state, latitude, longitude)
+
+    if session.get('HOSPITALS') is None or session.get('DATA') is None or session.get('DISTANCES') is None:
+        hospitals = Hospital.query.all()
+        hospitals.sort(key=lambda x: distance(session['LATITUDE'], session['LONGITUDE'], x.latitude, x.longitude))
+        hospitals = hospitals[:10]
+        session['HOSPITALS'] = [hospital.id for hospital in hospitals]
+        data = [Data.query.filter_by(hospital=hospital.id).order_by(Data.date.desc()).first() for hospital in hospitals]
+        session['DATA'] = [d.id for d in data]
+
+    decision_maker = HomeDecision([Hospital.query.get(hospital) for hospital in session['HOSPITALS']], [Data.query.get(data) for data in session['DATA']])
+    results = decision_maker.get_rating()
+
+    hospitals = []
+    ratings = {}
+    for hospital in results:
+        hospitals.append(hospital)
+        rating = results[hospital]
+        if rating > 8:
+            rating = "Great"
+        elif rating > 5:
+            rating = "Good"
+        elif rating > 1:
+            rating = "OK"
+        else:
+            rating = "Low Availability"
+        ratings[hospital] = rating
+
+    sort = "distance_and_rating"
+    if sort == "rating":
+        new_ratings = [ratings[hospital] for hospital in ratings]
+        results = {hospitals[i]: new_ratings[i] for i in range(len(hospitals))}
+        return render_template('home.html', results=results, header="Hospitals Sorted by Rating")
+    elif sort == "distance_and_rating" or sort == "rating_and_distance":
+        distances = [distance(session['LATITUDE'], session['LONGITUDE'], Hospital.query.get(hosp).latitude, Hospital.query.get(hosp).longitude) for hosp in session['HOSPITALS']]
+        results_with_dist = decision_maker.get_rating_with_distance(distances)
+        hospitals = []
+        new_ratings = []
+        for hospital in results_with_dist:
+            hospitals.append(hospital)
+            new_ratings.append(ratings[hospital])
+        results = {hospitals[i]: new_ratings[i] for i in range(len(hospitals))}
+        return render_template('home.html', results=results, header="Hospitals Sorted by Distance AND Rating")
+    else:
+        hospitals = [Hospital.query.get(hospital) for hospital in session['HOSPITALS']]
+        new_ratings = [ratings[hospital] for hospital in hospitals]
+        results = {hospitals[i] : new_ratings[i] for i in range(len(hospitals))}
+        return render_template('home.html', results=results, header="Hospitals Sorted by Distance")
 
 
 # @app.route("/db", methods=['POST'])

@@ -8,10 +8,20 @@
     </section>
     <section>
         <div id="map"></div>
-        {% for hospital in hospitals %}
+        <h2>{{ header }}</h2>
+        {% for hospital, rating in results.items() %}
             <div class="hospital_result">
                 <h3>{{ hospital.name }}</h3>
                 <p>{{ hospital.address }}</p>
+                {% if rating == 'Great' %}
+                    <p style="color:green">{{ rating }}</p>
+                {% elif rating == 'Good' %}
+                    <p style="color:#f8fb4c">{{ rating }}</p>
+                {% elif rating == 'OK' %}
+                    <p style="color:orange">{{ rating }}</p>
+                {% elif rating == 'Low Availability' %}
+                    <p style="color:red">{{ rating }}</p>
+                {% endif %}
                 <!-- <p>{{ hospital.admin_hex_id }}</p>
                 <p>{{ hospital.normal_hex_id }}</p> -->
                 <a href="{{ hospital.directions_link }}" class="btn btn-dark">Get directions</a>
