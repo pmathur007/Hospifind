@@ -102,8 +102,8 @@ def account():
             user_info.append((user, user.username, num, last))
 
         if hospital.system_open:
-            admin_invite_link = "hospifind.tech/hospital/register/admin/" + hospital.admin_hex_id
-            user_invite_link = "hospifind.tech/hospital/register/" + hospital.normal_hex_id
+            admin_invite_link = "/hospital/register/admin/" + hospital.admin_hex_id
+            user_invite_link = "/hospital/register/" + hospital.normal_hex_id
         else:
             admin_invite_link = ""
             user_invite_link = ""
