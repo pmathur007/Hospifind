@@ -18,7 +18,7 @@ class Patient:
 
 @app.route("/patient_form", methods=["GET", "POST"])
 def patient_form():
-    if session.get('HOSPITALS') is None:
+    if 'HOSPITALS' not in session:
         return redirect(url_for('home'))
 
     print(session['HOSPITALS'])
@@ -39,7 +39,7 @@ def patient_form():
 
 @app.route("/patient_results")
 def patient_results():
-    if session.get('PERSONALIZED_HOSPITALS') is None or session.get('PERSONALIZED_RATINGS') is None:
+    if 'PERSONALIZED_HOSPITALS' not in session or 'PERSONALIZED_RATINGS' not in session:
         return redirect(url_for('home'))
     hospitals = [Hospital.query.get(hospital) for hospital in session['PERSONALIZED_HOSPITALS']]
     ratings = []
@@ -80,15 +80,15 @@ def input_location():
             flash("We couldn't find the address you entered! Please try again.", 'danger')
             return redirect(url_for('input_location'))
     elif request.method == 'GET':
-        if session.get('STREET_ADDRESS') is not None:
+        if 'STREET_ADDRESS' not in session:
             form.street_address.data = session['STREET_ADDRESS']
-        if session.get('CITY') is not None:
+        if 'CITY' not in session:
             form.city.data = session['CITY']
-        if session.get('STATE') is not None:
+        if 'STATE' not in session:
             form.state.data = session['STATE']
-        if session.get('COUNTRY') is not None:
+        if 'COUNTRY' not in session:
             form.country.data = session['COUNTRY']
-        if session.get('ZIP_CODE') is not None:
+        if 'ZIP_CODE' not in session:
             form.zip_code.data = session['ZIP_CODE']
     return render_template('input_location.html', form=form)
 
