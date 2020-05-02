@@ -30,12 +30,11 @@ def home():
     print("IP: " + str(request.remote_addr))
     session['IP'] = str(request.remote_addr)
     g = geocoder.ip(session['IP'])
-    print(g)
     session['ADDRESS'] = g.address()
     latlng = g.latlng()
-    session['LATITUDE'] = latlng[0]
-    session['LONGITUDE'] = latlng[1]
-    # print(address, latitude, longitude)
+    session['LATITUDE'] = 38.8809
+    session['LONGITUDE'] = -77.3008  # g.latlng()
+    # print(state, latitude, longitude)
 
     if session.get('HOSPITALS') is None or session.get('DATA') is None or session.get('DISTANCES') is None:
         hospitals = Hospital.query.all()
@@ -67,7 +66,7 @@ def home():
     if sort == "rating":
         new_ratings = [ratings[hospital] for hospital in ratings]
         results = {hospitals[i]: new_ratings[i] for i in range(len(hospitals))}
-        return render_template('home.html', results=results, header="Hospitals Sorted by Rating", address=session['ADDRESS'])
+        return render_template('home.html', results=results, header="Hospitals Sorted by Rating")
     elif sort == "distance_and_rating" or sort == "rating_and_distance":
         distances = [distance(session['LATITUDE'], session['LONGITUDE'], Hospital.query.get(hosp).latitude, Hospital.query.get(hosp).longitude) for hosp in session['HOSPITALS']]
         results_with_dist = decision_maker.get_rating_with_distance(distances)
@@ -77,12 +76,12 @@ def home():
             hospitals.append(hospital)
             new_ratings.append(ratings[hospital])
         results = {hospitals[i]: new_ratings[i] for i in range(len(hospitals))}
-        return render_template('home.html', results=results, header="Hospitals Sorted by Distance AND Rating", address=session['ADDRESS'])
+        return render_template('home.html', results=results, header="Hospitals Sorted by Distance AND Rating", latlng=latlng)
     else:
         hospitals = [Hospital.query.get(hospital) for hospital in session['HOSPITALS']]
         new_ratings = [ratings[hospital] for hospital in hospitals]
         results = {hospitals[i] : new_ratings[i] for i in range(len(hospitals))}
-        return render_template('home.html', results=results, header="Hospitals Sorted by Distance", address=session['ADDRESS'])
+        return render_template('home.html', results=results, header="Hospitals Sorted by Distance")
 
 
 # @app.route("/db", methods=['POST'])
