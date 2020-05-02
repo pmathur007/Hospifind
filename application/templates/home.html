@@ -5,7 +5,8 @@
         <h2>Get the Care You Need</h2>
         <p>Hospifind shows you which hospitals have the capacity to treat you to ensure you get the care you need. Scroll down to see nearby hospitals and their treatment capacities. For personalized results, click the button below.</p>
         <a href="{{ url_for('patient_form') }}">Get Personalized Results</a>
-        <p class="text-muted">We automatically detected your location to be {{ ip }}, {{ address }}, {{ lat }}, {{ long }}, {{ g }}. If this is incorrect or can be made more accurate, click this button to enter your location manually.</p>
+        <p class="text-muted">We automatically detected your location to be <strong>{{ address }}</strong>. If this is incorrect or can be made more accurate, click this button to enter your location manually.</p>
+	<a class="btn btn-light">Input Location</a>
     </section>
     <section>
         <div id="map"></div>
