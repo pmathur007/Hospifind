@@ -6,42 +6,31 @@ from application.data_analysis import HomeDecision
 from application.models import User, Hospital, Data
 from sqlalchemy_json_querybuilder.querybuilder.search import Search
 import geocoder
-
-
-def distance(lat1, lon1, lat2, lon2):
-    R = 6373.0
-
-    lat1 = np.deg2rad(lat1)
-    lat2 = np.deg2rad(lat2)
-    lon1 = np.deg2rad(lon1)
-    lon2 = np.deg2rad(lon2)
-
-    dlon = lon2 - lon1
-    dlat = lat2 - lat1
-
-    a = math.sin(dlat / 2) ** 2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2) ** 2
-    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-
-    return R * c
+from application.utils import distance
 
 
 @app.route("/")
 @app.route("/home", methods=['GET'])
 def home():
-    print("IP: " + str(request.remote_addr))
-    session['IP'] = str(request.remote_addr)
-    g = geocoder.ip(session['IP'])
-    if g.ok and len(g.latlng) == 2 and g.latlng[0] is not None and g.latlng[1] is not None:
-        session['ADDRESS'] = g.city + ", " + g.state + ", " + g.country
-        latlng = g.latlng
-    else:
-        session['ADDRESS'] = "FAILURE"
-        latlng = [38.8809, -77.3008]
-    session['LATITUDE'] = latlng[0]
-    session['LONGITUDE'] = latlng[1]
+    if 'ADDRESS' not in session:
+        session['IP'] = str(request.remote_addr)
+        g = geocoder.ip(session['IP'])
+        if g.ok and len(g.latlng) == 2 and g.latlng[0] is not None and g.latlng[1] is not None:
+            session['ADDRESS'] = g.city + ", " + g.state + ", " + g.country
+            session['CITY'] = g.city
+            session['STATE'] = g.state
+            session['COUNTRY'] = g.country
+            latlng = g.latlng
+        else:
+            session['ADDRESS'] = "FAILURE"
+            latlng = [38.8809, -77.3008]
+        session['LATITUDE'] = latlng[0]
+        session['LONGITUDE'] = latlng[1]
+    print(session['LATITUDE'])
+    print(session['LONGITUDE'])
     # print(state, latitude, longitude)
 
-    if session.get('HOSPITALS') is None or session.get('DATA') is None or session.get('DISTANCES') is None:
+    if 'HOSPITALS' not in session or 'DATA' not in session or 'DISTANCES' not in session:
         hospitals = Hospital.query.all()
         hospitals.sort(key=lambda x: distance(session['LATITUDE'], session['LONGITUDE'], x.latitude, x.longitude))
         hospitals = hospitals[:10]
@@ -81,7 +70,7 @@ def home():
             hospitals.append(hospital)
             new_ratings.append(ratings[hospital])
         results = {hospitals[i]: new_ratings[i] for i in range(len(hospitals))}
-        return render_template('home.html', results=results, header="Hospitals Sorted by Distance AND Rating", ip=session['IP'], address=session['ADDRESS'], lat=session['LATITUDE'], long=session['LONGITUDE'])
+        return render_template('home.html', results=results, header="Hospitals Sorted by Distance & Rating", address=session['ADDRESS'])
     else:
         hospitals = [Hospital.query.get(hospital) for hospital in session['HOSPITALS']]
         new_ratings = [ratings[hospital] for hospital in hospitals]

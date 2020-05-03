@@ -1,14 +1,15 @@
 {% extends "layout.html" %}
 {% block content %}
     <h1>Personalized Results</h1>
+    <p class="mb-2 border-bottom">*Note: Ratings are based on hospital AND distance data.</p>
     {% for hospital, rating in results.items() %}
         <div class="hospital_result">
             <h3>{{ hospital.name }}</h3>
             <p>{{ hospital.address }}</p>
             {% if rating == 'Great' %}
-                <p style="color:green">{{ rating }}</p>
+                <p style="color:lime">{{ rating }}</p>
             {% elif rating == 'Good' %}
-                <p style="color:#f8fb4c">{{ rating }}</p>
+                <p style="color:green">{{ rating }}</p>
             {% elif rating == 'OK' %}
                 <p style="color:orange">{{ rating }}</p>
             {% elif rating == 'Low Availability' %}

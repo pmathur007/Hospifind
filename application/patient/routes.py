@@ -1,8 +1,11 @@
-from flask import render_template, request, url_for, redirect, session
+from flask import render_template, request, url_for, redirect, session, flash
 from application import app
 from application.models import Hospital, Data
 from application.data_analysis import PersonalDecision
-from application.main.routes import distance
+from application.utils import distance
+from application.patient.forms import InputLocationForm
+import geocoder
+import os
 
 
 class Patient:
@@ -15,7 +18,7 @@ class Patient:
 
 @app.route("/patient_form", methods=["GET", "POST"])
 def patient_form():
-    if session.get('HOSPITALS') is None:
+    if 'HOSPITALS' not in session:
         return redirect(url_for('home'))
 
     print(session['HOSPITALS'])
@@ -36,7 +39,7 @@ def patient_form():
 
 @app.route("/patient_results")
 def patient_results():
-    if session.get('PERSONALIZED_HOSPITALS') is None or session.get('PERSONALIZED_RATINGS') is None:
+    if 'PERSONALIZED_HOSPITALS' not in session or 'PERSONALIZED_RATINGS' not in session:
         return redirect(url_for('home'))
     hospitals = [Hospital.query.get(hospital) for hospital in session['PERSONALIZED_HOSPITALS']]
     ratings = []
@@ -52,6 +55,42 @@ def patient_results():
         ratings.append(rating)
     results = {hospitals[i]: ratings[i] for i in range(len(hospitals))}
     return render_template('patient_results.html', title='Personalized Results', results=results)
+
+
+@app.route("/input_location", methods=['GET', 'POST'])
+def input_location():
+    form = InputLocationForm()
+    if form.validate_on_submit():
+        address = form.street_address.data + ", " + form.city.data + ", " + form.state.data + ", " + form.country.data + " " + form.zip_code.data
+        print(address)
+        g = geocoder.google(address, key=os.environ.get('GOOGLE_API_KEY'))
+        print(g)
+        if g.ok and len(g.latlng) == 2 and g.latlng[0] is not None and g.latlng[1] is not None:
+            session['ADDRESS'] = address
+            session['STREET_ADDRESS'] = form.street_address.data
+            session['CITY'] = form.city.data
+            session['STATE'] = form.state.data
+            session['COUNTRY'] = form.country.data
+            session['ZIP_CODE'] = form.zip_code.data
+            session['LATITUDE'] = g.latlng[0]
+            session['LONGITUDE'] = g.latlng[1]
+            flash('Your location has been updated!', 'success')
+            return redirect(url_for('home'))
+        else:
+            flash("We couldn't find the address you entered! Please try again." + " - " + str(g), 'danger')
+            return redirect(url_for('input_location'))
+    elif request.method == 'GET':
+        if 'STREET_ADDRESS' in session:
+            form.street_address.data = session['STREET_ADDRESS']
+        if 'CITY' in session:
+            form.city.data = session['CITY']
+        if 'STATE' in session:
+            form.state.data = session['STATE']
+        if 'COUNTRY' in session:
+            form.country.data = session['COUNTRY']
+        if 'ZIP_CODE' in session:
+            form.zip_code.data = session['ZIP_CODE']
+    return render_template('input_location.html', form=form)
 
 
 @app.route("/call_911")

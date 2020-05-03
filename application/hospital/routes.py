@@ -2,8 +2,19 @@ from flask import render_template, flash, request, url_for, redirect, abort
 from flask_login import login_user, current_user, logout_user, login_required
 from application import app, bcrypt, db
 from application.models import Hospital, User, Data
-from application.hospital.forms import RegistrationForm, LoginForm, DataForm, UpdateAccountForm
+from application.hospital.forms import RegistrationForm, LoginForm, DataForm, UpdateAccountForm, RequestAccountForm
 from datetime import datetime
+from application.utils import send_request_email
+
+
+@app.route("/request_account", methods=["GET", "POST"])
+def request_account():
+    form = RequestAccountForm()
+    if form.validate_on_submit():
+        send_request_email(form.hospital.data, form.name.data, form.title.data, form.email.data, form.phone.data, form.message.data)
+        flash("An email has been sent to the Hospifind team for review. We will be in contact with you shortly.", 'success')
+        return redirect(url_for('home'))
+    return render_template('request_account.html', form=form)
 
 
 @app.route("/hospital/register/admin/<string:admin_hex_id>", methods=['GET', 'POST'])
@@ -196,5 +207,3 @@ def open_system(hospital_id):
     db.session.commit()
     flash('Your hospital system is now open! Your most recent invitation links have been reactivated and new users can now join.', 'success')
     return redirect(url_for('account'))
-
-

@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, SelectField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, TextAreaField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, NumberRange
 from flask_login import current_user
 from application.models import User
@@ -59,3 +59,20 @@ class UpdateAccountForm(FlaskForm):
             user = User.query.filter_by(email=email.data).first()
             if user:
                 raise ValidationError('That email is taken. Please choose a different one!')
+
+
+class RequestAccountForm(FlaskForm):
+    hospital = StringField('Hospital Name', validators=[DataRequired()])
+    name = StringField('Name', validators=[DataRequired()])
+    title = StringField('Title', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    phone = StringField('Phone Number', validators=[DataRequired()])
+    message = TextAreaField('Message/Additional Details')
+    submit = SubmitField('Submit Request')
+
+    def validate_phone(self, phone):
+        if len(phone.data) < 10 or len(phone.data) > 15:
+            raise ValidationError('Please enter a valid phone number.')
+        for char in phone.data:
+            if char not in '0123456789-+':
+                raise ValidationError('Please enter a valid phone number.')
