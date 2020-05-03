@@ -1,4 +1,5 @@
 .idea
+venv
 hospifindvenv
 application/static/js/node_modules
 application/templates/site.db
