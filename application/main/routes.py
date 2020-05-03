@@ -85,7 +85,7 @@ def home():
             hospitals.append(hospital)
             new_ratings.append(ratings[hospital])
         results = {hospitals[i]: new_ratings[i] for i in range(len(hospitals))}
-        return render_template('home.html', results=results, header="Hospitals Sorted by Distance AND Rating", ip=session['IP'], address=session['ADDRESS'], lat=session['LATITUDE'], long=session['LONGITUDE'])
+        return render_template('home.html', results=results, header="Hospitals Sorted by Distance & Rating", address=session['ADDRESS'])
     else:
         hospitals = [Hospital.query.get(hospital) for hospital in session['HOSPITALS']]
         new_ratings = [ratings[hospital] for hospital in hospitals]
