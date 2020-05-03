@@ -77,7 +77,7 @@ def input_location():
             flash('Your location has been updated!', 'success')
             return redirect(url_for('home'))
         else:
-            flash("We couldn't find the address you entered! Please try again.", 'danger')
+            flash("We couldn't find the address you entered! Please try again." + " - " + str(g), 'danger')
             return redirect(url_for('input_location'))
     elif request.method == 'GET':
         if 'STREET_ADDRESS' in session:
