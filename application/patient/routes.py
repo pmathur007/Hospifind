@@ -2,7 +2,7 @@ from flask import render_template, request, url_for, redirect, session, flash
 from application import app
 from application.models import Hospital, Data
 from application.data_analysis import PersonalDecision
-from application.main.routes import distance
+from application.utils import distance
 from application.patient.forms import InputLocationForm
 import geocoder
 import os
@@ -77,7 +77,7 @@ def input_location():
             flash('Your location has been updated!', 'success')
             return redirect(url_for('home'))
         else:
-            flash("We couldn't find the address you entered! Please try again.", 'danger')
+            flash("We couldn't find the address you entered! Please try again." + " - " + str(g), 'danger')
             return redirect(url_for('input_location'))
     elif request.method == 'GET':
         if 'STREET_ADDRESS' in session:
