@@ -3,7 +3,8 @@ import numpy as np
 from flask import render_template, request, url_for, redirect, session
 from application import app, db
 from application.data_analysis import HomeDecision
-from application.models import Hospital, Data
+from application.models import User, Hospital, Data
+from sqlalchemy_json_querybuilder.querybuilder.search import Search
 import geocoder
 
 
@@ -88,20 +89,17 @@ def home():
         return render_template('home.html', results=results, header="Hospitals Sorted by Distance")
 
 
-# @app.route("/db", methods=['POST'])
-# def query_db():
-#     tables = {
-#         'Hospital': Hospital,
-#         'User': User,
-#         'Data': Data
-#     }
-#
-#     req_data = request.get_json()
-#
-#     filter_by = req_data['filter_by']
-#
-#     raw_results = Search(db.session, 'application.models', (tables[req_data['table_name']],), filter_by=filter_by, all=True).results['data']
-#
-#     dict_results = [{c.name: str(getattr(result, c.name)) for c in result.__table__.columns} for result in raw_results]
-#
-#     return json.dumps(dict_results)
+@app.route("/db", methods=['POST'])
+def query_db():
+    tables = {
+        'Hospital': Hospital,
+        'User': User,
+        'Data': Data
+    }
+
+    req_data = request.get_json()
+    filter_by = req_data['filter_by']
+    raw_results = Search(db.session, 'application.models', (tables[req_data['table_name']],), filter_by=filter_by, all=True).results['data']
+    dict_results = [{c.name: str(getattr(result, c.name)) for c in result.__table__.columns} for result in raw_results]
+
+    return json.dumps(dict_results)
