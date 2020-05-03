@@ -2,7 +2,7 @@ from flask import render_template, request, url_for, redirect, session, flash
 from application import app
 from application.models import Hospital, Data
 from application.data_analysis import PersonalDecision
-from application.main.routes import distance
+from application.utils import distance
 from application.patient.forms import InputLocationForm
 import geocoder
 import os

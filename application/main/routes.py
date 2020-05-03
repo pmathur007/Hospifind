@@ -5,23 +5,7 @@ from application import app, db
 from application.data_analysis import HomeDecision
 from application.models import Hospital, Data
 import geocoder
-
-
-def distance(lat1, lon1, lat2, lon2):
-    R = 6373.0
-
-    lat1 = np.deg2rad(lat1)
-    lat2 = np.deg2rad(lat2)
-    lon1 = np.deg2rad(lon1)
-    lon2 = np.deg2rad(lon2)
-
-    dlon = lon2 - lon1
-    dlat = lat2 - lat1
-
-    a = math.sin(dlat / 2) ** 2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2) ** 2
-    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-
-    return R * c
+from application.utils import distance
 
 
 @app.route("/")
