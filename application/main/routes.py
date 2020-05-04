@@ -1,11 +1,10 @@
-import math, json
-import numpy as np
-from flask import render_template, request, url_for, redirect, session
+import json
+import geocoder
+from flask import render_template, request, session
+from sqlalchemy_json_querybuilder.querybuilder.search import Search
 from application import app, db
 from application.data_analysis import HomeDecision
 from application.models import User, Hospital, Data
-from sqlalchemy_json_querybuilder.querybuilder.search import Search
-import geocoder
 from application.utils import distance
 
 
