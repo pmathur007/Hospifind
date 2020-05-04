@@ -20,11 +20,11 @@ app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 
-if path.exists('environment_variables.txt'):
-    f = open('environment_variables.txt', 'r')
+if path.exists(os.path.join('application', 'environment_variables.txt')):
+    f = open(os.path.join('application', 'environment_variables.txt'), 'r')
+    app.config['GOOGLE_API_KEY'] = f.readline().strip()
     app.config['MAIL_USERNAME'] = f.readline().strip()
     app.config['MAIL_PASSWORD'] = f.readline().strip()
-    app.config['GOOGLE_API_KEY'] = f.readline().strip()
 else:
     app.config['MAIL_USERNAME'] = None
     app.config['MAIL_PASSWORD'] = None
