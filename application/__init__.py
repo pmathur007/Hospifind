@@ -19,8 +19,8 @@ app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = os.environ.get('HOSPIFIND_EMAIL_USER')
-print(os.environ.get('HOSPIFIND_EMAIL_USER'))
 app.config['MAIL_PASSWORD'] = os.environ.get('HOSPIFIND_EMAIL_PASS')
+app.config['GOOGLE_API_KEY'] = os.environ.get('GOOGLE_API_KEY')
 mail = Mail(app)
 
 app.config['TEMPLATES_AUTO_RELOAD'] = True
