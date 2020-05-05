@@ -1,11 +1,6 @@
 .idea
+venv
 hospifindvenv
 application/static/js/node_modules
 application/templates/site.db
-application/__init__.pyc
-application/data_analysis.pyc
-application/forms.pyc
-application/models.pyc
-application/routes.pyc
-run.pyc
-wsgi.pyc
+application/environment_variables.txt

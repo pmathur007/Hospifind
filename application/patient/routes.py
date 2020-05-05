@@ -63,7 +63,7 @@ def input_location():
     if form.validate_on_submit():
         address = form.street_address.data + ", " + form.city.data + ", " + form.state.data + ", " + form.country.data + " " + form.zip_code.data
         print(address)
-        g = geocoder.google(address, key=os.environ.get('GOOGLE_API_KEY'))
+        g = geocoder.google(address, key=app.config.get('GOOGLE_API_KEY'))
         print(g)
         if g.ok and len(g.latlng) == 2 and g.latlng[0] is not None and g.latlng[1] is not None:
             session['ADDRESS'] = address
@@ -77,7 +77,7 @@ def input_location():
             flash('Your location has been updated!', 'success')
             return redirect(url_for('home'))
         else:
-            flash("We couldn't find the address you entered! Please try again." + " - " + str(g), 'danger')
+            flash("We couldn't find the address you entered! Please try again." + " - ERROR: " + str(g), 'danger')
             return redirect(url_for('input_location'))
     elif request.method == 'GET':
         if 'STREET_ADDRESS' in session:
