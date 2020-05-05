@@ -1,4 +1,6 @@
-$font-stack: sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
+
+$font-stack: 'Ubuntu', sans-serif;
 $primary-color: #e60000;
 
 @function set-text-color($color) {

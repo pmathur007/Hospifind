@@ -1,27 +1,38 @@
-* {
-  font-family: Ubuntu;
-  margin: 0;
-  padding: 0;
-  color: white;
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu&display=swap");
+.btn-dark, .btn-light {
+  border-radius: 5px;
+  border: solid 1px #333;
+  max-width: 250px;
 }
 
-table.sortable thead{
-    background-color:#a9a9a9;
-    cursor: default;
+.btn-light {
+  background-color: rgba(255, 255, 255, 0.5);
+  color: #333;
+}
+.btn-light:hover {
+  border: solid 1px #333;
+  background-color: rgba(230, 230, 230, 0.5);
+  color: #333;
+}
+
+* {
+  font-family: "Ubuntu", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  height: 100%;
+  margin-top: 5vh;
+}
+
+header {
+  color: #e60000;
+  height: 5vh;
 }
 
 a:hover {
   text-decoration: none;
-}
-
-body {
-  background: black;
-  margin-top: 5rem;
-}
-
-header {
-  background: black;
-  color: white;
 }
 
 #logo_title {
@@ -32,73 +43,40 @@ header {
   height: 2rem;
 }
 
+#home_info {
+  background: url(../images/background_hospital.jpg) no-repeat center center fixed;
+  background-size: cover;
+  text-align: center;
+  padding: 5%;
+}
+#home_info a {
+  display: block;
+  margin: 5px auto;
+}
+
 .hospital_result {
-  padding-bottom: 10px;
-  margin-bottom: 1vh;
-  border-bottom: 2px solid #d9d9d9;
+  background: #f2f2f2;
+  border-radius: 10px;
+  margin: 10px 5%;
+  padding: 20px;
+  text-align: center;
 }
-.hospital_result h3 {
-  font-size: 1.2em;
+.hospital_result div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-.hospital_result p {
+.hospital_result div p, .hospital_result div a {
   margin: 0;
+  display: inline-block;
+  width: 50%;
 }
-.hospital_result a {
-  background-color: #d9d9d9;
-  color: #333;
-  padding: 5px 7px;
+.hospital_result div p {
+  font-size: 1.5em;
+  text-align: left;
 }
-.hospital_result a:hover {
-  text-decoration: none;
-}
-
-.plabel {
-    display: block;
+.hospital_result div a {
+  padding: 10px 0;
 }
 
-.modal-header {
-    background-color: black;
-    color: white;
-}
-
-.modal-content {
-    background-color: black;
-    color: white;
-}
-
-.modal-body {
-    background-color: black;
-    color: white;
-}
-
-.modal-footer {
-    background-color: black;
-    color: white;
-}
-
-.modal-footer {
-    background-color: black;
-    color: white;
-}
-
-table {
-  table-layout: fixed;
-  width: 100%;
-}
-
-th {
-  vertical-align: middle;
-  text-align: center;
-  width: 10%;
-}
-
-td {
-  vertical-align: middle;
-  text-align: center;
-  width: 10%;
-}
-
-footer {
-    text-align: center;
-}
 /*# sourceMappingURL=main.css.map */
