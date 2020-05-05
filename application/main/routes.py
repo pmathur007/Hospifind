@@ -1,16 +1,25 @@
 import json
 import geocoder
-from flask import render_template, request, session
+from flask import render_template, request, session, redirect, url_for, flash
 from sqlalchemy_json_querybuilder.querybuilder.search import Search
 from application import app, db
 from application.data_analysis import HomeDecision
 from application.models import User, Hospital, Data
 from application.utils import distance
+from application.main.forms import ContactForm
+from application.utils import send_contact_email
 
 
-@app.route("/")
-@app.route("/home", methods=['GET'])
+@app.route("/", methods=['GET', 'POST'])
+@app.route("/home", methods=['GET', 'POST'])
 def home():
+    form = ContactForm()
+    if form.validate_on_submit():
+        print('here')
+        send_contact_email(form.name.data, form.email.data, form.subject.data, form.message.data)
+        flash('Your contact email has been sent to the Hospifind team!', 'success')
+        return redirect(url_for('home'))
+
     if 'ADDRESS' not in session:
         session['IP'] = str(request.remote_addr)
         g = geocoder.ip(session['IP'])
@@ -59,7 +68,7 @@ def home():
     if sort == "rating":
         new_ratings = [ratings[hospital] for hospital in ratings]
         results = {hospitals[i]: new_ratings[i] for i in range(len(hospitals))}
-        return render_template('home.html', results=results, header="Hospitals Sorted by Rating")
+        return render_template('home.html', results=results, header="Hospitals Sorted by Rating", form=form)
     elif sort == "distance_and_rating" or sort == "rating_and_distance":
         distances = [distance(session['LATITUDE'], session['LONGITUDE'], Hospital.query.get(hosp).latitude, Hospital.query.get(hosp).longitude) for hosp in session['HOSPITALS']]
         results_with_dist = decision_maker.get_rating_with_distance(distances)
@@ -69,12 +78,12 @@ def home():
             hospitals.append(hospital)
             new_ratings.append(ratings[hospital])
         results = {hospitals[i]: new_ratings[i] for i in range(len(hospitals))}
-        return render_template('home.html', results=results, header="Hospitals Sorted by Distance & Rating", address=session['ADDRESS'])
+        return render_template('home.html', results=results, header="Hospitals Sorted by Distance & Rating", address=session['ADDRESS'], form=form)
     else:
         hospitals = [Hospital.query.get(hospital) for hospital in session['HOSPITALS']]
         new_ratings = [ratings[hospital] for hospital in hospitals]
         results = {hospitals[i] : new_ratings[i] for i in range(len(hospitals))}
-        return render_template('home.html', results=results, header="Hospitals Sorted by Distance")
+        return render_template('home.html', results=results, header="Hospitals Sorted by Distance", form=form)
 
 
 @app.route("/db", methods=['POST'])

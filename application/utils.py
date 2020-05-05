@@ -32,3 +32,16 @@ def send_request_email(hospital, name, title, email, phone, message):
         {message}
     '''
     mail.send(msg)
+
+
+def send_contact_email(name, email, subject, message):
+    msg = Message('Hospifind - Contact Us Email', sender='Hospifind Contact Us Email', recipients=["ronnachum13@gmail.com", "foramritasahu@gmail.com", "arya.grayeli@gmail.com", "pranavmathur001@gmail.com", "aarav.cube@gmail.com"])
+    msg.body = f'''A New User Submitted a Contact Form:
+        Name: {name}
+        Email: {email}
+        Subject: {subject}
+        Message:
+        {message}
+    '''
+    mail.send(msg)
+

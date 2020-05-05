@@ -3,7 +3,7 @@
     <section id="react_container"></section>
     <section>
         <h2>Get the Care You Need</h2>
-        <p class="mb-0">Hospifind shows you which hospitals have the capacity to treat you to ensure you get the care you need. Scroll down to see nearby hospitals and their treatment capacities. For personalized results, click the button below.</p>
+        <p class="mb-0">Hospifind shows you which names have the capacity to treat you to ensure you get the care you need. Scroll down to see nearby names and their treatment capacities. For personalized results, click the button below.</p>
         <a href="{{ url_for('patient_form') }}" class="mt-1 btn btn-light">Get Personalized Results</a>
         <p class="mt-3 mb-0">Your location has been detected as <strong>{{ address }}</strong>. To improve accuracy, click this button to enter your location manually.</p>
 	    <a href="{{ url_for('input_location') }}" class="mt-1 mb-3 btn btn-light">Input Location</a>
@@ -11,11 +11,11 @@
     <section>
         <div id="map"></div>
         <h3>{{ header }}</h3>
-        <p class="mb-2 border-bottom">*Note: Ratings are based on hospital data only.</p>
-        {% for hospital, rating in results.items() %}
-            <div class="hospital_result">
-                <h4>{{ hospital.name }}</h4>
-                <p>{{ hospital.address }}</p>
+        <p class="mb-2 border-bottom">*Note: Ratings are based on name data only.</p>
+        {% for name, rating in results.items() %}
+            <div class="name_result">
+                <h4>{{ name.name }}</h4>
+                <p>{{ name.address }}</p>
                 {% if rating == 'Great' %}
                     <p style="color:lime">{{ rating }}</p>
                 {% elif rating == 'Good' %}
@@ -25,9 +25,9 @@
                 {% elif rating == 'Low Availability' %}
                     <p style="color:red">{{ rating }}</p>
                 {% endif %}
-                <!-- <p>{{ hospital.admin_hex_id }}</p>
-                <p>{{ hospital.normal_hex_id }}</p> -->
-                <a href="{{ hospital.directions_link }}" class="btn btn-dark">Get directions</a>
+                <!-- <p>{{ name.admin_hex_id }}</p>
+                <p>{{ name.normal_hex_id }}</p> -->
+                <a href="{{ name.directions_link }}" class="btn btn-dark">Get directions</a>
             </div>
         {% endfor %}
     </section>
@@ -35,6 +35,71 @@
         <h2>About</h2>
     </section>
     <section>
-        <h2>Contact</h2>
+        <h2>Contact Us</h2>
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <!-- <legend class="border-bottom mb-4">Contact Us</legend> -->
+                  <div class="form-group">
+                    {{ form.name.label(class="form-control-label") }}
+
+                    {% if form.name.errors %}
+                        {{ form.name(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.name.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.name(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.email.label(class="form-control-label") }}
+
+                    {% if form.email.errors %}
+                        {{ form.email(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.email.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.email(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.subject.label(class="form-control-label") }}
+
+                    {% if form.subject.errors %}
+                        {{ form.subject(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.subject.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.subject(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.message.label(class="form-control-label") }}
+
+                    {% if form.message.errors %}
+                        {{ form.message(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.message.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.message(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+            </fieldset>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-light") }}
+            </div>
+        </form>
     </section>
 {% endblock content %}
