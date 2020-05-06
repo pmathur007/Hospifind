@@ -32,7 +32,7 @@
                 </div>
             </div>
         {% endfor %}
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXjkqMKDRe4JqMlH47E8USIJRAMvMdtog"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}"></script>
         <script>
               var data = {{ map_list|tojson }};
               var myLatLng = new google.maps.LatLng({lat: 0, lng: 0});
