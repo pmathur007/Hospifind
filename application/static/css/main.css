@@ -10,7 +10,7 @@
 }
 
 .btn-light {
-  background-color: #404040;
+  background-color: #202020;
   color: white;
 }
 .btn-light:hover {
@@ -69,7 +69,7 @@ footer {
 }
 
 .hospital_result {
-  background: #404040;
+  background: #202020;
   border-radius: 10px;
   margin: 10px 5%;
   padding: 20px;
