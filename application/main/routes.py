@@ -8,6 +8,7 @@ from application.models import User, Hospital, Data
 from application.utils import distance
 from application.main.forms import ContactForm
 from application.utils import send_contact_email
+import numpy as np
 
 
 @app.route("/", methods=['GET', 'POST'])
