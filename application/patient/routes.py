@@ -74,6 +74,7 @@ def input_location():
             session['ZIP_CODE'] = form.zip_code.data
             session['LATITUDE'] = g.latlng[0]
             session['LONGITUDE'] = g.latlng[1]
+            session['UPDATE_NEEDED'] = True
             flash('Your location has been updated!', 'success')
             return redirect(url_for('home'))
         else:

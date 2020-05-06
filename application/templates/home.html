@@ -13,10 +13,11 @@
         <h3>{{ header }}</h3>
         <p class="mb-2 border-bottom">*Note: Ratings are based on hospital data only.</p>
 
-        {% for hospital, rating in results.items() %}
+        {% for hospital, rating, distance, time in results %}
             <div class="hospital_result" id="{{ hospital.name }}">
-                <h4>{{ hospital.name }}</h4>
+                <h3>{{ hospital.name }}</h3>
                 <p>{{ hospital.address }}</p>
+                <p>Distance: {{ distance }} mi, Time: {{ time }} min</p>
                 <div>
                     {% if rating == 'Great' %}
                         <p style="color:lime">{{ rating }}</p>
