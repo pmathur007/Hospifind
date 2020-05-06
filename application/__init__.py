@@ -29,7 +29,8 @@ if path.exists(os.path.join('application', 'environment_variables.txt')):
     app.config['MAIL_USERNAME'] = f.readline().strip()
     app.config['MAIL_PASSWORD'] = f.readline().strip()
 else:
-    app.config['GOOGLE_API'] = None
+    app.config['GOOGLE_MAPS_API_KEY_BACKEND'] = None
+    app.config['GOOGLE_MAPS_API_KEY_FRONTEND'] = None
     app.config['GOOGLE_MAPS'] = None
     app.config['MAIL_USERNAME'] = None
     app.config['MAIL_PASSWORD'] = None
