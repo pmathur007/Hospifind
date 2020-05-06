@@ -15,7 +15,9 @@ var MobileDataTable = function (_React$Component) {
         var _this = _possibleConstructorReturn(this, (MobileDataTable.__proto__ || Object.getPrototypeOf(MobileDataTable)).call(this, props));
 
         _this.state = {
-            showingData: Array(props.data.length).fill(false)
+            data: props.data,
+            showingData: Array(props.data.length).fill(false),
+            deleteConfirmation: Array(props.data.length).fill(false)
         };
         _this.toggleDetails = _this.toggleDetails.bind(_this);
         return _this;
@@ -27,6 +29,15 @@ var MobileDataTable = function (_React$Component) {
             var newShowing = this.state.showingData.slice();
             newShowing[i] = !newShowing[i];
             this.setState({ showingData: newShowing });
+        }
+    }, {
+        key: "deleteEntry",
+        value: function deleteEntry(i) {
+            var newDeleteConf = this.state.deleteConfirmation.slice();
+            if (!newDeleteConf[i]) {
+                newDeleteConf[i] = true;
+                this.setState({ deleteConfirmation: newDeleteConf });
+            } else {}
         }
     }, {
         key: "render",
@@ -56,10 +67,15 @@ var MobileDataTable = function (_React$Component) {
                             "th",
                             null,
                             "Details"
+                        ),
+                        React.createElement(
+                            "th",
+                            null,
+                            "Delete User"
                         )
                     )
                 ),
-                this.props.data.map(function (d, i) {
+                this.state.data.map(function (d, i) {
                     return React.createElement(
                         "tbody",
                         { key: d.id },
@@ -69,7 +85,7 @@ var MobileDataTable = function (_React$Component) {
                             React.createElement(
                                 "td",
                                 null,
-                                d.date
+                                d.date.split(":", 2).join(":")
                             ),
                             React.createElement(
                                 "td",
@@ -85,6 +101,17 @@ var MobileDataTable = function (_React$Component) {
                                             return _this2.toggleDetails(i);
                                         } },
                                     "Details"
+                                )
+                            ),
+                            React.createElement(
+                                "td",
+                                null,
+                                React.createElement(
+                                    "button",
+                                    { onClick: function onClick() {
+                                            return _this2.deleteEntry(i);
+                                        } },
+                                    _this2.state.deleteConfirmation[i] ? "Confirm Delete" : "Delete"
                                 )
                             )
                         ),

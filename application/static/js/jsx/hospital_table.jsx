@@ -2,15 +2,30 @@ class MobileDataTable extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            showingData: Array(props.data.length).fill(false)
+            data: props.data,
+            showingData: Array(props.data.length).fill(false),
+            deleteConfirmation: Array(props.data.length).fill(false)
         }
         this.toggleDetails = this.toggleDetails.bind(this);
     }
 
     toggleDetails(i) {
-        const newShowing = this.state.showingData.slice()
+        const newShowing = this.state.showingData.slice();
         newShowing[i] = !newShowing[i];
         this.setState({showingData: newShowing});
+    }
+    
+    deleteEntry(i) {
+        const newDeleteConf = this.state.deleteConfirmation.slice();
+        if (!newDeleteConf[i])
+        {
+            newDeleteConf[i] = true;
+            this.setState({deleteConfirmation: newDeleteConf});
+        }
+        else
+        {
+
+        }
     }
 
     render() {
@@ -21,15 +36,17 @@ class MobileDataTable extends React.Component {
                         <th>Date</th>
                         <th>User</th>
                         <th>Details</th>
+                        <th>Delete User</th>
                     </tr>
                 </thead>
-                {this.props.data.map((d, i) => {
+                {this.state.data.map((d, i) => {
                     return (
                         <tbody key={d.id}>
                             <tr>
-                                <td>{ d.date }</td>
+                                <td>{ d.date.split(":", 2).join(":") }</td>
                                 <td>{ d.user }</td>
                                 <td><button onClick={ () => this.toggleDetails(i) }>Details</button></td>
+                                <td><button onClick={ () => this.deleteEntry(i) }>{ this.state.deleteConfirmation[i] ? "Confirm Delete" : "Delete" }</button></td>
                             </tr>
                             {this.state.showingData[i] ? (
                                 <tr>

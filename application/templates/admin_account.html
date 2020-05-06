@@ -3,7 +3,7 @@
     <h1>{{ current_user.name }} (Username: {{ current_user.username }})</h1>
     <h2>{{ hospital.name }} - Admin</h2>
     <h3 class="border-bottom mb-4">Account Information</h3>
-    <div>
+    <div class="mcontainer">
         <form method="POST" action="" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
@@ -54,7 +54,7 @@
             </div>
         </form>
     </div>
-    <div>
+    <div class="mcontainer">
       <h3 class="border-bottom mb-4">Users </h3>
       <table class="sortable border-bottom" style="width:1000px;" border=1 frame=void rules=rows>
         <thead>
@@ -97,7 +97,7 @@
                 <button class="mt-2 mb-2 btn btn-light" data-toggle="modal" data-target="#openModal">Open System</button>
             {% endif %}
     </div>
-    <div>
+    <div class="mcontainer">
         <h3 class="border-bottom mb-4">Graphs</h3>
         <div class="row">
               <div class="column">
@@ -124,7 +124,7 @@
               </div>
         </div>
     </div>
-    <div>
+    <div class="mcontainer"> 
         <h3 class="border-bottom mb-4">Data</h3>
         <a href="{{ url_for('data_input') }}">Input Data</a>
         <div id="data_table"></div>

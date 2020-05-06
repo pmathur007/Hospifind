@@ -8,7 +8,7 @@
         <a href="{{ url_for('patient_form') }}" class="btn-light">Get Personalized Results</a>
         <a href="{{ url_for('input_location') }}" class="btn-light">Input Location</a>
     </section>
-    <section>
+    <section class="mcontainer">
         <div id="map"></div>
         <h3>{{ header }}</h3>
         <p class="mb-2 border-bottom">*Note: Ratings are based on hospital data only.</p>
@@ -33,10 +33,10 @@
             </div>
         {% endfor %}
     </section>
-    <section>
+    <section class="mcontainer">
         <h2>About</h2>
     </section>
-    <section>
+    <section class="mcontainer">
         <h2>Contact Us</h2>
         <form method="POST" action="">
             {{ form.hidden_tag() }}

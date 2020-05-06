@@ -1,5 +1,5 @@
 @import 'config';
-@import 'buttons';
+@import 'utilities';
 
 * {
     font-family: $font-stack;
@@ -21,6 +21,14 @@ a {
     &:hover {
         text-decoration: none;
     }
+}
+
+h1, h2, h3 {
+    text-align: center;
+}
+
+footer {
+    text-align: center;
 }
 
 #logo_title {

@@ -1,4 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Ubuntu&display=swap");
+.mcontainer {
+  margin: 2%;
+}
+
 .btn-dark, .btn-light {
   border-radius: 5px;
   border: solid 1px #333;
@@ -33,6 +37,14 @@ header {
 
 a:hover {
   text-decoration: none;
+}
+
+h1, h2, h3 {
+  text-align: center;
+}
+
+footer {
+  text-align: center;
 }
 
 #logo_title {
