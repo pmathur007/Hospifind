@@ -41,7 +41,7 @@ class HomeDecision:
         self.icus_weight = 2
         self.vents_weight = 1.5
         self.tests_weight = 1.5
-        self.distance_weight = 7.5
+        self.distance_weight = 8
 
         self.base = 0.9
 
