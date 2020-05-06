@@ -8,7 +8,7 @@ import random
 db.drop_all()
 db.create_all()
 
-csv_file = os.path.join(os.path.dirname(os.getcwd()), "decision_tree", "us_data.csv")
+csv_file = os.path.join(os.path.dirname(os.getcwd()), "all_us_data.csv")
 data = pd.read_csv(csv_file)
 
 names = list(data['Name'])
