@@ -41,9 +41,9 @@ class HomeDecision:
         self.icus_weight = 2
         self.vents_weight = 1.5
         self.tests_weight = 1.5
-        self.distance_weight = 10
+        self.distance_weight = 7.5
 
-        self.base = 1.1
+        self.base = 0.9
 
     def get_rating(self):
         capacities = self.scale_capacity()
@@ -70,6 +70,9 @@ class HomeDecision:
         if not bool(self.ratings):
             self.get_rating()
         distances = self.scale_distance(distance_dict)
+
+        print(self.hospitals)
+        print(distances)
 
         nratings = {}
         for i in range(len(self.hospitals)):
@@ -115,10 +118,10 @@ class HomeDecision:
         out = [(n - min_val) / (max_val - min_val) for n in lst]
         return out
 
-    def scale_distance(self, distances):
-        min_val = min(distances)
-        max_val = max(distances)
-        lst = [-1*(self.base**distances[i]) for i in range(len(distances))]
+    def scale_distance(self, distances_dict):
+        min_val = min(distances_dict.values())
+        max_val = max(distances_dict.values())
+        lst = [-1*(self.base**distances_dict[str(hospital.id)]) for hospital in self.hospitals]
         max_val = self.base**max_val
         min_val = self.base**min_val
         out = [(n + max_val) / (max_val - min_val) for n in lst]
