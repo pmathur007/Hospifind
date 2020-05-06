@@ -23,8 +23,9 @@ app.config['MAIL_USE_TLS'] = True
 
 if path.exists(os.path.join('application', 'environment_variables.txt')):
     f = open(os.path.join('application', 'environment_variables.txt'), 'r')
-    app.config['GOOGLE_MAPS_API_KEY'] = f.readline().strip()
-    app.config['GOOGLE_MAPS'] = googlemaps.Client(key=app.config['GOOGLE_MAPS_API_KEY'])
+    app.config['GOOGLE_MAPS_API_KEY_BACKEND'] = f.readline().strip()
+    app.config['GOOGLE_MAPS_API_KEY_FRONTEND'] = f.readline().strip()
+    app.config['GOOGLE_MAPS'] = googlemaps.Client(key=app.config['GOOGLE_MAPS_API_KEY_BACKEND'])
     app.config['MAIL_USERNAME'] = f.readline().strip()
     app.config['MAIL_PASSWORD'] = f.readline().strip()
 else:

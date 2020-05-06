@@ -63,7 +63,7 @@ def input_location():
     if form.validate_on_submit():
         address = form.street_address.data + ", " + form.city.data + ", " + form.state.data + ", " + form.country.data + " " + form.zip_code.data
         print(address)
-        g = geocoder.google(address, key=app.config.get('GOOGLE_MAPS_API_KEY'))
+        g = geocoder.google(address, key=app.config.get('GOOGLE_MAPS_API_KEY_BACKEND'))
         print(g)
         if g.ok and len(g.latlng) == 2 and g.latlng[0] is not None and g.latlng[1] is not None:
             session['ADDRESS'] = address
