@@ -5,18 +5,18 @@
 
 .btn-dark, .btn-light {
   border-radius: 5px;
-  border: solid 1px #333;
+  border: solid 1px white;
   max-width: 250px;
 }
 
 .btn-light {
-  background-color: rgba(255, 255, 255, 0.5);
-  color: #333;
+  background-color: #404040;
+  color: white;
 }
 .btn-light:hover {
-  border: solid 1px #333;
-  background-color: rgba(230, 230, 230, 0.5);
-  color: #333;
+  border: solid 1px white;
+  background-color: #505050;
+  color: white;
 }
 
 * {
@@ -26,6 +26,8 @@
 }
 
 body {
+  background: black;
+  color: white;
   height: 100%;
   margin-top: 5vh;
 }
@@ -56,7 +58,7 @@ footer {
 }
 
 #home_info {
-  background: url(../images/background_hospital.jpg) no-repeat center center fixed;
+  background: url(../images/black.jpg) no-repeat center center fixed;
   background-size: cover;
   text-align: center;
   padding: 5%;
@@ -67,7 +69,7 @@ footer {
 }
 
 .hospital_result {
-  background: #f2f2f2;
+  background: #404040;
   border-radius: 10px;
   margin: 10px 5%;
   padding: 20px;
@@ -91,4 +93,12 @@ footer {
   padding: 10px 0;
 }
 
+.form-group {
+  width: 75vw;
+}
+
+#map {
+    height: 300px;
+    width: 100vw;
+}
 /*# sourceMappingURL=main.css.map */
