@@ -51,9 +51,18 @@ def home():
         session['DATA'] = [d.id for d in data]
         info = app.config['GOOGLE_MAPS'].distance_matrix(session['ADDRESS'], [hospital.address for hospital in hospitals], mode="driving", units="imperial")
         session['DISTANCES'] = {}; session['TIMES'] = {}
+        print(info)
         for i in range(len(info['rows'][0]['elements'])):
             session['DISTANCES'][str(session['HOSPITALS'][i])] = float(info['rows'][0]['elements'][i]['distance']['text'].replace(",", "").split(" ")[0])
-            session['TIMES'][str(session['HOSPITALS'][i])] = float(info['rows'][0]['elements'][i]['duration']['text'].replace(",", "").split(" ")[0])
+            arr = info['rows'][0]['elements'][i]['duration']['text'].replace(",", "").split(" ")
+
+            if len(arr) == 2:
+                time = float(arr[0])
+            elif len(arr) == 4 and arr[1].strip()[0:4] == "hour":
+                time = float(arr[0]) * 60 + float(arr[2])
+            elif len(arr) == 4 and arr[1].strip()[0:3] == "day":
+                time = float(arr[0]) * 1440 + float(arr[2]) * 60
+            session['TIMES'][str(session['HOSPITALS'][i])] = time
     print(session['HOSPITALS'], session['DISTANCES'], session['TIMES'], sep="\n")
 
     decision_maker = HomeDecision([Hospital.query.get(hospital) for hospital in session['HOSPITALS']], [Data.query.get(data) for data in session['DATA']])
