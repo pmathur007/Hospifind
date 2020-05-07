@@ -8,7 +8,8 @@ import random
 db.drop_all()
 db.create_all()
 
-csv_file = os.path.join(os.getcwd(), "filled_all_us_data.csv")
+csv_file = os.path.join(os.path.dirname(os.getcwd()), "data", "filled_all_us_data.csv")
+print(csv_file)
 data = pd.read_csv(csv_file)
 data = data.dropna(how='any')
 

@@ -23,7 +23,7 @@ import geocoder
 #
 #     df.to_csv('filled_all_us_data.csv', index=False)
 
-csv = os.path.join(os.getcwd(), 'all_us_data.csv')
+csv = os.path.join(os.path.dirname(os.getcwd()), 'data', 'all_us_data.csv')
 df = pd.read_csv(csv)
 df = df.dropna(thresh=2)
 print(df)
