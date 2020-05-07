@@ -18,6 +18,7 @@ class Hospital(db.Model, UserMixin):
     name = db.Column(db.String, nullable=False)
     address = db.Column(db.String, nullable=False)
     state = db.Column(db.String, nullable=False)
+    county = db.Column(db.String, nullable=False)
     latitude = db.Column(db.Integer, nullable=True)
     longitude = db.Column(db.Integer, nullable=True)
     admin_hex_id = db.Column(db.String, default=lambda: urandom(32).hex(), unique=True, nullable=True)
@@ -72,7 +73,7 @@ class User(db.Model, UserMixin):
     hospital = db.Column(db.Integer, db.ForeignKey('hospital.id'), nullable=False)
 
     def __repr__(self):
-        return "User('" + self.username + "', '" + self.hospital + "')"
+        return f"User('{self.id}', '{self.username}', '{self.hospital}')"
 
 
 class Data(db.Model):
@@ -90,4 +91,4 @@ class Data(db.Model):
     hospital = db.Column(db.Integer, db.ForeignKey('hospital.id'), nullable=False)
 
     def __repr__(self):
-        return f"Data(Hospital: '{self.hospital}', User: '{self.user}', Date: '{self.date}' -- {self.bed_capacity}, {self.beds_available}, {self.icus_available}, {self.ventilators_available}, {self.coronavirus_tests_available}, {self.coronavirus_patients}, {self.coronavirus_patient_percent})"
+        return f"Data('{self.id}', Hospital: '{self.hospital}', User: '{self.user}', Date: '{self.date}' -- {self.bed_capacity}, {self.beds_available}, {self.icus_available}, {self.ventilators_available}, {self.coronavirus_tests_available}, {self.coronavirus_patients}, {self.coronavirus_patient_percent})"
