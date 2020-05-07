@@ -130,25 +130,25 @@
               for (var i = 0; i < 10; i++){
                   if (data[i+1][4] === 'Great')
                   {
-                      icons.push('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
+                      icons.push('https://maps.google.com/mapfiles/ms/icons/green-dot.png')
                   }
                   else if (data[i+1][4] === 'Good')
                   {
-                      icons.push('http://maps.google.com/mapfiles/ms/icons/yellow-dot.png')
+                      icons.push('https://maps.google.com/mapfiles/ms/icons/yellow-dot.png')
                   }
                   else if (data[i+1][4] === 'OK')
                   {
-                      icons.push('http://maps.google.com/mapfiles/ms/icons/orange-dot.png')
+                      icons.push('https://maps.google.com/mapfiles/ms/icons/orange-dot.png')
                   }
                   else {
-                      icons.push('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
+                      icons.push('https://maps.google.com/mapfiles/ms/icons/red-dot.png');
                   }
               }
 
               var originMarker = new google.maps.Marker({
                   map: map,
                   position: originLatLng,
-                  icon: 'http://maps.google.com/mapfiles/ms/icons/blue.png',
+                  icon: 'https://maps.google.com/mapfiles/ms/icons/blue.png',
                   zIndex: google.maps.Marker.MAX_ZINDEX + 1
               })
 
@@ -202,10 +202,10 @@
               });
         </script>
     </section>
-    <section class="mcontainer">
+    <section class="mcontainer" id="About">
         <h2>About</h2>
     </section>
-    <section class="mcontainer">
+    <section class="mcontainer" id="Contact">
         <h2>Contact Us</h2>
         <form method="POST" action="">
             {{ form.hidden_tag() }}
