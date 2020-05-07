@@ -12,13 +12,18 @@
     <section class="mcontainer">
         <div id="map"></div>
         <h3>{{ header }}</h3>
-        <p class="mb-2 border-bottom">*Note: Ratings are based on hospital data only.</p>
+        {% if original_length > 15 %}
+            <h5 style="text-align:center">We found <strong>{{original_length}}</strong> hospitals matching our distance criteria. We then selected the <strong>{{ length }}</strong> closest ones for your convenience.</h5>
+        {% else %}
+            <h5 style="text-align:center">We found <strong>{{ length }}</strong> hospitals matching our distance criteria.</h5>
+        {% endif %}
+        <p class="mb-2 border-bottom" style="text-align:center">*Note: Ratings are based on hospital data only.</p>
 
         {% for hospital, rating, distance, time in results %}
             <div class="hospital_result" id="{{ hospital.name }}">
                 <h3>{{ hospital.name }}</h3>
                 <p>{{ hospital.address }}</p>
-                <p>Distance: {{ distance }} mi, Time: {{ time }} min</p>
+                <p>Distance: {{ distance }}, Time: {{ time }}</p>
                 <div>
                     {% if rating == 'Great' %}
                         <p style="color:lime">{{ rating }}</p>
@@ -127,7 +132,7 @@
               map.fitBounds(bounds.extend(originLatLng));
               var icons = [];
 
-              for (var i = 0; i < 10; i++){
+              for (var i = 0; i < data.length - 1; i++){
                   if (data[i+1][4] === 'Great')
                   {
                       icons.push('https://maps.google.com/mapfiles/ms/icons/green-dot.png')
@@ -159,7 +164,7 @@
                             '</div>'
               });
 
-              for (var i = 0; i < 10; i++) {
+              for (var i = 0; i < data.length - 1; i++) {
                   var myLatLng = new google.maps.LatLng({lat: data[i+1][2], lng: data[i+1][3]});
                   map.fitBounds(bounds.extend(myLatLng));
                   markersArray.push(new google.maps.Marker({
