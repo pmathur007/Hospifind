@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, session
 from application import app
 
 
@@ -14,4 +14,5 @@ def error_403(error):
 
 @app.errorhandler(500)
 def error_500(error):
+    session.clear()
     return render_template('errors/500.html'), 500
