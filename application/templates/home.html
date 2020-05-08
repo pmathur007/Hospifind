@@ -159,7 +159,7 @@
 
               var originWindow = new google.maps.InfoWindow({
                   content: '<div class="info_window">' +
-                                  '<h2>Your Location</h2>' +
+                                  '<h4>Your Location</h4>' +
                                   '<p>' + data[0][0] + '</p>' +
                             '</div>'
               });
@@ -181,7 +181,7 @@
 
                   infoWindowsArray.push(new google.maps.InfoWindow({
                       content: '<div class="info_window">' +
-                                      '<h2>' + data[i+1][0] + '</h2>' +
+                                      '<h4>' + data[i+1][0] + '</h4>' +
                                       '<p>' + data[i+1][1] + '</p>' +
                                       '<a href="' +
                                        link + '" target="_blank"> Get directions </a>' +

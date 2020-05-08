@@ -97,6 +97,10 @@ footer {
   width: 95vw;
 }
 
+.info_window {
+  color: black;
+}
+
 #map {
     height: 300px;
     width: 100vw;
