@@ -109,7 +109,7 @@ def home():
         return render_template('home.html', results=results, header="Hospitals Sorted by Distance", map_list=map_list, form=form, api_key=app.config['GOOGLE_MAPS_API_KEY_FRONTEND'])
 
 
-@app.route("/db", methods=['POST'])
+@app.route("/db", methods=['POST', 'DELETE'])
 def query_db():
     tables = {
         'Hospital': Hospital,
@@ -120,6 +120,12 @@ def query_db():
     req_data = request.get_json()
     filter_by = req_data['filter_by']
     raw_results = Search(db.session, 'application.models', (tables[req_data['table_name']],), filter_by=filter_by, all=True).results['data']
-    dict_results = [{c.name: str(getattr(result, c.name)) for c in result.__table__.columns} for result in raw_results]
 
-    return json.dumps(dict_results)
+    if request.method == 'POST':
+        dict_results = [{c.name: str(getattr(result, c.name)) for c in result.__table__.columns} for result in raw_results]
+        return json.dumps(dict_results)
+    elif request.method == 'DELETE':
+        for result in raw_results:
+            db.session.delete(result)
+        db.session.commit()
+        return 'delete successful'

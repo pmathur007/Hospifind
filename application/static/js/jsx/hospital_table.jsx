@@ -4,7 +4,6 @@ class MobileDataTable extends React.Component {
         this.state = {
             data: props.data,
             showingData: Array(props.data.length).fill(false),
-            deleteConfirmation: Array(props.data.length).fill(false)
         }
         this.toggleDetails = this.toggleDetails.bind(this);
     }
@@ -16,15 +15,32 @@ class MobileDataTable extends React.Component {
     }
     
     deleteEntry(i) {
-        const newDeleteConf = this.state.deleteConfirmation.slice();
-        if (!newDeleteConf[i])
-        {
-            newDeleteConf[i] = true;
-            this.setState({deleteConfirmation: newDeleteConf});
-        }
-        else
-        {
+        if (window.confirm("Do you want to delete this entry?")) {
+            query = {
+                "table_name": "Data",
+                "filter_by": [{
+                    "field_name": "Data.id",
+                    "operator": "equals",
+                    "field_value": this.state.data[i].id
+                }]
+            };
 
+            $.ajax({
+                type: "DELETE",
+                url: "/db",
+                data: JSON.stringify(query),
+                contentType: "application/json",
+                dataType: "json"
+            });
+
+            const newData = this.state.data.slice();
+            const newShowingData = this.state.showingData.slice();
+            newData.splice(i, 1); newShowingData.splice(i, 1);
+            
+            this.setState({
+                data: newData,
+                showingData: newShowingData
+            });
         }
     }
 
@@ -46,7 +62,7 @@ class MobileDataTable extends React.Component {
                                 <td>{ d.date.split(":", 2).join(":") }</td>
                                 <td>{ d.user }</td>
                                 <td><button onClick={ () => this.toggleDetails(i) }>Details</button></td>
-                                <td><button onClick={ () => this.deleteEntry(i) }>{ this.state.deleteConfirmation[i] ? "Confirm Delete" : "Delete" }</button></td>
+                                <td><button onClick={ () => this.deleteEntry(i) }>Delete</button></td>
                             </tr>
                             {this.state.showingData[i] ? (
                                 <tr>
@@ -104,13 +120,14 @@ function FullDataTable(props) {
     )
 }
 
-$(document).ready(function() {
+
+function reloadDataTable(hospital_id) {
     query = {
         "table_name": "Data",
         "filter_by": [{
             "field_name": "Data.hospital",
             "operator": "equals",
-            "field_value": 1
+            "field_value": hospital_id
         }]
     };
     
@@ -136,4 +153,4 @@ $(document).ready(function() {
             }
         });
     });
-});
+}

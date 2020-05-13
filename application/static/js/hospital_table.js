@@ -16,8 +16,7 @@ var MobileDataTable = function (_React$Component) {
 
         _this.state = {
             data: props.data,
-            showingData: Array(props.data.length).fill(false),
-            deleteConfirmation: Array(props.data.length).fill(false)
+            showingData: Array(props.data.length).fill(false)
         };
         _this.toggleDetails = _this.toggleDetails.bind(_this);
         return _this;
@@ -33,11 +32,33 @@ var MobileDataTable = function (_React$Component) {
     }, {
         key: "deleteEntry",
         value: function deleteEntry(i) {
-            var newDeleteConf = this.state.deleteConfirmation.slice();
-            if (!newDeleteConf[i]) {
-                newDeleteConf[i] = true;
-                this.setState({ deleteConfirmation: newDeleteConf });
-            } else {}
+            if (window.confirm("Do you want to delete this entry?")) {
+                query = {
+                    "table_name": "Data",
+                    "filter_by": [{
+                        "field_name": "Data.id",
+                        "operator": "equals",
+                        "field_value": this.state.data[i].id
+                    }]
+                };
+
+                $.ajax({
+                    type: "DELETE",
+                    url: "/db",
+                    data: JSON.stringify(query),
+                    contentType: "application/json",
+                    dataType: "json"
+                });
+
+                var newData = this.state.data.slice();
+                var newShowingData = this.state.showingData.slice();
+                newData.splice(i, 1);newShowingData.splice(i, 1);
+
+                this.setState({
+                    data: newData,
+                    showingData: newShowingData
+                });
+            }
         }
     }, {
         key: "render",
@@ -111,7 +132,7 @@ var MobileDataTable = function (_React$Component) {
                                     { onClick: function onClick() {
                                             return _this2.deleteEntry(i);
                                         } },
-                                    _this2.state.deleteConfirmation[i] ? "Confirm Delete" : "Delete"
+                                    "Delete"
                                 )
                             )
                         ),
@@ -293,13 +314,13 @@ function FullDataTable(props) {
     );
 }
 
-$(document).ready(function () {
+function reloadDataTable(hospital_id) {
     query = {
         "table_name": "Data",
         "filter_by": [{
             "field_name": "Data.hospital",
             "operator": "equals",
-            "field_value": 1
+            "field_value": hospital_id
         }]
     };
 
@@ -323,4 +344,4 @@ $(document).ready(function () {
             }
         });
     });
-});
+}
