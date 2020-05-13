@@ -35,8 +35,8 @@
                     <div class="navbar-nav">
                       <a class="nav-item nav-link" href="{{ url_for('home') }}">See Nearby Hospitals</a>
                       <a class="nav-item nav-link" href="{{ url_for('patient_form') }}">Get Personalized Results</a>
-                      <a class="nav-item nav-link" href="{{ url_for('home') }}">About</a>
-                      <a class="nav-item nav-link" href="{{ url_for('home') }}">Contact Us</a>
+                      <a class="nav-item nav-link" href="{{ url_for('home', _anchor='About') }}">About</a>
+                      <a class="nav-item nav-link" href="{{ url_for('home', _anchor='Contact') }}">Contact Us</a>
                     </div>
                     <!-- Navbar Right Side -->
                     <div class="navbar-nav">

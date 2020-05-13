@@ -12,13 +12,18 @@
     <section class="mcontainer">
         <div id="map"></div>
         <h3>{{ header }}</h3>
-        <p class="mb-2 border-bottom">*Note: Ratings are based on hospital data only.</p>
+        {% if original_length > 15 %}
+            <h5 style="text-align:center">We found <strong>{{original_length}}</strong> hospitals matching our distance criteria. We then selected the <strong>{{ length }}</strong> closest ones for your convenience.</h5>
+        {% else %}
+            <h5 style="text-align:center">We found <strong>{{ length }}</strong> hospitals matching our distance criteria.</h5>
+        {% endif %}
+        <p class="mb-2 border-bottom" style="text-align:center">*Note: Ratings are based on hospital data only.</p>
 
         {% for hospital, rating, distance, time in results %}
             <div class="hospital_result" id="{{ hospital.name }}">
                 <h3>{{ hospital.name }}</h3>
                 <p>{{ hospital.address }}</p>
-                <p>Distance: {{ distance }} mi, Time: {{ time }} min</p>
+                <p>Distance: {{ distance }}, Time: {{ time }}</p>
                 <div>
                     {% if rating == 'Great' %}
                         <p style="color:lime">{{ rating }}</p>
@@ -127,39 +132,39 @@
               map.fitBounds(bounds.extend(originLatLng));
               var icons = [];
 
-              for (var i = 0; i < 10; i++){
+              for (var i = 0; i < data.length - 1; i++){
                   if (data[i+1][4] === 'Great')
                   {
-                      icons.push('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
+                      icons.push('https://maps.google.com/mapfiles/ms/icons/green-dot.png')
                   }
                   else if (data[i+1][4] === 'Good')
                   {
-                      icons.push('http://maps.google.com/mapfiles/ms/icons/yellow-dot.png')
+                      icons.push('https://maps.google.com/mapfiles/ms/icons/yellow-dot.png')
                   }
                   else if (data[i+1][4] === 'OK')
                   {
-                      icons.push('http://maps.google.com/mapfiles/ms/icons/orange-dot.png')
+                      icons.push('https://maps.google.com/mapfiles/ms/icons/orange-dot.png')
                   }
                   else {
-                      icons.push('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
+                      icons.push('https://maps.google.com/mapfiles/ms/icons/red-dot.png');
                   }
               }
 
               var originMarker = new google.maps.Marker({
                   map: map,
                   position: originLatLng,
-                  icon: 'http://maps.google.com/mapfiles/ms/icons/blue.png',
+                  icon: 'https://maps.google.com/mapfiles/ms/icons/blue.png',
                   zIndex: google.maps.Marker.MAX_ZINDEX + 1
               })
 
               var originWindow = new google.maps.InfoWindow({
                   content: '<div class="info_window">' +
-                                  '<h2>Your Location</h2>' +
+                                  '<h4>Your Location</h4>' +
                                   '<p>' + data[0][0] + '</p>' +
                             '</div>'
               });
 
-              for (var i = 0; i < 10; i++) {
+              for (var i = 0; i < data.length - 1; i++) {
                   var myLatLng = new google.maps.LatLng({lat: data[i+1][2], lng: data[i+1][3]});
                   map.fitBounds(bounds.extend(myLatLng));
                   markersArray.push(new google.maps.Marker({
@@ -176,7 +181,7 @@
 
                   infoWindowsArray.push(new google.maps.InfoWindow({
                       content: '<div class="info_window">' +
-                                      '<h2>' + data[i+1][0] + '</h2>' +
+                                      '<h4>' + data[i+1][0] + '</h4>' +
                                       '<p>' + data[i+1][1] + '</p>' +
                                       '<a href="' +
                                        link + '" target="_blank"> Get directions </a>' +
@@ -202,10 +207,10 @@
               });
         </script>
     </section>
-    <section class="mcontainer">
+    <section class="mcontainer" id="About">
         <h2>About</h2>
     </section>
-    <section class="mcontainer">
+    <section class="mcontainer" id="Contact">
         <h2>Contact Us</h2>
         <form method="POST" action="">
             {{ form.hidden_tag() }}
