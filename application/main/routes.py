@@ -20,7 +20,8 @@ def home():
     form = ContactForm()
     if form.validate_on_submit():
         print('here')
-        send_contact_email(form.name.data, form.email.data, form.subject.data, form.message.data)
+        send_contact_email(form.name.data, form.email.data,
+                           form.subject.data, form.message.data)
         flash('Your contact email has been sent to the Hospifind team!', 'success')
         return redirect(url_for('home'))
 
@@ -45,24 +46,33 @@ def home():
         session['UPDATE_NEEDED'] = False
         hospitals = Hospital.query.all()
         # hospitals = hospitals[:10]
-        hospitals = [x for x in hospitals if distance(session['LATITUDE'], session['LONGITUDE'], x.latitude, x.longitude) < 60]
-        hospitals.sort(key=lambda x: distance(session['LATITUDE'], session['LONGITUDE'], x.latitude, x.longitude))
+        hospitals = [x for x in hospitals if distance(
+            session['LATITUDE'], session['LONGITUDE'], x.latitude, x.longitude) < 60]
+        hospitals.sort(key=lambda x: distance(
+            session['LATITUDE'], session['LONGITUDE'], x.latitude, x.longitude))
         session['ORIGINAL_LENGTH'] = len(hospitals)
         if len(hospitals) > 15:
             hospitals = hospitals[:15]
         session['LENGTH'] = len(hospitals)
         session['HOSPITALS'] = [hospital.id for hospital in hospitals]
-        data = [Data.query.filter_by(hospital=hospital.id).order_by(Data.date.desc()).first() for hospital in hospitals]
+        data = [Data.query.filter_by(hospital=hospital).order_by(
+            Data.date.desc()).first() for hospital in session['HOSPITALS']]
+        # print(data)
         session['DATA'] = [d.id for d in data]
-        info = app.config['GOOGLE_MAPS'].distance_matrix(session['ADDRESS'], [hospital.address for hospital in hospitals], mode="driving", units="imperial")
-        session['DISTANCES'] = {}; session['TIMES'] = {}
-        session['DISTANCE_STRINGS'] = {}; session['TIME_STRINGS'] = {}
+        info = app.config['GOOGLE_MAPS'].distance_matrix(session['ADDRESS'], [
+                                                         hospital.address for hospital in hospitals], mode="driving", units="imperial")
+        session['DISTANCES'] = {}
+        session['TIMES'] = {}
+        session['DISTANCE_STRINGS'] = {}
+        session['TIME_STRINGS'] = {}
         print(info)
         for i in range(len(info['rows'][0]['elements'])):
             if info['rows'][0]['elements'][i]['status'] == 'OK':
-                session['DISTANCES'][str(session['HOSPITALS'][i])] = float(info['rows'][0]['elements'][i]['distance']['text'].replace(",", "").split(" ")[0])
+                session['DISTANCES'][str(session['HOSPITALS'][i])] = float(
+                    info['rows'][0]['elements'][i]['distance']['text'].replace(",", "").split(" ")[0])
 
-                arr = info['rows'][0]['elements'][i]['duration']['text'].replace(",", "").split(" ")
+                arr = info['rows'][0]['elements'][i]['duration']['text'].replace(
+                    ",", "").split(" ")
                 if len(arr) == 2:
                     time = float(arr[0])
                 elif len(arr) == 4 and arr[1].strip()[0:4] == "hour":
@@ -71,17 +81,22 @@ def home():
                     time = float(arr[0]) * 1440 + float(arr[2]) * 60
                 session['TIMES'][str(session['HOSPITALS'][i])] = time
 
-                session['DISTANCE_STRINGS'][str(session['HOSPITALS'][i])] = info['rows'][0]['elements'][i]['distance']['text']
-                session['TIME_STRINGS'][str(session['HOSPITALS'][i])] = info['rows'][0]['elements'][i]['duration']['text']
+                session['DISTANCE_STRINGS'][str(
+                    session['HOSPITALS'][i])] = info['rows'][0]['elements'][i]['distance']['text']
+                session['TIME_STRINGS'][str(
+                    session['HOSPITALS'][i])] = info['rows'][0]['elements'][i]['duration']['text']
             else:
                 session['DISTANCES'][str(session['HOSPITALS'][i])] = 99999
                 session['TIMES'][str(session['HOSPITALS'][i])] = 99999
-                session['DISTANCE_STRINGS'][str(session['HOSPITALS'][i])] = 'Error'
+                session['DISTANCE_STRINGS'][str(
+                    session['HOSPITALS'][i])] = 'Error'
                 session['TIME_STRINGS'][str(session['HOSPITALS'][i])] = 'Error'
 
-    print(session['HOSPITALS'], session['DISTANCES'], session['TIMES'], sep="\n")
+    print(session['HOSPITALS'], session['DISTANCES'],
+          session['TIMES'], sep="\n")
 
-    decision_maker = HomeDecision([Hospital.query.get(hospital) for hospital in session['HOSPITALS']], [Data.query.get(data) for data in session['DATA']])
+    decision_maker = HomeDecision([Hospital.query.get(hospital) for hospital in session['HOSPITALS']], [
+                                  Data.query.get(data) for data in session['DATA']])
     results = decision_maker.get_rating()
 
     print(results)
@@ -106,31 +121,39 @@ def home():
     sort = "time_and_rating"
     if sort == "rating":
         new_ratings = [ratings[hospital] for hospital in ratings]
-        results = [(session['HOSPITALS'][i], new_ratings[i], session['DISTANCES'][hospitals[i].id], session['TIMES'][hospitals[i].id]) for i in range(len(hospitals))]
+        results = [(session['HOSPITALS'][i], new_ratings[i], session['DISTANCES']
+                    [hospitals[i].id], session['TIMES'][hospitals[i].id]) for i in range(len(hospitals))]
         for i in range(len(hospitals)):
-            map_list.append((hospitals[i].name, hospitals[i].address, hospitals[i].latitude, hospitals[i].longitude, results[hospitals[i]]))
+            map_list.append((hospitals[i].name, hospitals[i].address,
+                             hospitals[i].latitude, hospitals[i].longitude, results[hospitals[i]]))
         return render_template('home.html', results=results, header="Hospitals Sorted by Rating",  map_list=map_list, form=form, original_length=session['ORIGINAL_LENGTH'], length=session['LENGTH'], api_key=app.config['GOOGLE_MAPS_API_KEY_FRONTEND'])
     elif sort == "time_and_rating" or sort == "rating_and_time":
-        results_with_dist = decision_maker.get_rating_with_distance(session['TIMES'])
+        results_with_dist = decision_maker.get_rating_with_distance(
+            session['TIMES'])
         print(results_with_dist)
         hospitals = []
         new_ratings = []
         for hospital in results_with_dist:
             hospitals.append(hospital)
             new_ratings.append(ratings[hospital])
-        results = [(hospitals[i], new_ratings[i], session['DISTANCE_STRINGS'][str(hospitals[i].id)], session['TIME_STRINGS'][str(hospitals[i].id)]) for i in range(len(hospitals))]
+        results = [(hospitals[i], new_ratings[i], session['DISTANCE_STRINGS'][str(
+            hospitals[i].id)], session['TIME_STRINGS'][str(hospitals[i].id)]) for i in range(len(hospitals))]
         # print(results)
         for i in range(len(results)):
-            map_list.append((results[i][0].name, results[i][0].address, results[i][0].latitude, results[i][0].longitude, results[i][1]))
+            map_list.append((results[i][0].name, results[i][0].address,
+                             results[i][0].latitude, results[i][0].longitude, results[i][1]))
         # print(map_list)
         # print(results)
         return render_template('home.html', results=results, header="Hospitals Sorted by Time & Rating", address=session['ADDRESS'],  map_list=map_list, form=form, length=session['LENGTH'], original_length=session['ORIGINAL_LENGTH'], api_key=app.config['GOOGLE_MAPS_API_KEY_FRONTEND'])
     else:
-        hospitals = [Hospital.query.get(hospital) for hospital in session['HOSPITALS']]
+        hospitals = [Hospital.query.get(hospital)
+                     for hospital in session['HOSPITALS']]
         new_ratings = [ratings[hospital] for hospital in hospitals]
-        results = [(hospitals[i], new_ratings[i], session['DISTANCE_STRINGS'][str(hospitals[i].id)], session['TIME_STRINGS'][str(hospitals[i].id)]) for i in range(len(hospitals))]
+        results = [(hospitals[i], new_ratings[i], session['DISTANCE_STRINGS'][str(
+            hospitals[i].id)], session['TIME_STRINGS'][str(hospitals[i].id)]) for i in range(len(hospitals))]
         for i in range(len(hospitals)):
-            map_list.append((hospitals[i].name, hospitals[i].address, hospitals[i].latitude, hospitals[i].longitude, results[hospitals[i]]))
+            map_list.append((hospitals[i].name, hospitals[i].address,
+                             hospitals[i].latitude, hospitals[i].longitude, results[hospitals[i]]))
         return render_template('home.html', results=results, header="Hospitals Sorted by Distance", map_list=map_list, form=form, length=session['LENGTH'], original_length=session['ORIGINAL_LENGTH'], api_key=app.config['GOOGLE_MAPS_API_KEY_FRONTEND'])
 
 
@@ -144,7 +167,9 @@ def query_db():
 
     req_data = request.get_json()
     filter_by = req_data['filter_by']
-    raw_results = Search(db.session, 'application.models', (tables[req_data['table_name']],), filter_by=filter_by, all=True).results['data']
-    dict_results = [{c.name: str(getattr(result, c.name)) for c in result.__table__.columns} for result in raw_results]
+    raw_results = Search(db.session, 'application.models', (
+        tables[req_data['table_name']],), filter_by=filter_by, all=True).results['data']
+    dict_results = [{c.name: str(getattr(result, c.name))
+                     for c in result.__table__.columns} for result in raw_results]
 
     return json.dumps(dict_results)

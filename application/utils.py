@@ -16,14 +16,16 @@ def distance(lat1, lon1, lat2, lon2):
     dlon = lon2 - lon1
     dlat = lat2 - lat1
 
-    a = math.sin(dlat / 2) ** 2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2) ** 2
+    a = math.sin(dlat / 2) ** 2 + math.cos(lat1) * \
+        math.cos(lat2) * math.sin(dlon / 2) ** 2
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
 
     return R * c
 
 
-def send_request_email(hospital, name, title, email, phone, message):
-    msg = Message('Hospifind - New Account Request', sender='Hospifind Account Request', recipients=["ronnachum13@gmail.com", "foramritasahu@gmail.com", "arya.grayeli@gmail.com", "pranavmathur001@gmail.com", "aarav.cube@gmail.com"])
+def send_hospital_request_email(hospital, name, title, email, phone, message):
+    msg = Message('Hospifind - New Account Request', sender='Hospifind Account Request', recipients=[
+                  "ronnachum13@gmail.com", "foramritasahu@gmail.com", "arya.grayeli@gmail.com", "pranavmathur001@gmail.com", "aarav.cube@gmail.com"])
     msg.body = f'''A New User is Requesting a Hospifind Account! Here is their information:
         Hospital Name: {hospital}
         Name: {name}   Title: {title}
@@ -35,7 +37,8 @@ def send_request_email(hospital, name, title, email, phone, message):
 
 
 def send_contact_email(name, email, subject, message):
-    msg = Message('Hospifind - Contact Us Email', sender='Hospifind Contact Us Email', recipients=["ronnachum13@gmail.com", "foramritasahu@gmail.com", "arya.grayeli@gmail.com", "pranavmathur001@gmail.com", "aarav.cube@gmail.com"])
+    msg = Message('Hospifind - Contact Us Email', sender='Hospifind Contact Us Email', recipients=[
+                  "ronnachum13@gmail.com", "foramritasahu@gmail.com", "arya.grayeli@gmail.com", "pranavmathur001@gmail.com", "aarav.cube@gmail.com"])
     msg.body = f'''A New User Submitted a Contact Form:
         Name: {name}
         Email: {email}
@@ -44,4 +47,3 @@ def send_contact_email(name, email, subject, message):
         {message}
     '''
     mail.send(msg)
-

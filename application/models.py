@@ -21,8 +21,10 @@ class Hospital(db.Model, UserMixin):
     county = db.Column(db.String, nullable=False)
     latitude = db.Column(db.Integer, nullable=True)
     longitude = db.Column(db.Integer, nullable=True)
-    admin_hex_id = db.Column(db.String, default=lambda: urandom(32).hex(), unique=True, nullable=True)
-    normal_hex_id = db.Column(db.String, default=lambda: urandom(32).hex(), unique=True, nullable=True)
+    admin_hex_id = db.Column(db.String, default=lambda: urandom(
+        32).hex(), unique=True, nullable=True)
+    normal_hex_id = db.Column(db.String, default=lambda: urandom(
+        32).hex(), unique=True, nullable=True)
     system_open = db.Column(db.Boolean, default=True)
     old_admin_hex_id = db.Column(db.String, default=None, nullable=True)
     old_normal_hex_id = db.Column(db.String, default=None, nullable=True)
@@ -68,9 +70,10 @@ class User(db.Model, UserMixin):
     name = db.Column(db.String, nullable=False)
     username = db.Column(db.String, unique=True, nullable=False)
     email = db.Column(db.String, unique=True, nullable=False)
-    is_admin = db.Column(db.Boolean, nullable=False)
+    user_type = db.Column(db.String, nullable=False)
     password = db.Column(db.String, nullable=False)
-    hospital = db.Column(db.Integer, db.ForeignKey('hospital.id'), nullable=False)
+    hospital = db.Column(db.Integer, db.ForeignKey(
+        'hospital.id'), nullable=False)
 
     def __repr__(self):
         return f"User('{self.id}', '{self.username}', '{self.hospital}')"
@@ -88,7 +91,8 @@ class Data(db.Model):
     coronavirus_patients = db.Column(db.Integer, nullable=False)
     coronavirus_patient_percent = db.Column(db.Float, nullable=False)
     user = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    hospital = db.Column(db.Integer, db.ForeignKey('hospital.id'), nullable=False)
+    hospital = db.Column(db.Integer, db.ForeignKey(
+        'hospital.id'), nullable=False)
 
     def __repr__(self):
         return f"Data('{self.id}', Hospital: '{self.hospital}', User: '{self.user}', Date: '{self.date}' -- {self.bed_capacity}, {self.beds_available}, {self.icus_available}, {self.ventilators_available}, {self.coronavirus_tests_available}, {self.coronavirus_patients}, {self.coronavirus_patient_percent})"

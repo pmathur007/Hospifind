@@ -2,16 +2,17 @@ from flask import render_template, flash, request, url_for, redirect, abort
 from flask_login import login_user, current_user, logout_user, login_required
 from application import app, bcrypt, db
 from application.models import Hospital, User, Data
-from application.hospital.forms import RegistrationForm, LoginForm, DataForm, UpdateAccountForm, RequestAccountForm
+from application.hospital.forms import RegistrationForm, LoginForm, DataForm, UpdateAccountForm, HospitalRequestAccountForm
 from datetime import datetime
-from application.utils import send_request_email
+from application.utils import send_hospital_request_email
 
 
-@app.route("/request_account", methods=["GET", "POST"])
-def request_account():
-    form = RequestAccountForm()
+@app.route("/hospital/request_account", methods=["GET", "POST"])
+def hospital_request_account():
+    form = HospitalRequestAccountForm()
     if form.validate_on_submit():
-        send_request_email(form.hospital.data, form.name.data, form.title.data, form.email.data, form.phone.data, form.message.data)
+        send_hospital_request_email(form.hospital.data, form.name.data, form.title.data,
+                                    form.email.data, form.phone.data, form.message.data)
         flash("An email has been sent to the Hospifind team for review. We will be in contact with you shortly.", 'success')
         return redirect(url_for('home'))
     return render_template('request_account.html', form=form)
@@ -21,11 +22,14 @@ def request_account():
 def hospital_admin_register(admin_hex_id):
     if current_user.is_authenticated:
         return redirect(url_for('home'))
-    hospital = Hospital.query.filter_by(admin_hex_id=admin_hex_id).first_or_404()
+    hospital = Hospital.query.filter_by(
+        admin_hex_id=admin_hex_id).first_or_404()
     form = RegistrationForm()
     if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = User(name=form.name.data, username=form.username.data, email=form.email.data, password=hashed_password, hospital=hospital.id, is_admin=True)
+        hashed_password = bcrypt.generate_password_hash(
+            form.password.data).decode('utf-8')
+        user = User(name=form.name.data, username=form.username.data, email=form.email.data,
+                    password=hashed_password, hospital=hospital.id, user_type="Admin")
         db.session.add(user)
         db.session.commit()
         flash('Your account has been created! You are now able to log in.', 'success')
@@ -37,11 +41,14 @@ def hospital_admin_register(admin_hex_id):
 def hospital_normal_register(normal_hex_id):
     if current_user.is_authenticated:
         return redirect(url_for('home'))
-    hospital = Hospital.query.filter_by(normal_hex_id=normal_hex_id).first_or_404()
+    hospital = Hospital.query.filter_by(
+        normal_hex_id=normal_hex_id).first_or_404()
     form = RegistrationForm()
     if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = User(name=form.name.data, username=form.username.data, email=form.email.data, password=hashed_password, hospital=hospital.id, is_admin=False)
+        hashed_password = bcrypt.generate_password_hash(
+            form.password.data).decode('utf-8')
+        user = User(name=form.name.data, username=form.username.data, email=form.email.data,
+                    password=hashed_password, hospital=hospital.id, user_type="Normal")
         db.session.add(user)
         db.session.commit()
         flash('Your account has been created! You are now able to log in.', 'success')
@@ -66,7 +73,8 @@ def login():
             hospital_name = Hospital.query.get(user.hospital).name
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
-            flash('Hello ' + user.name + '! You are now logged in as ' + user.username + ' - ' + hospital_name + '!', 'success')
+            flash('Hello ' + user.name + '! You are now logged in as ' +
+                  user.username + ' - ' + hospital_name + '!', 'success')
             return redirect(next_page) if next_page else redirect(url_for('home'))
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
@@ -92,24 +100,39 @@ def account():
         form.username.data = current_user.username
         form.email.data = current_user.email
 
-    if current_user.is_admin:
-        users = User.query.filter_by(hospital=current_user.hospital).order_by(User.is_admin.desc()).all()
-        data = Data.query.filter_by(hospital=current_user.hospital).order_by(Data.date.desc()).all()
-        bed_capacity = []; beds_available = []; icus_available = []; ventilators_available = []
-        coronavirus_tests_available = []; coronavirus_patients = []; coronavirus_patient_percent = []; dates = []
+    if current_user.user_type == "Admin":
+        users = User.query.filter_by(hospital=current_user.hospital).order_by(
+            User.user_type.desc()).all()
+        data = Data.query.filter_by(
+            hospital=current_user.hospital).order_by(Data.date.desc()).all()
+        bed_capacity = []
+        beds_available = []
+        icus_available = []
+        ventilators_available = []
+        coronavirus_tests_available = []
+        coronavirus_patients = []
+        coronavirus_patient_percent = []
+        dates = []
         for d in data:
-            bed_capacity.append(d.bed_capacity); beds_available.append(d.beds_available)
-            icus_available.append(d.icus_available); ventilators_available.append(d.ventilators_available)
-            coronavirus_tests_available.append(d.coronavirus_tests_available); coronavirus_patients.append(d.coronavirus_patients)
-            coronavirus_patient_percent.append(d.coronavirus_patient_percent*100); dates.append((d.date-datetime.utcfromtimestamp(0)).total_seconds())
+            bed_capacity.append(d.bed_capacity)
+            beds_available.append(d.beds_available)
+            icus_available.append(d.icus_available)
+            ventilators_available.append(d.ventilators_available)
+            coronavirus_tests_available.append(d.coronavirus_tests_available)
+            coronavirus_patients.append(d.coronavirus_patients)
+            coronavirus_patient_percent.append(
+                d.coronavirus_patient_percent*100)
+            dates.append((d.date-datetime.utcfromtimestamp(0)).total_seconds())
         user_info = []
         for user in users:
-            inputs = Data.query.filter_by(user=user.id).filter_by(hospital=hospital.id).all()
+            inputs = Data.query.filter_by(user=user.id).filter_by(
+                hospital=hospital.id).all()
             num = len(inputs)
             if len(inputs) == 0:
                 last = "N/A"
             else:
-                last = Data.query.filter_by(user=user.id).filter_by(hospital=hospital.id).order_by(Data.date.desc()).first().date.strftime('%m/%d/%y')
+                last = Data.query.filter_by(user=user.id).filter_by(hospital=hospital.id).order_by(
+                    Data.date.desc()).first().date.strftime('%m/%d/%y')
             user_info.append((user, user.username, num, last))
 
         if hospital.system_open:
@@ -130,7 +153,8 @@ def account():
 
 @app.route("/hospital/data/<int:hospital_id>")
 def hospital_data(hospital_id):
-    data = Data.query.filter_by(hospital=hospital_id).order_by(Data.date.desc()).all()
+    data = Data.query.filter_by(
+        hospital=hospital_id).order_by(Data.date.desc()).all()
     return render_template('hospital_data.html', title='Hospital Data', heading='Hospital Data - ' + Hospital.query.get(hospital_id).name, data=data)
 
 
@@ -139,7 +163,8 @@ def hospital_data(hospital_id):
 def data_input():
     form = DataForm()
     if form.validate_on_submit():
-        data = Data(bed_capacity=form.bed_capacity.data, beds_available=form.beds_available.data, icus_available=form.icus_available.data, ventilators_available=form.ventilators_available.data, coronavirus_tests_available=form.coronavirus_tests_available.data, coronavirus_patients=form.coronavirus_patients.data, coronavirus_patient_percent=form.coronavirus_patients.data/(form.bed_capacity.data-form.beds_available.data), user=current_user, hospital=current_user.hospital)
+        data = Data(bed_capacity=form.bed_capacity.data, beds_available=form.beds_available.data, icus_available=form.icus_available.data, ventilators_available=form.ventilators_available.data, coronavirus_tests_available=form.coronavirus_tests_available.data,
+                    coronavirus_patients=form.coronavirus_patients.data, coronavirus_patient_percent=form.coronavirus_patients.data/(form.bed_capacity.data-form.beds_available.data), user=current_user, hospital=current_user.hospital)
         db.session.add(data)
         db.session.commit()
         flash('Your data has been successfully uploaded to the server!', 'success')
@@ -150,7 +175,7 @@ def data_input():
 @app.route("/users/<int:user_id>")
 def view_user(user_id):
     requested_user = User.query.filter_by(id=user_id).first_or_404()
-    if not current_user is None and (requested_user.id == current_user.id or (current_user.is_admin and requested_user.hospital == current_user.hospital)):
+    if not current_user is None and (requested_user.id == current_user.id or (current_user.user_type == "Admin" and requested_user.hospital == current_user.hospital)):
         return render_template('user.html', user=requested_user)
     else:
         flash('You are not authorized to access that user.', 'danger')
@@ -161,13 +186,14 @@ def view_user(user_id):
 @login_required
 def delete_data(data_id):
     data = Data.query.get_or_404(data_id)
-    if (current_user is None) or (current_user != User.query.get(data.user) and not (current_user.is_admin and data.hospital == current_user.hospital)):
+    if (current_user is None) or (current_user != User.query.get(data.user) and not (current_user.user_type == "Admin" and data.hospital == current_user.hospital)):
         abort(403)
     date = data.date
     user = User.query.get(data.user).name
     db.session.delete(data)
     db.session.commit()
-    flash('Your data submitted on ' + date.strftime("%m/%d") + ' by {user} has been deleted!', 'success')
+    flash('Your data submitted on ' + date.strftime("%m/%d") +
+          ' by {user} has been deleted!', 'success')
     return redirect(url_for('account'))
 
 
@@ -175,7 +201,7 @@ def delete_data(data_id):
 @login_required
 def regenerate_links(hospital_id):
     hospital = Hospital.query.get_or_404(hospital_id)
-    if current_user is None or not current_user.is_admin or current_user.hospital != hospital.id:
+    if current_user is None or current_user.user_type != "Admin" or current_user.hospital != hospital.id:
         abort(403)
     hospital.regenerate_hex_ids()
     db.session.commit()
@@ -188,7 +214,7 @@ def regenerate_links(hospital_id):
 def close_system(hospital_id):
     print('here')
     hospital = Hospital.query.get_or_404(hospital_id)
-    if current_user is None or not current_user.is_admin or current_user.hospital != hospital.id:
+    if current_user is None or current_user.user_type != "Admin" or current_user.hospital != hospital.id:
         abort(403)
     hospital.close_system()
     db.session.commit()
@@ -201,7 +227,7 @@ def close_system(hospital_id):
 def open_system(hospital_id):
     print('here')
     hospital = Hospital.query.get_or_404(hospital_id)
-    if current_user is None or not current_user.is_admin or current_user.hospital != hospital.id:
+    if current_user is None or current_user.user_type != "Admin" or current_user.hospital != hospital.id:
         abort(403)
     hospital.open_system()
     db.session.commit()
