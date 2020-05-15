@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Muli&display=swap');
 
-$font-stack: 'Ubuntu', sans-serif;
+$font-stack: 'Muli', sans-serif;
 $primary-color: #e60000;
 
 @function set-text-color($color) {
@@ -15,3 +16,11 @@ $primary-color: #e60000;
     background-color: $color;
     color: set-text-color($color);
 }
+
+@mixin transition($args...) {
+    -webkit-transition: $args;
+    -moz-transition: $args;
+    -ms-transition: $args;
+    -o-transition: $args;
+    transition: $args;
+  }

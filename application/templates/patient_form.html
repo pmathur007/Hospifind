@@ -2,43 +2,43 @@
 {% block content %}
     <h1>Get Personalized Results</h1>
     <form class="mcontainer" action="{{ url_for('patient_form') }}" method="post">
-        <fieldset class="pfield">
+        <fieldset>
             <legend>Are you in a serious/life-threatening condition?</legend>
-            <label class="plabel"><input type="radio" name="emergency" value="y"> Yes</label>
-            <label class="plabel"><input type="radio" name="emergency" value="n"> No</label>
+            <input id="emergency_y" type="radio" name="emergency" value="y"><label for="emergency_y">Yes</label>
+            <input id="emergency_n" type="radio" name="emergency" value="n"><label for="emergency_n">No</label>
         </fieldset>
-        <fieldset class="pfield">
+        <fieldset>
             <legend>Age</legend>
-            <label class="plabel"><input type="radio" name="age" value="0"> Younger than 18</label>
-            <label class="plabel"><input type="radio" name="age" value="1"> 18-64</label>
-            <label class="plabel"><input type="radio" name="age" value="2"> 65+</label>
+            <input id="age_0" type="radio" name="age" value="0"><label for="age_0">Younger than 18</label>
+            <input id="age_1" type="radio" name="age" value="1"><label for="age_1">18-64</label>
+            <input id="age_2" type="radio" name="age" value="2"><label for="age_2">65+</label>
         </fieldset>
         <fieldset class="pfield">
             <legend>Which, if any, of the following symptoms do you have?</legend>
-            <label class="plabel"><input type="checkbox" name="symptoms" value=0> Fever</label>
-            <label class="plabel"><input type="checkbox" name="symptoms" value=1> Dry Cough</label>
-            <label class="plabel"><input type="checkbox" name="symptoms" value=2> Fatigue</label>
-            <label class="plabel"><input type="checkbox" name="symptoms" value=3> Phlegm</label>
-            <label class="plabel"><input type="checkbox" name="symptoms" value=4> Shortness of Breath</label>
-            <label class="plabel"><input type="checkbox" name="symptoms" value=5> Sore Throat or Headache</label>
-            <label class="plabel"><input type="checkbox" name="symptoms" value=6> Chills</label>
-            <label class="plabel"><input type="checkbox" name="symptoms" value=7> Vomiting</label>
-            <label class="plabel"><input type="checkbox" name="symptoms" value=8> Nasal Congestion</label>
-            <label class="plabel"><input type="checkbox" name="symptoms" value=9> Diarrhea</label>
+            <input id="symptoms_0" type="checkbox" name="symptoms" value=0><label for="symptoms_0">Fever</label>
+            <input id="symptoms_1" type="checkbox" name="symptoms" value=1><label for="symptoms_1">Dry Cough</label>
+            <input id="symptoms_2" type="checkbox" name="symptoms" value=2><label for="symptoms_2">Fatigue</label>
+            <input id="symptoms_3" type="checkbox" name="symptoms" value=3><label for="symptoms_3">Phlegm</label>
+            <input id="symptoms_4" type="checkbox" name="symptoms" value=4><label for="symptoms_4">Shortness of Breath</label>
+            <input id="symptoms_5" type="checkbox" name="symptoms" value=5><label for="symptoms_5">Sore Throat or Headache</label>
+            <input id="symptoms_6" type="checkbox" name="symptoms" value=6><label for="symptoms_6">Chills</label>
+            <input id="symptoms_7" type="checkbox" name="symptoms" value=7><label for="symptoms_7">Vomiting</label>
+            <input id="symptoms_8" type="checkbox" name="symptoms" value=8><label for="symptoms_8">Nasal Congestion</label>
+            <input id="symptoms_9" type="checkbox" name="symptoms" value=9><label for="symptoms_9">Diarrhea</label>
         </fieldset>
         <fieldset class="pfield">
             <legend>Which, if any, of the following underlying conditions do you have?</legend>
-            <label class="plabel"><input type="checkbox" name="conditions" value=0> High Blood Pressure</label>
-            <label class="plabel"><input type="checkbox" name="conditions" value=1> Heart Problems</label>
-            <label class="plabel"><input type="checkbox" name="conditions" value=2> Diabetes</label>
-            <label class="plabel"><input type="checkbox" name="conditions" value=3> Asthma</label>
-            <label class="plabel"><input type="checkbox" name="conditions" value=4> Any smoking-related condition</label>
+            <input id="conditions_0" type="checkbox" name="conditions" value=0><label for="conditions_0">High Blood Pressure</label>
+            <input id="conditions_1" type="checkbox" name="conditions" value=1><label for="conditions_1">Heart Problems</label>
+            <input id="conditions_2" type="checkbox" name="conditions" value=2><label for="conditions_2">Diabetes</label>
+            <input id="conditions_3" type="checkbox" name="conditions" value=3><label for="conditions_3">Asthma</label>
+            <input id="conditions_4" type="checkbox" name="conditions" value=4><label for="conditions_4">Any smoking-related condition</label>
         </fieldset>
         <fieldset class="pfield">
             <legend>Have you been in an area where COVID‑19 is widespread or have you been in contact with someone known to have COVID-19?</legend>
-            <label class="plabel"><input type="radio" name="near_covid" value="y"> Yes</label>
-            <label class="plabel"><input type="radio" name="near_covid" value="n"> No</label>
-            <label class="plabel"><input type="radio" name="near_covid" value="idk"> I don't know</label>
+            <input id="near_covid_y" type="radio" name="near_covid" value="y"><label for="near_covid_y">Yes</label>
+            <input id="near_covid_n" type="radio" name="near_covid" value="n"><label for="near_covid_n">No</label>
+            <input id="near_covid_idk" type="radio" name="near_covid" value="idk"><label for="near_covid_idk">I don't know</label>
         </fieldset>
         <input type="submit" class="btn btn-light" value="Submit">
     </form>

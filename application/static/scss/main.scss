@@ -8,6 +8,7 @@
 }
 
 body {
+    @include set-background(darken(#ffffff, 1));
     height: 100%;
     margin-top: 5vh;
 }
@@ -33,6 +34,7 @@ footer {
 
 #logo_title {
     font-size: 2rem;
+    letter-spacing: 1px;
     img {
         width: 2rem;
         height: 2rem;
@@ -78,4 +80,41 @@ footer {
             padding: 10px 0;
         }
     }
+}
+
+fieldset {
+    text-align: center;
+    margin-bottom: 30px;
+
+    legend {
+        letter-spacing: 0.4px;
+    }
+
+    input {
+        display: none;
+    }
+
+    input[type="radio"]:checked + label, input[type="checkbox"]:checked + label {
+        background: #ffe6e6;
+    }
+
+    label {
+        @include set-background(darken(#ffffff, 3));
+        display: block;
+        width: 70%;
+        text-align: center;
+        margin: 5px auto;
+        padding: 13px 0px;
+
+        @include transition(background 0.5s ease);
+        &:hover {
+            background: lighten(#ffe6e6, 2);
+        }
+    }
+}
+
+input[type="submit"] {
+    display: block;
+    margin: auto;
+    text-align: center;
 }
