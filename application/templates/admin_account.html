@@ -56,7 +56,8 @@
     </div>
     <div class="mcontainer">
       <h3 class="border-bottom mb-4">Users </h3>
-      <table class="sortable border-bottom" style="width:1000px;" border=1 frame=void rules=rows>
+      <div id="user_table"></div>
+      <!-- <table class="sortable border-bottom" style="width:1000px;" border=1 frame=void rules=rows>
         <thead>
           <tr>
             <th>Name</th>
@@ -81,7 +82,7 @@
             </tr>
         {% endfor %}
         </tbody>
-      </table>
+      </table> -->
         {% if hospital.system_open %}
             <a href='{{ admin_invite_link }}'>https://{{ admin_invite_link }}</a>
             <a href='{{ user_invite_link }}'>https://hospifind.tech{{ user_invite_link }}</a>
@@ -288,8 +289,10 @@
     </div>
 {% endblock content %}
 {% block scripts %}
-    <script src="../static/js/hospital_table.js"></script>
+<script src="../static/js/user_table.js"></script>
+    <script src="../static/js/data_table.js"></script>
     <script>
+        reloadUserTable({{ hospital.id }});
         reloadDataTable({{ hospital.id }});
     </script>
 {% endblock scripts %}

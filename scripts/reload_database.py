@@ -5,7 +5,8 @@ import os
 import time
 import random
 
-Hospital.query.delete()
+db.drop_all()
+db.create_all()
 
 csv_file = os.path.join(os.path.dirname(os.getcwd()), "data", "newest_us_data.csv")
 print(csv_file)
