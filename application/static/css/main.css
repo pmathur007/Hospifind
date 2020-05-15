@@ -4,7 +4,8 @@
   margin: 2%;
 }
 
-.btn-dark, .btn-light {
+.btn-dark,
+.btn-light {
   border-radius: 5px;
   border: solid 1px #333;
   max-width: 250px;
@@ -42,7 +43,9 @@ a:hover {
   text-decoration: none;
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   text-align: center;
 }
 
@@ -60,7 +63,8 @@ footer {
 }
 
 #home_info {
-  background: url(../images/background_hospital.jpg) no-repeat center center fixed;
+  background: url(../images/background_hospital.jpg) no-repeat center center
+    fixed;
   background-size: cover;
   text-align: center;
   padding: 5%;
@@ -82,7 +86,8 @@ footer {
   justify-content: space-between;
   align-items: center;
 }
-.hospital_result div p, .hospital_result div a {
+.hospital_result div p,
+.hospital_result div a {
   margin: 0;
   display: inline-block;
   width: 50%;
@@ -105,7 +110,8 @@ fieldset legend {
 fieldset input {
   display: none;
 }
-fieldset input[type=radio]:checked + label, fieldset input[type=checkbox]:checked + label {
+fieldset input[type="radio"]:checked + label,
+fieldset input[type="checkbox"]:checked + label {
   background: #ffe6e6;
 }
 fieldset label {
@@ -126,10 +132,14 @@ fieldset label:hover {
   background: #fff0f0;
 }
 
-input[type=submit] {
+input[type="submit"] {
   display: block;
   margin: auto;
   text-align: center;
 }
 
+#map {
+  width: 100%;
+  height: 300px;
+}
 /*# sourceMappingURL=main.css.map */

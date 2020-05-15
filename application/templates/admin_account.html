@@ -1,63 +1,54 @@
-{% extends "layout.html" %}
-{% block content %}
-    <h1>{{ current_user.name }} (Username: {{ current_user.username }})</h1>
-    <h2>{{ hospital.name }} - Admin</h2>
-    <h3 class="border-bottom mb-4">Account Information</h3>
-    <div class="mcontainer">
-        <form method="POST" action="" enctype="multipart/form-data">
-            {{ form.hidden_tag() }}
-            <fieldset class="form-group">
-                <div class="form-group">
-                    {{ form.name.label(class="form-control-label") }}
-
-                    {% if form.name.errors %}
-                        {{ form.name(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.name.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.name(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    {{ form.username.label(class="form-control-label") }}
-
-                    {% if form.username.errors %}
-                        {{ form.username(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.username.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.username(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    {{ form.email.label(class="form-control-label") }}
-                    {% if form.email.errors %}
-                        {{ form.email(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.email.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.email(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-            </fieldset>
-            <div class="form-group">
-                {{ form.submit(class="btn btn-light") }}
-            </div>
-        </form>
+{% extends "layout.html" %} {% block content %}
+<h1>{{ current_user.name }} (Username: {{ current_user.username }})</h1>
+<h2>{{ hospital.name }} - Admin</h2>
+<h3 class="border-bottom mb-4">Account Information</h3>
+<div class="mcontainer">
+  <form method="POST" action="" enctype="multipart/form-data">
+    {{ form.csrf_token() }}
+    <fieldset class="form-group">
+      <div class="form-group">
+        {% if form.name.errors %} {{ form.name(class="form-control
+        form-control-lg is-invalid") }}
+        <div class="invalid-feedback">
+          {% for error in form.name.errors %}
+          <span>{{ error }}</span>
+          {% endfor %}
+        </div>
+        {% else %} {{ form.name(class="form-control form-control-lg") }} {%
+        endif %}
+      </div>
+      <div class="form-group">
+        {% if form.username.errors %} {{ form.username(class="form-control
+        form-control-lg is-invalid") }}
+        <div class="invalid-feedback">
+          {% for error in form.username.errors %}
+          <span>{{ error }}</span>
+          {% endfor %}
+        </div>
+        {% else %} {{ form.username(class="form-control form-control-lg") }} {%
+        endif %}
+      </div>
+      <div class="form-group">
+        {% if form.email.errors %} {{ form.email(class="form-control
+        form-control-lg is-invalid") }}
+        <div class="invalid-feedback">
+          {% for error in form.email.errors %}
+          <span>{{ error }}</span>
+          {% endfor %}
+        </div>
+        {% else %} {{ form.email(class="form-control form-control-lg") }} {%
+        endif %}
+      </div>
+    </fieldset>
+    <div class="form-group">
+      {{ form.submit(class="btn btn-light") }}
     </div>
-    <div class="mcontainer">
-      <h3 class="border-bottom mb-4">Users </h3>
-      <div id="user_table"></div>
-      <!-- <table class="sortable border-bottom" style="width:1000px;" border=1 frame=void rules=rows>
+  </form>
+</div>
+<div class="mcontainer">
+  <h3 class="border-bottom mb-4">Users</h3>
+  <div id="user_table"></div>
+  <!-- <table class="sortable border-bottom" style="width:1000px;" border=1 frame=void rules=rows>
         <thead>
           <tr>
             <th>Name</th>
@@ -83,102 +74,6 @@
         {% endfor %}
         </tbody>
       </table> -->
-        {% if hospital.system_open %}
-            <a href='{{ admin_invite_link }}'>https://{{ admin_invite_link }}</a>
-            <a href='{{ user_invite_link }}'>https://hospifind.tech{{ user_invite_link }}</a>
-            <div class="row">
-                <div class="column">
-                    <button class="ml-3 mt-2 mb-2 btn btn-light" data-toggle="modal" data-target="#regenerateModal">Regenerate Links</button>
-                </div>
-                <div class="column">
-                    <button class="ml-3 mt-2 mb-2 btn btn-light" data-toggle="modal" data-target="#closeModal">Close System</button>
-                </div>
-            </div>
-            {% else %}
-                <button class="mt-2 mb-2 btn btn-light" data-toggle="modal" data-target="#openModal">Open System</button>
-            {% endif %}
-    </div>
-    <div class="mcontainer">
-        <h3 class="border-bottom mb-4">Graphs</h3>
-        <div class="row">
-              <div class="column">
-                  <canvas id="beds_available" width="500" height="200"></canvas>
-              </div>
-              <div class="column">
-                  <canvas id="icus_available" width="500" height="200"></canvas>
-              </div>
-        </div>
-        {% else %} {{ form.name(class="form-control form-control-lg") }} {%
-        endif %}
-      </div>
-      <div class="form-group">
-        {{ form.username.label(class="form-control-label") }} {% if
-        form.username.errors %} {{ form.username(class="form-control
-        form-control-lg is-invalid") }}
-        <div class="invalid-feedback">
-          {% for error in form.username.errors %}
-          <span>{{ error }}</span>
-          {% endfor %}
-        </div>
-        {% else %} {{ form.username(class="form-control form-control-lg") }} {%
-        endif %}
-      </div>
-      <div class="form-group">
-        {{ form.email.label(class="form-control-label") }} {% if
-        form.email.errors %} {{ form.email(class="form-control form-control-lg
-        is-invalid") }}
-        <div class="invalid-feedback">
-          {% for error in form.email.errors %}
-          <span>{{ error }}</span>
-          {% endfor %}
-        </div>
-        {% else %} {{ form.email(class="form-control form-control-lg") }} {%
-        endif %}
-      </div>
-    </fieldset>
-    <div class="form-group">
-      {{ form.submit(class="btn btn-light") }}
-    </div>
-  </form>
-</div>
-<div class="mcontainer">
-  <h3 class="border-bottom mb-4">Users</h3>
-  <table
-    class="sortable border-bottom"
-    style="width: 1000px;"
-    border="1"
-    frame="void"
-    rules="rows"
-  >
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Username</th>
-        <th>User Type</th>
-        <th>Data Inputs</th>
-        <th>Last Input</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for user, username, num_input, last_input in user_info %}
-      <tr>
-        <td>{{ user.name }}</td>
-        <td>
-          <a href="{{ url_for('view_user', user_id=user.id) }}"
-            >{{ username }}</a
-          >
-        </td>
-        {% if user.user_type == "Admin" %}
-        <td>Admin</td>
-        {% else %}
-        <td>Normal</td>
-        {% endif %}
-        <td>{{ num_input }}</td>
-        <td>{{ last_input }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
   {% if hospital.system_open %}
   <a href="{{ admin_invite_link }}">https://{{ admin_invite_link }}</a>
   <a href="{{ user_invite_link }}"
@@ -362,7 +257,7 @@
   }
 </script>
 <script>
-  color = 'white'
+  color = 'black'
   create_graph('beds_available', {{dates}}, 'Beds Available', 'Beds Available', {{beds_available}}, 255, 30, 50, 0.3, color, 0, 0, 0, 0)
   create_graph('icus_available', {{dates}}, 'ICU Beds Available', 'ICUs Available', {{icus_available}}, 255, 130, 31, 0.3, color, 0, 0, 0, 0)
   create_graph('ventilators_available', {{dates}}, 'Ventilators Available', 'Ventilators Available', {{ventilators_available}}, 255, 255, 50, 0.3, color, 0, 0, 0, 0)
@@ -517,19 +412,13 @@
         </form>
       </div>
     </div>
-<<<<<<< HEAD
-  </div>
-</div>
-{% endblock content %} {% block scripts %}
-<script src="../static/js/hospital_table.js"></script>
-=======
-{% endblock content %}
-{% block scripts %}
-<script src="../static/js/user_table.js"></script>
+    {% endblock content %} {% block scripts %}
+    <script src="../static/js/user_table.js"></script>
     <script src="../static/js/data_table.js"></script>
     <script>
-        reloadUserTable({{ hospital.id }});
-        reloadDataTable({{ hospital.id }});
+      reloadUserTable({{ hospital.id }});
+      reloadDataTable({{ hospital.id }});
     </script>
->>>>>>> ef59c8032ab4b696a49559af86bc4c4fbe80c6f5
-{% endblock scripts %}
+    {% endblock scripts %}
+  </div>
+</div>

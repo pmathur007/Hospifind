@@ -167,17 +167,14 @@ def query_db():
 
     req_data = request.get_json()
     filter_by = req_data['filter_by']
-<<<<<<< HEAD
     raw_results = Search(db.session, 'application.models', (
         tables[req_data['table_name']],), filter_by=filter_by, all=True).results['data']
     dict_results = [{c.name: str(getattr(result, c.name))
                      for c in result.__table__.columns} for result in raw_results]
-=======
-    raw_results = Search(db.session, 'application.models', (tables[req_data['table_name']],), filter_by=filter_by, all=True).results['data']
->>>>>>> ef59c8032ab4b696a49559af86bc4c4fbe80c6f5
 
     if request.method == 'POST':
-        dict_results = [{c.name: str(getattr(result, c.name)) for c in result.__table__.columns} for result in raw_results]
+        dict_results = [{c.name: str(getattr(result, c.name))
+                         for c in result.__table__.columns} for result in raw_results]
         return json.dumps(dict_results)
     elif request.method == 'DELETE':
         for result in raw_results:
