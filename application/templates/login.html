@@ -1,8 +1,9 @@
-{% extends "layout.html" %}
-{% block page_styles %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}"/>
-{% endblock page_styles %}
-{% block content %}
+{% extends "layout.html" %} {% block page_styles %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/login.css') }}"
+/>
+{% endblock page_styles %} {% block content %}
 <div class="content-section">
     <form method="POST" action="">
         {{ form.csrf_token() }}
