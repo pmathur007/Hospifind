@@ -20,7 +20,7 @@ fieldset {
     label {
         @include set-background(darken(#ffffff, 3));
         display: block;
-        width: 70%;
+        width: 90%;
         text-align: center;
         margin: 5px auto;
         padding: 13px 0px;
@@ -30,10 +30,4 @@ fieldset {
             background: lighten(#ffe6e6, 2);
         }
     }
-}
-
-input[type="submit"] {
-    display: block;
-    margin: auto;
-    text-align: center;
 }

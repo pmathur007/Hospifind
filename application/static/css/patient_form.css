@@ -1,17 +1,18 @@
 @import url("https://fonts.googleapis.com/css2?family=Ubuntu&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Muli&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Muli&display=swap");
 .mcontainer {
   margin: 2%;
 }
 
 .btn-red {
-  border-radius: 5px;
+  border-radius: 50px;
   border: none;
-  max-width: 250px;
 }
 
 .btn-red {
-  background-color: #ff0000;
+  background-color: #ff6666;
   color: #fff;
   -webkit-transition: background 0.5s ease-in-out;
   -moz-transition: background 0.5s ease-in-out;
@@ -20,8 +21,16 @@
   transition: background 0.5s ease-in-out;
 }
 .btn-red:hover {
-  background-color: #e60000;
+  background-color: #ff3d3d;
   color: #fff;
+}
+
+.btn-wide {
+  text-align: center;
+  display: block;
+  margin: auto;
+  width: 90%;
+  padding: 10px 0px;
 }
 
 fieldset {
@@ -41,7 +50,7 @@ fieldset label {
   background-color: #f7f7f7;
   color: #333;
   display: block;
-  width: 70%;
+  width: 90%;
   text-align: center;
   margin: 5px auto;
   padding: 13px 0px;
@@ -53,12 +62,6 @@ fieldset label {
 }
 fieldset label:hover {
   background: #fff0f0;
-}
-
-input[type=submit] {
-  display: block;
-  margin: auto;
-  text-align: center;
 }
 
 /*# sourceMappingURL=patient_form.css.map */
