@@ -10,8 +10,8 @@
     <fieldset>
       <legend>Log In</legend>
       <div class="form-group">
-        {% if form.email.errors %} {{ form.email(class="form-control
-        is-invalid", placeholder="Email") }}
+        {% if form.email.errors %} {{ form.email(class="is-invalid",
+        placeholder="Email") }}
         <div class="invalid-feedback">
           {% for error in form.email.errors %}
           <span>{{ error }}</span>
@@ -34,13 +34,13 @@
           <div id="remember_me">
             {{ form.remember() }} {{ form.remember.label() }}
           </div>
-          <a id="forgot_password" href="{{ url_for('request_password_reset') }}"
+          <a id="forgot_password" href="{{ url_for('login') }}"
             >Forgot Password?</a
           >
         </div>
       </div>
     </fieldset>
-    {{ form.submit(class="btn-red submit_button") }}
+    {{ form.submit(class="btn-red btn-wide") }}
   </form>
 </div>
 <div>

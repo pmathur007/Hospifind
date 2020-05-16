@@ -11,10 +11,18 @@
 
 .btn-red {
     @extend %btn;
-    @include set-background(darken(#ff0000, 5));
+    @include set-background(lighten(#ff0000, 20));
 
     @include transition(background .5s ease-in-out);
     &:hover {
-        @include set-background(darken(#ff0000, 10));
+        @include set-background(lighten(#ff0000, 12));
     }
+}
+
+.btn-wide {
+    text-align: center;
+    display: block;
+    margin: auto;
+    width: 90%;
+    padding: 10px 0px;
 }
