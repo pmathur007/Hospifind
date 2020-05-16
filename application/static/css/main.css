@@ -1,23 +1,28 @@
 @import url("https://fonts.googleapis.com/css2?family=Ubuntu&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Muli&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Muli&display=swap");
 .mcontainer {
   margin: 2%;
 }
 
-.btn-dark, .btn-light {
-  border-radius: 5px;
-  border: solid 1px #333;
-  max-width: 250px;
+.btn-red {
+  border-radius: 50px;
+  border: none;
 }
 
-.btn-light {
-  background-color: rgba(255, 255, 255, 0.5);
-  color: #333;
+.btn-red {
+  background-color: #e60000;
+  color: #fff;
+  -webkit-transition: background 0.5s ease-in-out;
+  -moz-transition: background 0.5s ease-in-out;
+  -ms-transition: background 0.5s ease-in-out;
+  -o-transition: background 0.5s ease-in-out;
+  transition: background 0.5s ease-in-out;
 }
-.btn-light:hover {
-  border: solid 1px #333;
-  background-color: rgba(230, 230, 230, 0.5);
-  color: #333;
+.btn-red:hover {
+  background-color: #cc0000;
+  color: #fff;
 }
 
 * {
@@ -59,7 +64,7 @@ footer {
   text-align: center;
 }
 
-input[type=text], input[type=email], input[type=password] {
+input[type=text], input[type=email], input[type=password], .textareas {
   background-color: #f2f2f2;
   color: #333;
   width: 90%;
@@ -67,10 +72,14 @@ input[type=text], input[type=email], input[type=password] {
   border: none;
   border-radius: 0px;
   padding: 15px 15px;
+  -webkit-transition: background 0.4s ease-in-out;
+  -moz-transition: background 0.4s ease-in-out;
+  -ms-transition: background 0.4s ease-in-out;
+  -o-transition: background 0.4s ease-in-out;
+  transition: background 0.4s ease-in-out;
 }
-
-input[type=text]:focus, input[type=email]:focus, input[type=password]:focus {
-  background-color: #f2f2f2;
+input[type=text]:focus, input[type=email]:focus, input[type=password]:focus, .textareas:focus {
+  background-color: #e6e6e6;
   color: #333;
   border: none;
   outline: 0px;

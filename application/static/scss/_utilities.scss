@@ -1,27 +1,20 @@
+@import 'config';
+
 .mcontainer {
     margin: 2%;
 }
 
 %btn {
-    border-radius: 5px;
-    border: solid 1px #333;
-    max-width: 250px;
+    border-radius: 50px;
+    border: none;
 }
 
-.btn-light {
+.btn-red {
     @extend %btn;
-    @include set-background(rgba(255, 255, 255, 0.5));
+    @include set-background(darken(#ff0000, 5));
 
+    @include transition(background .5s ease-in-out);
     &:hover {
-        border: solid 1px #333;
-        @include set-background(darken(rgba(255, 255, 255, 0.5), 10));
-    }
-}
-
-.btn-dark {
-    @extend %btn;
-
-    &:hover {
-        
+        @include set-background(darken(#ff0000, 10));
     }
 }

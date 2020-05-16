@@ -25,7 +25,7 @@ fieldset {
         margin: 5px auto;
         padding: 13px 0px;
 
-        @include transition(background 0.5s ease);
+        @include transition(background 0.5s ease-in-out);
         &:hover {
             background: lighten(#ffe6e6, 2);
         }

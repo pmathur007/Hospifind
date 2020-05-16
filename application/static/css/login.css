@@ -1,0 +1,40 @@
+legend {
+  width: 90%;
+  margin: 0px auto 10px;
+  letter-spacing: 0.4px;
+}
+
+fieldset {
+  margin-bottom: 10px;
+}
+
+#more_options {
+  width: 90%;
+  margin: auto;
+  padding-top: 7px;
+  font-size: 0.8em;
+}
+
+#remember_me {
+  float: left;
+}
+
+#forgot_password {
+  margin: auto;
+  float: right;
+}
+
+.submit_button {
+  text-align: center;
+  display: block;
+  margin: auto;
+  width: 90%;
+  padding: 10px 0px;
+}
+
+p {
+  text-align: center;
+  margin: 2px auto;
+}
+
+/*# sourceMappingURL=login.css.map */

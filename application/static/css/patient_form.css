@@ -4,20 +4,24 @@
   margin: 2%;
 }
 
-.btn-dark, .btn-light {
+.btn-red {
   border-radius: 5px;
-  border: solid 1px #333;
+  border: none;
   max-width: 250px;
 }
 
-.btn-light {
-  background-color: rgba(255, 255, 255, 0.5);
-  color: #333;
+.btn-red {
+  background-color: #ff0000;
+  color: #fff;
+  -webkit-transition: background 0.5s ease-in-out;
+  -moz-transition: background 0.5s ease-in-out;
+  -ms-transition: background 0.5s ease-in-out;
+  -o-transition: background 0.5s ease-in-out;
+  transition: background 0.5s ease-in-out;
 }
-.btn-light:hover {
-  border: solid 1px #333;
-  background-color: rgba(230, 230, 230, 0.5);
-  color: #333;
+.btn-red:hover {
+  background-color: #e60000;
+  color: #fff;
 }
 
 fieldset {
@@ -41,11 +45,11 @@ fieldset label {
   text-align: center;
   margin: 5px auto;
   padding: 13px 0px;
-  -webkit-transition: background 0.5s ease;
-  -moz-transition: background 0.5s ease;
-  -ms-transition: background 0.5s ease;
-  -o-transition: background 0.5s ease;
-  transition: background 0.5s ease;
+  -webkit-transition: background 0.5s ease-in-out;
+  -moz-transition: background 0.5s ease-in-out;
+  -ms-transition: background 0.5s ease-in-out;
+  -o-transition: background 0.5s ease-in-out;
+  transition: background 0.5s ease-in-out;
 }
 fieldset label:hover {
   background: #fff0f0;
