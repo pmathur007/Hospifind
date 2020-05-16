@@ -21,9 +21,7 @@
       type="text/css"
       href="{{ url_for('static', filename='css/main.css') }}"
     />
-    {% block page_styles %}{% endblock page_styles %}
-
-    {% if title %}
+    {% block page_styles %}{% endblock page_styles %} {% if title %}
     <title>Hospifind - {{ title }}</title>
     {% else %}
     <title>Hospifind</title>
@@ -92,7 +90,7 @@
               {% else %}
               <a
                 class="nav-item nav-link"
-                href="{{ url_for('hospital_request_account') }}"
+                href="{{ url_for('request_account') }}"
                 >Request Account</a
               >
               <a class="nav-item nav-link" href="{{ url_for('login') }}"
@@ -114,11 +112,13 @@
       content %}
     </main>
     <footer class="mcontainer">
-        <p><small>
-        Created by Aarav Bajaj, Arya Grayeli, Pranav Mathur, Ron Nachum, Amrita
-        Sahu
-        </small></p>
-        <p><a href="#">Legal</a> | <a href="#">Privacy</a></p>
+      <p>
+        <small>
+          Created by Aarav Bajaj, Arya Grayeli, Pranav Mathur, Ron Nachum,
+          Amrita Sahu
+        </small>
+      </p>
+      <p><a href="#">Legal</a> | <a href="#">Privacy</a></p>
     </footer>
 
     <!-- React -->
