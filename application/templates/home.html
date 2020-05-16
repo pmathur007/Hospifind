@@ -153,7 +153,7 @@
 <section class="mcontainer" id="Contact">
   <h2>Contact Us</h2>
   <form method="POST" action="">
-    {{ form.hidden_tag() }}
+    {{ form.csrf_token() }}
     <fieldset class="form-group">
       <!-- <legend class="border-bottom mb-4">Contact Us</legend> -->
       <div class="row">

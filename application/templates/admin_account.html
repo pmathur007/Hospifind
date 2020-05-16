@@ -49,10 +49,8 @@
   <h3 class="border-bottom mb-4">Users</h3>
   <div id="user_table"></div>
   {% if hospital.system_open %}
-  <a href="{{ admin_invite_link }}">https://{{ admin_invite_link }}</a>
-  <a href="{{ user_invite_link }}"
-    >https://hospifind.tech{{ user_invite_link }}</a
-  >
+  <a href="{{ admin_invite_link }}">{{ admin_invite_link }}</a>
+  <a href="{{ user_invite_link }}">{{ user_invite_link }}</a>
   <div class="row">
     <div class="column">
       <button

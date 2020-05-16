@@ -2,9 +2,9 @@ from flask import render_template, flash, request, url_for, redirect, abort
 from flask_login import login_user, current_user, logout_user, login_required
 from application import app, bcrypt, db
 from application.models import Hospital, User, Data
-from application.hospital.forms import RegistrationForm, LoginForm, DataForm, UpdateAccountForm, HospitalRequestAccountForm
+from application.hospital.forms import ResetPasswordForm, RegistrationForm, LoginForm, DataForm, UpdateAccountForm, HospitalRequestAccountForm, RequestPasswordResetForm
 from datetime import datetime
-from application.utils import send_hospital_request_email
+from application.utils import send_hospital_request_email, send_password_reset_email
 
 
 @app.route("/hospital/request_account", methods=["GET", "POST"])
@@ -75,7 +75,7 @@ def login():
             next_page = request.args.get('next')
             flash('Hello ' + user.name + '! You are now logged in as ' +
                   user.username + ' - ' + hospital_name + '!', 'success')
-            return redirect(next_page) if next_page else redirect(url_for('home'))
+            return redirect(next_page) if next_page else redirect(url_for('account'))
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', title='Login', form=form)
@@ -136,8 +136,10 @@ def account():
             user_info.append((user, user.username, num, last))
 
         if hospital.system_open:
-            admin_invite_link = "/hospital/register/admin/" + hospital.admin_hex_id
-            user_invite_link = "/hospital/register/" + hospital.normal_hex_id
+            admin_invite_link = url_for(
+                'hospital_admin_register', admin_hex_id=hospital.admin_hex_id, _external=True)
+            user_invite_link = url_for(
+                'hospital_normal_register', normal_hex_id=hospital.normal_hex_id, _external=True)
         else:
             admin_invite_link = ""
             user_invite_link = ""
@@ -212,7 +214,6 @@ def regenerate_links(hospital_id):
 @app.route("/hospital/close/<int:hospital_id>", methods=["GET", "POST"])
 @login_required
 def close_system(hospital_id):
-    print('here')
     hospital = Hospital.query.get_or_404(hospital_id)
     if current_user is None or current_user.user_type != "Admin" or current_user.hospital != hospital.id:
         abort(403)
@@ -225,7 +226,6 @@ def close_system(hospital_id):
 @app.route("/hospital/open/<int:hospital_id>", methods=["GET", "POST"])
 @login_required
 def open_system(hospital_id):
-    print('here')
     hospital = Hospital.query.get_or_404(hospital_id)
     if current_user is None or current_user.user_type != "Admin" or current_user.hospital != hospital.id:
         abort(403)
@@ -233,3 +233,35 @@ def open_system(hospital_id):
     db.session.commit()
     flash('Your hospital system is now open! Your most recent invitation links have been reactivated and new users can now join.', 'success')
     return redirect(url_for('account'))
+
+
+@app.route("/request_password_reset", methods=['GET', 'POST'])
+def request_password_reset():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    form = RequestPasswordResetForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        send_password_reset_email(user)
+        flash('An email has been sent with instructions to reset your password.', 'info')
+        return redirect(url_for('login'))
+    return render_template('request_password_reset.html', title='Password Reset Request', form=form)
+
+
+@app.route("/reset_password/<token>", methods=['GET', 'POST'])
+def reset_token(token):
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    user = User.verify_reset_token(token)
+    if not user:
+        flash('That is an invalid or expired token', 'warning')
+        return redirect(url_for('reset_password_request'))
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(
+            form.password.data).decode('utf-8')
+        user.password = hashed_password
+        db.session.commit()
+        flash('Your password has been updated! You are now able to log in.', 'success')
+        return redirect(url_for('login'))
+    return render_template('reset_token.html', title='Reset Password', form=form)
