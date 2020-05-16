@@ -48,32 +48,6 @@
 <div class="mcontainer">
   <h3 class="border-bottom mb-4">Users</h3>
   <div id="user_table"></div>
-  <!-- <table class="sortable border-bottom" style="width:1000px;" border=1 frame=void rules=rows>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Username</th>
-            <th>User Type</th>
-            <th>Data Inputs</th>
-            <th>Last Input</th>
-          </tr>
-        </thead>
-        <tbody>
-        {% for user, username, num_input, last_input in user_info %}
-            <tr>
-                <td>{{ user.name }}</td>
-                <td><a href="{{ url_for('view_user', user_id=user.id) }}">{{ username }}</a></td>
-                {% if user.is_admin %}
-                    <td>Admin</td>
-                {% else %}
-                    <td>Normal</td>
-                {% endif %}
-                <td>{{ num_input }}</td>
-                <td>{{ last_input }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-      </table> -->
   {% if hospital.system_open %}
   <a href="{{ admin_invite_link }}">https://{{ admin_invite_link }}</a>
   <a href="{{ user_invite_link }}"

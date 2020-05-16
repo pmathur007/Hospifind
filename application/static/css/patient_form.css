@@ -1,0 +1,60 @@
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Muli&display=swap");
+.mcontainer {
+  margin: 2%;
+}
+
+.btn-dark, .btn-light {
+  border-radius: 5px;
+  border: solid 1px #333;
+  max-width: 250px;
+}
+
+.btn-light {
+  background-color: rgba(255, 255, 255, 0.5);
+  color: #333;
+}
+.btn-light:hover {
+  border: solid 1px #333;
+  background-color: rgba(230, 230, 230, 0.5);
+  color: #333;
+}
+
+fieldset {
+  text-align: center;
+  margin-bottom: 30px;
+}
+fieldset legend {
+  letter-spacing: 0.4px;
+}
+fieldset input {
+  display: none;
+}
+fieldset input[type=radio]:checked + label, fieldset input[type=checkbox]:checked + label {
+  background: #ffe6e6;
+}
+fieldset label {
+  background-color: #f7f7f7;
+  color: #333;
+  display: block;
+  width: 70%;
+  text-align: center;
+  margin: 5px auto;
+  padding: 13px 0px;
+  -webkit-transition: background 0.5s ease;
+  -moz-transition: background 0.5s ease;
+  -ms-transition: background 0.5s ease;
+  -o-transition: background 0.5s ease;
+  transition: background 0.5s ease;
+}
+fieldset label:hover {
+  background: #fff0f0;
+}
+
+input[type=submit] {
+  display: block;
+  margin: auto;
+  text-align: center;
+}
+
+/*# sourceMappingURL=patient_form.css.map */

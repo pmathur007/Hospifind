@@ -21,6 +21,7 @@
       type="text/css"
       href="{{ url_for('static', filename='css/main.css') }}"
     />
+    {% block page_styles %}{% endblock page_styles %}
 
     {% if title %}
     <title>Hospifind - {{ title }}</title>
