@@ -15,7 +15,7 @@ def hospital_request_account():
                                     form.email.data, form.phone.data, form.message.data)
         flash("An email has been sent to the Hospifind team for review. We will be in contact with you shortly.", 'success')
         return redirect(url_for('home'))
-    return render_template('request_account.html', form=form)
+    return render_template('hospital_request_account.html', form=form)
 
 
 @app.route("/hospital/register/admin/<string:admin_hex_id>", methods=['GET', 'POST'])

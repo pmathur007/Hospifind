@@ -157,6 +157,11 @@ def home():
         return render_template('home.html', results=results, header="Hospitals Sorted by Distance", map_list=map_list, form=form, length=session['LENGTH'], original_length=session['ORIGINAL_LENGTH'], api_key=app.config['GOOGLE_MAPS_API_KEY_FRONTEND'])
 
 
+@app.route("/request_account")
+def request_account():
+    return render_template("request_account.html")
+
+
 @app.route("/db", methods=['POST', 'DELETE'])
 def query_db():
     tables = {
