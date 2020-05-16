@@ -3,76 +3,86 @@
     <form method="POST" action="">
         {{ form.csrf_token() }}
         <fieldset class="form-group">
-            <legend class="border-bottom mb-4">Request Hospital Account</legend>
+            <legend>Request Hospital Account</legend>
             <div class="form-group">
-                {% if form.hospital.errors %} {{ form.hospital(class="form-control
-        form-control-lg is-invalid", placeholder="Hospital Name") }}
-                <div class="invalid-feedback">
-                    {% for error in form.hospital.errors %}
-                    <span>{{ error }}</span>
-                    {% endfor %}
-                </div>
-                {% else %} {{ form.hospital(class="form-control form-control-lg",
-        placeholder="Hospital Name") }} {% endif %}
+                {% if form.hospital.errors %}
+                    {{ form.hospital(class="form-control form-control-lg is-invalid", placeholder="Hospital Name") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.hospital.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.hospital(class="form-control form-control-lg", placeholder="Hospital Name") }}
+                {% endif %}
             </div>
             <div class="row">
                 <div class="form-group col-md-6">
-                    {% if form.name.errors %} {{ form.name(class="form-control
-          form-control-lg is-invalid", placeholder="Name") }}
-                    <div class="invalid-feedback">
-                        {% for error in form.name.errors %}
-                        <span>{{ error }}</span>
-                        {% endfor %}
-                    </div>
-                    {% else %} {{ form.name(class="form-control form-control-lg",
-          placeholder="Name") }} {% endif %}
+                    {% if form.name.errors %}
+                        {{ form.name(class="form-control form-control-lg is-invalid", placeholder="Name") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.name.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.name(class="form-control form-control-lg", placeholder="Name") }}
+                    {% endif %}
                 </div>
                 <div class="form-group col-md-6">
-                    {% if form.title.errors %} {{ form.title(class="form-control
-          form-control-lg is-invalid", placeholder="Title") }}
-                    <div class="invalid-feedback">
-                        {% for error in form.title.errors %}
-                        <span>{{ error }}</span>
-                        {% endfor %}
-                    </div>
-                    {% else %} {{ form.title(class="form-control form-control-lg",
-          placeholder="Title") }} {% endif %}
+                    {% if form.title.errors %}
+                        {{ form.title(class="form-control form-control-lg is-invalid", placeholder="Title") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.title.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.title(class="form-control form-control-lg", placeholder="Title") }}
+                    {% endif %}
                 </div>
             </div>
             <div class="row">
                 <div class="form-group col-md-6">
-                    {% if form.email.errors %} {{ form.email(class="form-control form-control-lg is-invalid", placeholder="Email") }}
-                    <div class="invalid-feedback">
-                        {% for error in form.email.errors %}
-                        <span>{{ error }}</span>
-                        {% endfor %}
-                    </div>
-                    {% else %} {{ form.email(class="form-control form-control-lg", placeholder="Email") }} {% endif %}
+                    {% if form.email.errors %}
+                        {{ form.email(class="form-control form-control-lg is-invalid", placeholder="Email") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.email.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.email(class="form-control form-control-lg", placeholder="Email") }}
+                    {% endif %}
                 </div>
                 <div class="form-group col-md-6">
-                    {% if form.phone.errors %} {{ form.phone(class="form-control form-control-lg is-invalid", placeholder="Phone") }}
-                    <div class="invalid-feedback">
-                        {% for error in form.phone.errors %}
-                        <span>{{ error }}</span>
-                        {% endfor %}
-                    </div>
-                    {% else %} {{ form.phone(class="form-control form-control-lg", placeholder="Phone") }} {% endif %}
+                    {% if form.phone.errors %}
+                        {{ form.phone(class="form-control form-control-lg is-invalid", placeholder="Phone") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.phone.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.phone(class="form-control form-control-lg", placeholder="Phone") }}
+                    {% endif %}
                 </div>
             </div>
             <div class="form-group">
                 {% if form.message.errors %}
-                {{ form.message(class="form-control is-invalid", placeholder="Message/Additional Details") }}
-                <div class="invalid-feedback">
-                    {% for error in form.message.errors %}
-                    <span>{{ error }}</span>
-                    {% endfor %}
-                </div>
-                {% else %} {{ form.message(class="form-control", placeholder="Message/Additional Details") }}
+                    {{ form.message(class="form-control is-invalid textareas", placeholder="Message/Additional Details") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.message.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.message(class="form-control textareas", placeholder="Message/Additional Details") }}
                 {% endif %}
             </div>
         </fieldset>
         <div class="form-group">
-            {{ form.submit(class="btn btn-light") }}
+            {{ form.submit(class="btn-red btn-wide") }}
         </div>
     </form>
 </div>

@@ -1,25 +1,8 @@
 {% extends "layout.html" %} {% block page_styles %}
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/login.css') }}"
-/>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}" />
 {% endblock page_styles %} {% block content %}
 <div class="content-section">
-  <div class="row">
-    <div clas="col">
-      <a
-        class="btn-red submit_button"
-        href="{{ url_for('hospital_request_account') }}"
-        >Hospital</a
-      >
-    </div>
-    <div clas="col">
-      <a
-        class="btn-red submit_button"
-        href="{{ url_for('hospital_request_account') }}"
-        >Hospital</a
-      >
-    </div>
-  </div>
+    <a class="btn-red btn-wide" href="{{ url_for('hospital_request_account') }}">Hospital</a>
+    <a class="btn-red btn-wide" href="{{ url_for('hospital_request_account') }}">Hospital</a>
 </div>
 {% endblock content %}
