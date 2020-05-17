@@ -1,0 +1,44 @@
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Muli&display=swap");
+#home_info {
+  background-color: #ff6666;
+  color: #fff;
+  text-align: center;
+  padding: 5%;
+}
+#home_info a {
+  display: block;
+  margin: 10px auto;
+}
+
+#map {
+  width: 100%;
+  height: 300px;
+}
+
+.hospital_result {
+  background: #f2f2f2;
+  border-radius: 10px;
+  margin: 10px 5%;
+  padding: 20px;
+  text-align: center;
+}
+.hospital_result div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.hospital_result div p, .hospital_result div a {
+  margin: 0;
+  display: inline-block;
+  width: 50%;
+}
+.hospital_result div p {
+  font-size: 1.5em;
+  text-align: left;
+}
+.hospital_result div a {
+  padding: 10px 0;
+}
+
+/*# sourceMappingURL=home.css.map */

@@ -1,38 +1,27 @@
-{% extends "layout.html" %} {% block content %}
-<script>
-  (function () {
-    var h, a, f;
-    a = document.getElementsByTagName('link');
-    for (h = 0; h < a.length; h++) {
-      f = a[h];
-      if (f.rel.toLowerCase().match(/stylesheet/) && f.href) {
-        var g = f.href.replace(/(&|\?)rnd=\d+/, '');
-        f.href = g + (g.match(/\?/) ? '&' : '?');
-        f.href += 'rnd=' + (new Date().valueOf());
-      }
-    } // for
-  })()
-</script>
-<section id="react_container"></section>
+{% extends "layout.html" %}
+
+{% block page_styles %}
+<link rel="stylesheet" href="../static/css/home.css">
+{% endblock page_styles %}
+
+{% block content %}
 <section id="home_info">
   <h2>Get the Care You Need</h2>
-  <p class="mb-0">
+  <p>
     Hospifind shows you which hospitals have the capacity to treat you to ensure
     you get the care you need.
   </p>
-  <p class="mt-3 mb-0">
-    Your location has been detected as <strong>{{ address }}</strong>. If this
-    is inaccurate, click this button to enter your location manually for better
-    results.
-  </p>
-  <h4 class="mt-3 mb-0">
-    NOTE: All hospital data, and therefore all ratings are
-    <strong>simulated</strong>. This website is in its beta testing version.
-  </h4>
-  <a href="{{ url_for('patient_form') }}" class="btn-light">Get Personalized Results</a>
-  <a href="{{ url_for('input_location') }}" class="btn-light">Input Location</a>
+  <a href="{{ url_for('patient_form') }}" class="btn-light btn-wide">Get Personalized Results</a>
+  <a href="{{ url_for('input_location') }}" class="btn-light btn-wide">
+    Enter My Location<br />
+  </a>
+  <p><small>Automatic Location Detection: {{ address }}</small></p>
+  <!-- <p>
+        NOTE: All hospital data, and therefore all ratings are
+        <strong>simulated</strong>. This website is in its beta testing version.
+    </p> -->
 </section>
-<section class="mcontainer">
+<section>
   <div id="map"></div>
   <h3>{{ header }}</h3>
   {% if original_length > 15 %}
@@ -71,7 +60,7 @@
   {% endfor %}
   <script src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}"></script>
   <script>
-    var data = {{ map_list | tojson}};
+    var data = {{ map_list | tojson }};
     var myLatLng = new google.maps.LatLng({
       lat: 0,
       lng: 0
@@ -136,7 +125,7 @@
         "&destination=" + data[i + 1][1].split(" ").join("+");
 
       document.getElementById(data[i + 1][0]).innerHTML += '<a href="' + link +
-        '" target="_blank" class="btn-light col-sm-4">Get directions</a>';
+        '" target="_blank" class="btn-red col-sm-4">Get directions</a>';
 
       infoWindowsArray.push(new google.maps.InfoWindow({
         content: '<div class="info_window">' +

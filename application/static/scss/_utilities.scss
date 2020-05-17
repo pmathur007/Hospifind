@@ -11,11 +11,23 @@
 
 .btn-red {
     @extend %btn;
-    @include set-background(lighten(#ff0000, 20));
+    @include set-background($salmon-color);
 
     @include transition(background .5s ease-in-out);
     &:hover {
-        @include set-background(lighten(#ff0000, 12));
+        @include set-background(darken($salmon-color, 8));
+    }
+}
+
+.btn-light {
+    @extend %btn;
+    @include set-background(#ffffff);
+
+    color: $salmon-color;
+    @include transition(background 0.5s ease-in-out);
+    &:hover {
+        @include set-background(darken(#ffffff, 10));
+        color: $salmon-color;
     }
 }
 
