@@ -69,5 +69,6 @@
 }
 
 #about {
-    @include set-background($salmon-color)
+    @include set-background($salmon-color);
+    padding: 5%;
 }

@@ -24,10 +24,23 @@ def distance(lat1, lon1, lat2, lon2):
 
 
 def send_hospital_request_email(hospital, name, title, email, phone, message):
-    msg = Message('Hospifind - New Account Request', sender='Hospifind Account Request', recipients=[
+    msg = Message('Hospifind - New Hospital Account Request', sender='Hospifind Account Request', recipients=[
                   "ronnachum13@gmail.com", "foramritasahu@gmail.com", "arya.grayeli@gmail.com", "pranavmathur001@gmail.com", "aarav.cube@gmail.com"])
-    msg.body = f'''A New User is Requesting a Hospifind Account! Here is their information:
+    msg.body = f'''A New User is Requesting a Hospifind Hospital Account! Here is their information:
         Hospital Name: {hospital}
+        Name: {name}   Title: {title}
+        Email: {email}   Phone: {phone}
+        Message:
+        {message}
+    '''
+    mail.send(msg)
+
+
+def send_government_request_email(gov, gov_type, name, title, email, phone, message):
+    msg = Message('Hospifind - New Government Account Request', sender='Hospifind Account Request', recipients=[
+                  "ronnachum13@gmail.com", "foramritasahu@gmail.com", "arya.grayeli@gmail.com", "pranavmathur001@gmail.com", "aarav.cube@gmail.com"])
+    msg.body = f'''A New User is Requesting a Hospifind Government Account! Here is their information:
+        Government: {gov}   Government Type: {gov_type}
         Name: {name}   Title: {title}
         Email: {email}   Phone: {phone}
         Message:

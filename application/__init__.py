@@ -8,8 +8,10 @@ from flask_mail import Mail
 import googlemaps
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = "5791628bb0b13ce0c676dfde280ba245"  # os.environ.get('FLASK_APP_SECRET_KEY')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'  # os.environ.get('FLASK_APP_SQLALCHEMY_DATABASE_URI')
+# os.environ.get('FLASK_APP_SECRET_KEY')
+app.config['SECRET_KEY'] = "5791628bb0b13ce0c676dfde280ba245"
+# os.environ.get('FLASK_APP_SQLALCHEMY_DATABASE_URI')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
@@ -25,7 +27,8 @@ if path.exists(os.path.join('application', 'environment_variables.txt')):
     f = open(os.path.join('application', 'environment_variables.txt'), 'r')
     app.config['GOOGLE_MAPS_API_KEY_BACKEND'] = f.readline().strip()
     app.config['GOOGLE_MAPS_API_KEY_FRONTEND'] = f.readline().strip()
-    app.config['GOOGLE_MAPS'] = googlemaps.Client(key=app.config['GOOGLE_MAPS_API_KEY_BACKEND'])
+    app.config['GOOGLE_MAPS'] = googlemaps.Client(
+        key=app.config['GOOGLE_MAPS_API_KEY_BACKEND'])
     app.config['MAIL_USERNAME'] = f.readline().strip()
     app.config['MAIL_PASSWORD'] = f.readline().strip()
 else:
@@ -42,4 +45,5 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 from application.main import routes
 from application.patient import routes
 from application.hospital import routes
+from application.government import routes
 from application.errors import handlers

@@ -1,7 +1,7 @@
-{% extends "layout.html" %} 
+{% extends "layout.html" %}
 
 {% block page_styles %}
-    <link rel="stylesheet" href="../static/css/home.css">
+<link rel="stylesheet" href="../static/css/home.css">
 {% endblock page_styles %}
 
 {% block content %}
@@ -13,7 +13,7 @@
     </p>
     <a href="{{ url_for('patient_form') }}" class="btn-light btn-wide">Get Personalized Results</a>
     <a href="{{ url_for('input_location') }}" class="btn-light btn-wide">
-        Enter My Location<br/>
+        Enter My Location<br />
     </a>
     <p><small>Automatic Location Detection: {{ address }}</small></p>
     <!-- <p>
@@ -25,7 +25,8 @@
     <h3>Hospital Results</h3>
     {% if original_length > 15 %}
     <p style="text-align: center;">
-        We found <strong>{{original_length}}</strong> hospitals in your area and selected the <strong>{{ length }}</strong> nearest hopsitals from of the  in your area {{ header }}. 
+        We found <strong>{{original_length}}</strong> hospitals in your area and selected the
+        <strong>{{ length }}</strong> nearest hopsitals from of the in your area {{ header }}.
     </p>
     {% else %}
     <h5 style="text-align: center;">
@@ -52,19 +53,19 @@
             {% endif %}
         ">
             <p>
-                <strong>{{ hospital.name }}</strong><br/>
-                {{ hospital.address }}<br/>
+                <strong>{{ hospital.name }}</strong><br />
+                {{ hospital.address }}<br />
                 {{ distance }} - {{ time }}
             </p>
             <div id="{{ hospital.name }}">
                 {% if rating == 'Great' %}
-                    <p style="color: lime;">{{ rating }}</p>
+                <p style="color: lime;">{{ rating }}</p>
                 {% elif rating == 'Good' %}
-                    <p style="color: #e6e600;">{{ rating }}</p>
+                <p style="color: #e6e600;">{{ rating }}</p>
                 {% elif rating == 'OK' %}
-                    <p style="color: #ffad33;">{{ rating }}</p>
+                <p style="color: #ffad33;">{{ rating }}</p>
                 {% elif rating == 'Low Availability' %}
-                    <p style="color: red;">{{ rating }}</p>
+                <p style="color: red;">{{ rating }}</p>
                 {% endif %}
             </div>
         </div>
@@ -169,6 +170,15 @@
 </section>
 <section id="about">
     <h2>About</h2>
+    <p>&emsp; On July 16, 1969, the Apollo 11 spacecraft launched from the Kennedy Space Center in Florida. Its mission
+        was to go where no human being had gone before—the moon! The crew consisted of Neil Armstrong, Michael Collins,
+        and
+        Buzz Aldrin. The spacecraft landed on the moon in the Sea of Tranquility, a basaltic flood plain, on July 20,
+        1969.
+        The moonwalk took place the following day. On July 21, 1969, at precisely 10:56 EDT, Commander Neil Armstrong
+        emerged from the Lunar Module and took his famous first step onto the moon’s surface. He declared, “That’s one
+        small
+        step for man, one giant leap for mankind.” It was a monumental moment in human history!</p>
 </section>
 <section id="contact">
     <h2>Contact Us</h2>

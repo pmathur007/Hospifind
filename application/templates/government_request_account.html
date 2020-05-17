@@ -1,0 +1,97 @@
+{% extends "layout.html" %} {% block content %}
+<div class="content-section">
+  <form method="POST" action="">
+    {{ form.csrf_token() }}
+    <fieldset class="form-group">
+      <legend>Government Hospital Account</legend>
+      <div class="row">
+        <div class="form-group col-md-6">
+          {% if form.government.errors %} {{ form.government(class="form-control
+          form-control-lg is-invalid", placeholder="Hospital Name") }}
+          <div class="invalid-feedback">
+            {% for error in form.government.errors %}
+            <span>{{ error }}</span>
+            {% endfor %}
+          </div>
+          {% else %} {{ form.government(class="form-control form-control-lg",
+          placeholder="Government Name") }} {% endif %}
+        </div>
+        <div class="form-group col-md-6">
+          {% if form.government_type.errors %} {{
+          form.government_type(class="form-control form-control-lg is-invalid",
+          placeholder="Hospital Name") }}
+          <div class="invalid-feedback">
+            {% for error in form.government_type.errors %}
+            <span>{{ error }}</span>
+            {% endfor %}
+          </div>
+          {% else %} {{ form.government_type(class="form-control
+          form-control-lg", placeholder="Government Type (City, County, State, etc)") }} {% endif %}
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-md-6">
+          {% if form.name.errors %} {{ form.name(class="form-control
+          form-control-lg is-invalid", placeholder="Name") }}
+          <div class="invalid-feedback">
+            {% for error in form.name.errors %}
+            <span>{{ error }}</span>
+            {% endfor %}
+          </div>
+          {% else %} {{ form.name(class="form-control form-control-lg",
+          placeholder="Name") }} {% endif %}
+        </div>
+        <div class="form-group col-md-6">
+          {% if form.title.errors %} {{ form.title(class="form-control
+          form-control-lg is-invalid", placeholder="Title") }}
+          <div class="invalid-feedback">
+            {% for error in form.title.errors %}
+            <span>{{ error }}</span>
+            {% endfor %}
+          </div>
+          {% else %} {{ form.title(class="form-control form-control-lg",
+          placeholder="Title") }} {% endif %}
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-md-6">
+          {% if form.email.errors %} {{ form.email(class="form-control
+          form-control-lg is-invalid", placeholder="Email") }}
+          <div class="invalid-feedback">
+            {% for error in form.email.errors %}
+            <span>{{ error }}</span>
+            {% endfor %}
+          </div>
+          {% else %} {{ form.email(class="form-control form-control-lg",
+          placeholder="Email") }} {% endif %}
+        </div>
+        <div class="form-group col-md-6">
+          {% if form.phone.errors %} {{ form.phone(class="form-control
+          form-control-lg is-invalid", placeholder="Phone") }}
+          <div class="invalid-feedback">
+            {% for error in form.phone.errors %}
+            <span>{{ error }}</span>
+            {% endfor %}
+          </div>
+          {% else %} {{ form.phone(class="form-control form-control-lg",
+          placeholder="Phone") }} {% endif %}
+        </div>
+      </div>
+      <div class="form-group">
+        {% if form.message.errors %} {{ form.message(class="form-control
+        is-invalid textareas", placeholder="Message/Additional Details") }}
+        <div class="invalid-feedback">
+          {% for error in form.message.errors %}
+          <span>{{ error }}</span>
+          {% endfor %}
+        </div>
+        {% else %} {{ form.message(class="form-control textareas",
+        placeholder="Message/Additional Details") }} {% endif %}
+      </div>
+    </fieldset>
+    <div class="form-group">
+      {{ form.submit(class="btn-red btn-wide") }}
+    </div>
+  </form>
+</div>
+{% endblock content %}
