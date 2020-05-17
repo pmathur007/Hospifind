@@ -9,6 +9,7 @@
 .btn-light, .btn-red {
   border-radius: 50px;
   border: none;
+  text-align: center;
 }
 
 .btn-red {
@@ -58,7 +59,6 @@
 body {
   background-color: #fcfcfc;
   color: #333;
-  height: 100%;
   margin-top: 5vh;
 }
 
