@@ -126,7 +126,7 @@ def home():
         for i in range(len(hospitals)):
             map_list.append((hospitals[i].name, hospitals[i].address,
                              hospitals[i].latitude, hospitals[i].longitude, results[hospitals[i]]))
-        return render_template('home.html', results=results, header="Hospitals Sorted by Rating",  map_list=map_list, form=form, original_length=session['ORIGINAL_LENGTH'], length=session['LENGTH'], api_key=app.config['GOOGLE_MAPS_API_KEY_FRONTEND'])
+        return render_template('home.html', results=results, header="sorted by rating",  map_list=map_list, form=form, original_length=session['ORIGINAL_LENGTH'], length=session['LENGTH'], api_key=app.config['GOOGLE_MAPS_API_KEY_FRONTEND'])
     elif sort == "time_and_rating" or sort == "rating_and_time":
         results_with_dist = decision_maker.get_rating_with_distance(
             session['TIMES'])
@@ -144,7 +144,7 @@ def home():
                              results[i][0].latitude, results[i][0].longitude, results[i][1]))
         # print(map_list)
         # print(results)
-        return render_template('home.html', results=results, header="Hospitals Sorted by Time & Rating", address=session['ADDRESS'],  map_list=map_list, form=form, length=session['LENGTH'], original_length=session['ORIGINAL_LENGTH'], api_key=app.config['GOOGLE_MAPS_API_KEY_FRONTEND'])
+        return render_template('home.html', results=results, header="sorted by time & rating", address=session['ADDRESS'],  map_list=map_list, form=form, length=session['LENGTH'], original_length=session['ORIGINAL_LENGTH'], api_key=app.config['GOOGLE_MAPS_API_KEY_FRONTEND'])
     else:
         hospitals = [Hospital.query.get(hospital)
                      for hospital in session['HOSPITALS']]
@@ -154,7 +154,7 @@ def home():
         for i in range(len(hospitals)):
             map_list.append((hospitals[i].name, hospitals[i].address,
                              hospitals[i].latitude, hospitals[i].longitude, results[hospitals[i]]))
-        return render_template('home.html', results=results, header="Hospitals Sorted by Distance", map_list=map_list, form=form, length=session['LENGTH'], original_length=session['ORIGINAL_LENGTH'], api_key=app.config['GOOGLE_MAPS_API_KEY_FRONTEND'])
+        return render_template('home.html', results=results, header="sorted by distance", map_list=map_list, form=form, length=session['LENGTH'], original_length=session['ORIGINAL_LENGTH'], api_key=app.config['GOOGLE_MAPS_API_KEY_FRONTEND'])
 
 
 @app.route("/request_account")

@@ -16,12 +16,19 @@
     height: 300px;
 }
 
+#hospital_results {
+    height: 50vh;
+    overflow: auto;
+}
+
 .hospital_result {
-    background: darken($color: #fff, $amount: 5);
-    border-radius: 10px;
+    background: darken(#fff, 5);
     margin: 10px 5%;
     padding: 20px;
-    text-align: center;
+
+    h3 {
+        text-align: left;
+    }
 
     div {
         display: flex;
@@ -31,16 +38,37 @@
         p, a {
             margin: 0;
             display: inline-block;
-            width: 50%;
         }
 
         p {
-            font-size: 1.5em;
+            font-size: 1.2em;
             text-align: left;
         }
 
         a {
+            width: 35%;
             padding: 10px 0;
         }
     }
+}
+
+.green-top {
+    border-top: 6px solid #00ff00;
+}
+
+.orange-top {
+    border-top: 6px solid #ff8800;
+}
+
+.yellow-top {
+    border-top: 6px solid #ffff00;
+}
+
+.red-top {
+    border-top: 6px solid #ff0000;
+}
+
+#about {
+    @include set-background($salmon-color);
+    padding: 5%;
 }
