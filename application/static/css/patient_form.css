@@ -6,7 +6,7 @@
   margin: 2%;
 }
 
-.btn-red {
+.btn-light, .btn-red {
   border-radius: 50px;
   border: none;
 }
@@ -23,6 +23,22 @@
 .btn-red:hover {
   background-color: #ff3d3d;
   color: #fff;
+}
+
+.btn-light {
+  background-color: #ffffff;
+  color: #333;
+  color: #ff6666;
+  -webkit-transition: background 0.5s ease-in-out;
+  -moz-transition: background 0.5s ease-in-out;
+  -ms-transition: background 0.5s ease-in-out;
+  -o-transition: background 0.5s ease-in-out;
+  transition: background 0.5s ease-in-out;
+}
+.btn-light:hover {
+  background-color: #e6e6e6;
+  color: #333;
+  color: #ff6666;
 }
 
 .btn-wide {
