@@ -12,7 +12,7 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-class Hospital(db.Model, UserMixin):
+class Hospital(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     name = db.Column(db.String, nullable=False)
@@ -30,19 +30,6 @@ class Hospital(db.Model, UserMixin):
     old_normal_hex_id = db.Column(db.String, default=None, nullable=True)
 
     data = db.relationship('Data', backref='input', lazy=True)
-
-    # def get_reset_token(self, expires_sec=1800):
-    #     s = Serializer(current_app.config['SECRET_KEY'], expires_sec)
-    #     return s.dumps({'hospital_id': self.id}).decode('utf-8')
-    #
-    # @staticmethod
-    # def verify_reset_token(token):
-    #     s = Serializer(current_app.config['SECRET_KEY'])
-    #     try:
-    #         hospital_id = s.loads(token)['hospital_id']
-    #     except:
-    #         return None
-    #     return Hospital.query.get(hospital_id)
 
     def regenerate_hex_ids(self):
         self.admin_hex_id = urandom(32).hex()
@@ -62,6 +49,34 @@ class Hospital(db.Model, UserMixin):
 
     def __repr__(self):
         return "Hospital('" + str(self.id) + "', '" + self.name + "', '" + self.state + "')"
+
+
+class Government(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    name = db.Column(db.String, nullable=False)
+    location = db.Column(db.String, nullable=False)
+    gov_type = db.Column(db.String, nullable=False)
+    hospitals = db.Column(db.String, nullable=False)
+    hex_id = db.Column(db.String, default=lambda: urandom(
+        32).hex(), unique=True, nullable=True)
+    system_open = db.Column(db.Boolean, default=True)
+    old_hex_id = db.Column(db.String, default=None, nullable=True)
+
+    def regenerate_hex_ids(self):
+        self.hex_id = urandom(32).hex()
+
+    def close_system(self):
+        self.old_hex_id = copy.deepcopy(self.hex_id)
+        self.hex_id = None
+        self.system_open = False
+
+    def open_system(self):
+        self.hex_id = self.old_hex_id
+        self.system_open = True
+
+    def __repr__(self):
+        return f"Government('{self.name}', '{self.gov_type}')"
 
 
 class User(db.Model, UserMixin):
