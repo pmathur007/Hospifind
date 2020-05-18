@@ -39,3 +39,11 @@
     width: 90%;
     padding: 10px 0px;
 }
+
+.bg-salmon {
+    @include set-background($salmon-color);
+}
+
+.pcontainer {
+    padding: 5%;
+}

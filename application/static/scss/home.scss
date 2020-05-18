@@ -1,9 +1,22 @@
 @import 'config';
 
+html {
+    scroll-behavior: smooth;
+}
+
 #home_info {
     @include set-background($salmon-color);
     text-align: center;
     padding: 5%;
+    height: 92vh;
+    margin: auto 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    h2 {
+        margin-bottom: 3%;
+    }
 
     a {
         display: block;
@@ -11,14 +24,28 @@
     }
 }
 
-#map {
-    width: 100%;
-    height: 300px;
-}
+#hospital_map {
+    height: 92vh;
+    padding: 5%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 
-#hospital_results {
-    height: 50vh;
-    overflow: auto;
+    h3 {
+        margin-bottom: 5%;
+    }
+
+    #map {
+        width: 100%;
+        max-width: 1000px;
+        height: 100%;
+        margin: auto;
+    }
+
+    #hospital_results {
+        height: 100%;
+        overflow: auto;
+    }
 }
 
 .hospital_result {
@@ -52,6 +79,23 @@
     }
 }
 
+#about {
+    @include set-background($salmon-color);
+    padding: 5%;
+
+    h2 {
+        margin-bottom: 3%;
+    }
+}
+
+#contact {
+    padding: 5%;
+
+    h2 {
+        margin-bottom: 3%;
+    }
+}
+
 .green-top {
     border-top: 6px solid #00ff00;
 }
@@ -66,9 +110,4 @@
 
 .red-top {
     border-top: 6px solid #ff0000;
-}
-
-#about {
-    @include set-background($salmon-color);
-    padding: 5%;
 }

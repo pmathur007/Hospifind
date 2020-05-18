@@ -50,6 +50,15 @@
   padding: 10px 0px;
 }
 
+.bg-salmon {
+  background-color: #ff6666;
+  color: #fff;
+}
+
+.pcontainer {
+  padding: 5%;
+}
+
 fieldset {
   text-align: center;
   margin-bottom: 30px;

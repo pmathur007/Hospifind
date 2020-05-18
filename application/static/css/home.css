@@ -1,23 +1,46 @@
 @import url("https://fonts.googleapis.com/css2?family=Ubuntu&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Muli&display=swap");
+html {
+  scroll-behavior: smooth;
+}
+
 #home_info {
   background-color: #ff6666;
   color: #fff;
   text-align: center;
   padding: 5%;
+  height: 92vh;
+  margin: auto 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#home_info h2 {
+  margin-bottom: 3%;
 }
 #home_info a {
   display: block;
   margin: 10px auto;
 }
 
-#map {
-  width: 100%;
-  height: 300px;
+#hospital_map {
+  height: 92vh;
+  padding: 5%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
-
-#hospital_results {
-  height: 60vh;
+#hospital_map h3 {
+  margin-bottom: 5%;
+}
+#hospital_map #map {
+  width: 100%;
+  max-width: 1000px;
+  height: 100%;
+  margin: auto;
+}
+#hospital_map #hospital_results {
+  height: 100%;
   overflow: auto;
 }
 
@@ -47,6 +70,22 @@
   padding: 10px 0;
 }
 
+#about {
+  background-color: #ff6666;
+  color: #fff;
+  padding: 5%;
+}
+#about h2 {
+  margin-bottom: 3%;
+}
+
+#contact {
+  padding: 5%;
+}
+#contact h2 {
+  margin-bottom: 3%;
+}
+
 .green-top {
   border-top: 6px solid #00ff00;
 }
@@ -61,12 +100,6 @@
 
 .red-top {
   border-top: 6px solid #ff0000;
-}
-
-#about {
-  background-color: #ff6666;
-  color: #fff;
-  padding: 5%;
 }
 
 /*# sourceMappingURL=home.css.map */
