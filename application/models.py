@@ -87,8 +87,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String, unique=True, nullable=False)
     user_type = db.Column(db.String, nullable=False)
     password = db.Column(db.String, nullable=False)
-    hospital = db.Column(db.Integer, db.ForeignKey(
-        'hospital.id'), nullable=False)
+    association = db.Column(db.Integer, nullable=False)
 
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(current_app.config['SECRET_KEY'], expires_sec)
@@ -104,7 +103,7 @@ class User(db.Model, UserMixin):
         return User.query.get(user_id)
 
     def __repr__(self):
-        return f"User('{self.id}', '{self.username}', '{self.hospital}')"
+        return f"User('{self.id}', '{self.username}', '{self.association}')"
 
 
 class Data(db.Model):

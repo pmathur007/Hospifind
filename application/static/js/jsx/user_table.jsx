@@ -11,7 +11,7 @@ class MobileUserTable extends React.Component {
     toggleDetails(i) {
         const newShowing = this.state.showingData.slice();
         newShowing[i] = !newShowing[i];
-        this.setState({showingData: newShowing});
+        this.setState({ showingData: newShowing });
     }
 
     render() {
@@ -25,25 +25,25 @@ class MobileUserTable extends React.Component {
                 </thead>
                 {this.state.data.map((d, i) => {
                     return (
-                        <tbody key={ d.id }>
+                        <tbody key={d.id}>
                             <tr>
-                                <td>{ d.username }</td>
-                                <td>{ d.is_admin ? "Admin" : "Data Input" }</td>
+                                <td>{d.username}</td>
+                                <td>{d.is_admin ? "Admin" : "Data Input"}</td>
                                 <td><button onClick={() => this.toggleDetails(i)}>User Info</button></td>
                                 <td><button>Data Details</button></td>
                             </tr>
                             {this.state.showingData[i] ? (
                                 <tr>
                                     <td colSpan={4}>
-                                        <p>Name: { d.name }</p>
-                                        <p>Email: { d.email }</p>
+                                        <p>Name: {d.name}</p>
+                                        <p>Email: {d.email}</p>
                                     </td>
                                 </tr>
                             ) : ""}
                         </tbody>
                     );
                 })}
-            </table>  
+            </table>
         );
     }
 }
@@ -68,11 +68,11 @@ class FullUserTable extends React.Component {
                 </thead>
                 {this.state.data.map((d) => {
                     return (
-                        <tr key={ d.id }>
-                            <td>{ d.username }</td>
-                            <td>{ d.name }</td>
-                            <td>{ d.email }</td>
-                            <td>{ d.is_admin ? "Admin" : "Data Input" }</td>
+                        <tr key={d.id}>
+                            <td>{d.username}</td>
+                            <td>{d.name}</td>
+                            <td>{d.email}</td>
+                            <td>{d.is_admin ? "Admin" : "Data Input"}</td>
                             <td><button>Data Details</button></td>
                         </tr>
                     );
@@ -86,7 +86,7 @@ function reloadUserTable(hospital_id) {
     query = {
         "table_name": "User",
         "filter_by": [{
-            "field_name": "User.hospital",
+            "field_name": "User.association",
             "operator": "equals",
             "field_value": hospital_id
         }]
@@ -98,19 +98,19 @@ function reloadUserTable(hospital_id) {
         contentType: "application/json",
         dataType: "json",
         data: JSON.stringify(query),
-    }).done(function(json) {
+    }).done(function (json) {
         if ($(window).width() < 800) {
-            ReactDOM.render(<MobileUserTable data={json}/>, document.getElementById("user_table"));
+            ReactDOM.render(<MobileUserTable data={json} />, document.getElementById("user_table"));
         }
         else {
-            ReactDOM.render(<FullUserTable data={json}/>, document.getElementById("user_table"));
+            ReactDOM.render(<FullUserTable data={json} />, document.getElementById("user_table"));
         }
-        window.addEventListener("resize", function() {
+        window.addEventListener("resize", function () {
             if ($(window).width() < 800) {
-                ReactDOM.render(<MobileUserTable data={json}/>, document.getElementById("user_table"));
+                ReactDOM.render(<MobileUserTable data={json} />, document.getElementById("user_table"));
             }
             else {
-                ReactDOM.render(<FullUserTable data={json}/>, document.getElementById("user_table"));
+                ReactDOM.render(<FullUserTable data={json} />, document.getElementById("user_table"));
             }
         });
     });
