@@ -5,7 +5,7 @@ from flask_login import current_user
 from application.models import User
 
 
-class RegistrationForm(FlaskForm):
+class HospitalRegistrationForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     username = StringField('Username', validators=[
                            DataRequired(), Length(min=2, max=20)])

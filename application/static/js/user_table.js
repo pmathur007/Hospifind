@@ -83,9 +83,11 @@ var MobileUserTable = function (_React$Component) {
                                 null,
                                 React.createElement(
                                     "button",
-                                    { onClick: function onClick() {
+                                    {
+                                        onClick: function onClick() {
                                             return _this2.toggleDetails(i);
-                                        } },
+                                        }
+                                    },
                                     "User Info"
                                 )
                             ),
@@ -223,7 +225,7 @@ function reloadUserTable(hospital_id) {
     query = {
         "table_name": "User",
         "filter_by": [{
-            "field_name": "User.hospital",
+            "field_name": "User.association",
             "operator": "equals",
             "field_value": hospital_id
         }]
