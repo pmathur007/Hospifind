@@ -17,7 +17,7 @@
 }
 
 #hospital_results {
-  height: 50vh;
+  height: 60vh;
   overflow: auto;
 }
 
@@ -67,8 +67,6 @@
   background-color: #ff6666;
   color: #fff;
   padding: 5%;
-  height: 50vh;
-  overflow: auto;
 }
 
 /*# sourceMappingURL=home.css.map */
