@@ -88,7 +88,7 @@ def login():
 @login_required
 def account():
     if current_user.user_type == "Government":
-        return redirect(url_for("home"))
+        return render_template('government_account.html')
     else:
         hospital = Hospital.query.get(current_user.association)
         print(hospital.id)
