@@ -37,6 +37,7 @@
     display: block;
     margin: auto;
     width: 90%;
+    max-width: 300px;
     padding: 10px 0px;
 }
 
@@ -46,4 +47,10 @@
 
 .pcontainer {
     padding: 5%;
+}
+
+.form-container {
+    margin: 10% auto;
+    padding: 0 4%;
+    max-width: 800px;
 }

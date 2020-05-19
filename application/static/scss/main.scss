@@ -9,11 +9,11 @@
 
 body {
     @include set-background(darken(#ffffff, 1));
-    margin-top: 8vh;
+    margin-top: 10vh;
 }
 
 nav {
-    height: 8vh;
+    height: 10vh;
     display: flex;
     align-items: center;
 }
@@ -63,7 +63,6 @@ input[type="text"], input[type="email"], input[type="password"], .textareas {
 }
 
 legend {
-    width: 90%;
     margin: 0px auto 10px;
     letter-spacing: 0.4px;
 }

@@ -2,8 +2,13 @@ fieldset {
   margin-bottom: 10px;
 }
 
+#content-section {
+  padding: 5%;
+  margin: auto;
+  max-width: 600px;
+}
+
 #more_options {
-  width: 90%;
   margin: auto;
   padding-top: 7px;
   font-size: 0.8em;

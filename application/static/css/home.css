@@ -8,8 +8,7 @@ html {
   background-color: #ff6666;
   color: #fff;
   text-align: center;
-  padding: 5%;
-  height: 92vh;
+  height: 90vh;
   margin: auto 0px;
   display: flex;
   align-items: center;
@@ -21,6 +20,7 @@ html {
 #home_info a {
   display: block;
   margin: 10px auto;
+  max-width: 100%;
 }
 
 #hospital_map {
@@ -79,10 +79,13 @@ html {
 }
 
 #contact {
-  padding: 5%;
+  padding: 5% 15%;
 }
 #contact h2 {
   margin-bottom: 3%;
+}
+#contact textarea {
+  height: 200px;
 }
 
 .green-top {

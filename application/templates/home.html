@@ -35,53 +35,55 @@
 </section>
 <section id="hospital_map">
     <h2>Hospital Results</h2>
-    <div id="map"></div>
-
     {% if original_length > 15 %}
-    <p style="text-align: center;">
-        We found <strong>{{original_length}}</strong> hospitals in your area and selected the
-        <strong>{{ length }}</strong> nearest for display, sorted by {{ header }}.
-    </p>
+        <p style="text-align: center;">
+            We found <strong>{{original_length}}</strong> hospitals in your area and selected the
+            <strong>{{ length }}</strong> nearest for display, sorted by {{ header }}.
+        </p>
     {% else %}
-    <h5 style="text-align: center;">
-        We found <strong>{{ length }}</strong> hospitals matching our distance
-        criteria.
-    </h5>
+        <h5 style="text-align: center;">
+            We found <strong>{{ length }}</strong> hospitals matching our distance
+            criteria.
+        </h5>
     {% endif %}
     <p class="mb-2" style="text-align: center;">
         *Note: Ratings are based on hospital data only.
     </p>
-    <div id="hospital_results">
-        {% for hospital, rating, distance, time in results %}
-        <div class="hospital_result 
-            {% if rating == 'Great' %}
-                green-top
-            {% elif rating == 'Good' %}
-                yellow-top
-            {% elif rating == 'OK' %}
-                orange-top
-            {% elif rating == 'Low Availability' %}
-                red-top
-            {% endif %}
-        ">
-            <p>
-                <strong>{{ hospital.name }}</strong><br />
-                {{ hospital.address }}<br />
-                {{ distance }} - {{ time }}
-            </p>
-            <div id="{{ hospital.name }}">
+
+    <div class="row">
+        <div id="map" class="col-lg-6"></div>
+        <div id="hospital_results" class="col-lg-6">
+            {% for hospital, rating, distance, time in results %}
+            <div class="hospital_result 
                 {% if rating == 'Great' %}
-                <p style="color: lime;">{{ rating }}</p>
+                    green-top
                 {% elif rating == 'Good' %}
-                <p style="color: #e6e600;">{{ rating }}</p>
+                    yellow-top
                 {% elif rating == 'OK' %}
-                <p style="color: #ffad33;">{{ rating }}</p>
+                    orange-top
                 {% elif rating == 'Low Availability' %}
-                <p style="color: red;">{{ rating }}</p>
+                    red-top
                 {% endif %}
+            ">
+                <p>
+                    <strong>{{ hospital.name }}</strong><br />
+                    {{ hospital.address }}<br />
+                    {{ distance }} - {{ time }}
+                </p>
+                <div id="{{ hospital.name }}">
+                    {% if rating == 'Great' %}
+                    <p style="color: lime;">{{ rating }}</p>
+                    {% elif rating == 'Good' %}
+                    <p style="color: #e6e600;">{{ rating }}</p>
+                    {% elif rating == 'OK' %}
+                    <p style="color: #ffad33;">{{ rating }}</p>
+                    {% elif rating == 'Low Availability' %}
+                    <p style="color: red;">{{ rating }}</p>
+                    {% endif %}
+                </div>
             </div>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
     
     <script src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}"></script>
@@ -151,7 +153,7 @@
                 "&destination=" + data[i + 1][1].split(" ").join("+");
 
             document.getElementById(data[i + 1][0]).innerHTML += '<a href="' + link +
-                '" target="_blank" class="btn-red col-sm-2">Directions</a>';
+                '" target="_blank" class="btn-red col-sm-3">Directions</a>';
 
             infoWindowsArray.push(new google.maps.InfoWindow({
                 content: '<div class="info_window">' +

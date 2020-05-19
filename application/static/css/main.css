@@ -47,6 +47,7 @@
   display: block;
   margin: auto;
   width: 90%;
+  max-width: 300px;
   padding: 10px 0px;
 }
 
@@ -59,6 +60,12 @@
   padding: 5%;
 }
 
+.form-container {
+  margin: 10% auto;
+  padding: 0 4%;
+  max-width: 800px;
+}
+
 * {
   font-family: "Muli", sans-serif;
   margin: 0;
@@ -68,11 +75,11 @@
 body {
   background-color: #fcfcfc;
   color: #333;
-  margin-top: 8vh;
+  margin-top: 10vh;
 }
 
 nav {
-  height: 8vh;
+  height: 10vh;
   display: flex;
   align-items: center;
 }
@@ -124,7 +131,6 @@ input[type=text]:focus, input[type=email]:focus, input[type=password]:focus, .te
 }
 
 legend {
-  width: 90%;
   margin: 0px auto 10px;
   letter-spacing: 0.4px;
 }
