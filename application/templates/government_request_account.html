@@ -3,11 +3,11 @@
   <form method="POST" action="">
     {{ form.csrf_token() }}
     <fieldset class="form-group">
-      <legend>Government Hospital Account</legend>
+      <legend>Government Account</legend>
       <div class="row">
         <div class="form-group col-md-6">
           {% if form.government.errors %} {{ form.government(class="form-control
-          form-control-lg is-invalid", placeholder="Hospital Name") }}
+          form-control-lg is-invalid", placeholder="Government Name") }}
           <div class="invalid-feedback">
             {% for error in form.government.errors %}
             <span>{{ error }}</span>
@@ -19,7 +19,7 @@
         <div class="form-group col-md-6">
           {% if form.government_type.errors %} {{
           form.government_type(class="form-control form-control-lg is-invalid",
-          placeholder="Hospital Name") }}
+          placeholder="Government Type") }}
           <div class="invalid-feedback">
             {% for error in form.government_type.errors %}
             <span>{{ error }}</span>

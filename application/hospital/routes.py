@@ -88,10 +88,24 @@ def login():
 @login_required
 def account():
     if current_user.user_type == "Government":
-        return render_template('government_account.html')
+        form = UpdateAccountForm()
+
+        if form.validate_on_submit():
+            current_user.name = form.name.data
+            current_user.username = form.username.data
+            current_user.email = form.email.data
+            db.session.commit()
+            flash('Your account has been updated!', 'success')
+            return redirect(url_for('account'))
+        elif request.method == 'GET':
+            form.name.data = current_user.name
+            form.username.data = current_user.username
+            form.email.data = current_user.email
+
+        government = Government.query.get(current_user.association)
+        return render_template('government_account.html', form=form, government=government)
     else:
         hospital = Hospital.query.get(current_user.association)
-        print(hospital.id)
         form = UpdateAccountForm()
 
         if form.validate_on_submit():
