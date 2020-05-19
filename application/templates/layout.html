@@ -45,7 +45,8 @@
             <div class="collapse navbar-collapse" id="navbarToggle">
                 <div class="navbar-nav">
                     <a class="nav-item nav-link" href="{{ url_for('patient_form') }}">Get Personalized Results</a>
-                    <a class="nav-item nav-link" href="{{ url_for('home') }}">See Nearby Hospitals</a>
+                    <a class="nav-item nav-link" href="{{ url_for('home', _anchor='hospital_map') }}">See Nearby
+                        Hospitals</a>
                     <a class="nav-item nav-link" href="{{ url_for('home', _anchor='about') }}">About</a>
                     <a class="nav-item nav-link" href="{{ url_for('home', _anchor='contact') }}">Contact Us</a>
                 </div>
@@ -91,10 +92,10 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
-    </script>
+        </script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
-    </script>
+        </script>
     <!-- My JS -->
     {% block scripts %}{% endblock scripts %}
 </body>
