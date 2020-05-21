@@ -121,7 +121,7 @@
 <script>
   function create_graph(
     canvas_name,
-    times,
+    dates,
     title,
     label,
     data,
@@ -139,23 +139,13 @@
     var myChart = new Chart(ctx, {
       type: "line",
       data: {
-        labels: times,
+        labels: dates,
         datasets: [
           {
             label: title,
             data: data,
-            backgroundColor:
-              "rgba(" +
-              color1 +
-              ", " +
-              color2 +
-              ", " +
-              color3 +
-              ", " +
-              color4 +
-              ")",
-            borderColor:
-              "rgba(" + color1 + ", " + color2 + ", " + color3 + ", 1)",
+            backgroundColor: "rgba(" + color1 + ", " + color2 + ", " + color3 + ", " + color4 + ")",
+            borderColor: "rgba(" + color1 + ", " + color2 + ", " + color3 + ", 1)",
             borderWidth: 2,
           },
         ],
