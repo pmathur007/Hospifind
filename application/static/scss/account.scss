@@ -1,0 +1,48 @@
+@import 'config';
+
+h2 {
+    font-size: 1.4em;
+}
+
+#account-info {
+    padding: 0 5%;
+}
+
+#users {
+    padding: 0 5%;
+
+    a {
+        margin: 2% auto;
+    }
+
+    #system-control {
+        text-align: center;
+    }
+
+    #system-control button {
+        padding: 10px 5%;
+    }
+}
+
+#data {
+    table {
+        margin: auto;
+    }
+    
+    a {
+        margin: 10px auto;
+    }
+
+    tbody:nth-child(even) {
+        @include set-background(lighten($salmon-color, 27))
+    }
+
+    th {
+        @include set-background($salmon-color);
+    }
+
+    th, td {
+        text-align: center;
+        padding: 5px 8px;
+    }
+}

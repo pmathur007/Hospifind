@@ -52,7 +52,7 @@ class MobileDataTable extends React.Component {
                         <th>Date</th>
                         <th>User</th>
                         <th>Details</th>
-                        <th>Delete User</th>
+                        <th>Delete</th>
                     </tr>
                 </thead>
                 {this.state.data.map((d, i) => {
@@ -61,8 +61,8 @@ class MobileDataTable extends React.Component {
                             <tr>
                                 <td>{ d.date.split(":", 2).join(":") }</td>
                                 <td>{ d.user }</td>
-                                <td><button onClick={ () => this.toggleDetails(i) }>Details</button></td>
-                                <td><button onClick={ () => this.deleteEntry(i) }>Delete</button></td>
+                                <td onClick={ () => this.toggleDetails(i) } className="td-clickable">Details</td>
+                                <td onClick={ () => this.deleteEntry(i) } className="td-clickable">Delete</td>
                             </tr>
                             {this.state.showingData[i] ? (
                                 <tr>
@@ -152,7 +152,7 @@ class FullDataTable extends React.Component {
                             <td>{ d.coronavirus_tests_available }</td>
                             <td>{ d.coronavirus_patients }</td>
                             <td>{ d.coronavirus_patient_percent }</td>
-                            <td><button onClick={ () => this.deleteEntry(i) }>Delete</button></td>
+                            <td onClick={ () => this.deleteEntry(i) } className="td-clickable">Delete</td>
                         </tr>
                     );
                 })}

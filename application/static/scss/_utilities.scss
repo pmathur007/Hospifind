@@ -22,7 +22,7 @@
 
 .btn-light {
     @extend %btn;
-    @include set-background(#ffffff);
+    @include set-background(darken(#ffffff, 1));
 
     color: $salmon-color;
     @include transition(background 0.5s ease-in-out);

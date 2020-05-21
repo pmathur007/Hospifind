@@ -83,11 +83,9 @@ var MobileUserTable = function (_React$Component) {
                                 null,
                                 React.createElement(
                                     "button",
-                                    {
-                                        onClick: function onClick() {
+                                    { onClick: function onClick() {
                                             return _this2.toggleDetails(i);
-                                        }
-                                    },
+                                        } },
                                     "User Info"
                                 )
                             ),

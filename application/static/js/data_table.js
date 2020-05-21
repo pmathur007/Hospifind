@@ -92,7 +92,7 @@ var MobileDataTable = function (_React$Component) {
                         React.createElement(
                             "th",
                             null,
-                            "Delete User"
+                            "Delete"
                         )
                     )
                 ),
@@ -115,25 +115,17 @@ var MobileDataTable = function (_React$Component) {
                             ),
                             React.createElement(
                                 "td",
-                                null,
-                                React.createElement(
-                                    "button",
-                                    { onClick: function onClick() {
-                                            return _this2.toggleDetails(i);
-                                        } },
-                                    "Details"
-                                )
+                                { onClick: function onClick() {
+                                        return _this2.toggleDetails(i);
+                                    }, className: "td-clickable" },
+                                "Details"
                             ),
                             React.createElement(
                                 "td",
-                                null,
-                                React.createElement(
-                                    "button",
-                                    { onClick: function onClick() {
-                                            return _this2.deleteEntry(i);
-                                        } },
-                                    "Delete"
-                                )
+                                { onClick: function onClick() {
+                                        return _this2.deleteEntry(i);
+                                    }, className: "td-clickable" },
+                                "Delete"
                             )
                         ),
                         _this2.state.showingData[i] ? React.createElement(
@@ -365,14 +357,10 @@ var FullDataTable = function (_React$Component2) {
                         ),
                         React.createElement(
                             "td",
-                            null,
-                            React.createElement(
-                                "button",
-                                { onClick: function onClick() {
-                                        return _this4.deleteEntry(i);
-                                    } },
-                                "Delete"
-                            )
+                            { onClick: function onClick() {
+                                    return _this4.deleteEntry(i);
+                                }, className: "td-clickable" },
+                            "Delete"
                         )
                     );
                 })
