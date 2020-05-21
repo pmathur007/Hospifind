@@ -88,6 +88,7 @@ def login():
 @login_required
 def account():
     if current_user.user_type == "Government":
+        government = Government.query.get(current_user.association)
         form = UpdateAccountForm()
 
         if form.validate_on_submit():
@@ -102,7 +103,27 @@ def account():
             form.username.data = current_user.username
             form.email.data = current_user.email
 
-        government = Government.query.get(current_user.association)
+        users = User.query.filter_by(association=current_user.association).filter_by(
+            user_type="Government").order_by(User.user_type.desc()).all()
+
+        hospitals = [Hospital.query.get(h) for h in government.hospitals.split(",")]
+
+        data = [Data.query.filter_by(hospital=hospital.id).all() for hospital in hospitals]
+
+        bed_capacity = []
+        beds_available = []
+        icus_available = []
+        ventilators_available = []
+        coronavirus_tests_available = []
+        coronavirus_patients = []
+        coronavirus_patient_percent = []
+        dates = []
+
+        if government.system_open:
+            invite_link = url_for('government_register', hex_id=government.hex_id, _external=True)
+        else:
+            invite_link = ""
+
         return render_template('government_account.html', form=form, government=government)
     else:
         hospital = Hospital.query.get(current_user.association)
@@ -121,7 +142,7 @@ def account():
             form.email.data = current_user.email
 
         if current_user.user_type == "Admin":
-            users = User.query.filter_by(association=current_user.association).order_by(
+            users = User.query.filter_by(association=current_user.association).filter(User.user_type != "Government").order_by(
                 User.user_type.desc()).all()
             data = Data.query.filter_by(
                 hospital=current_user.association).order_by(Data.date.desc()).all()
@@ -138,13 +159,10 @@ def account():
                 beds_available.append(d.beds_available)
                 icus_available.append(d.icus_available)
                 ventilators_available.append(d.ventilators_available)
-                coronavirus_tests_available.append(
-                    d.coronavirus_tests_available)
+                coronavirus_tests_available.append(d.coronavirus_tests_available)
                 coronavirus_patients.append(d.coronavirus_patients)
-                coronavirus_patient_percent.append(
-                    d.coronavirus_patient_percent*100)
-                dates.append(
-                    (d.date-datetime.utcfromtimestamp(0)).total_seconds())
+                coronavirus_patient_percent.append(d.coronavirus_patient_percent)
+                dates.append((d.date-datetime.utcfromtimestamp(0)).total_seconds())
             user_info = []
             for user in users:
                 inputs = Data.query.filter_by(user=user.id).all()
@@ -184,6 +202,8 @@ def hospital_data(hospital_id):
 @login_required
 @app.route("/hospital/data_input", methods=["GET", "POST"])
 def data_input():
+    if current_user.user_type == "Government":
+        return redirect(url_for('home'))
     form = DataForm()
     if form.validate_on_submit():
         data = Data(bed_capacity=form.bed_capacity.data, beds_available=form.beds_available.data, icus_available=form.icus_available.data, ventilators_available=form.ventilators_available.data, coronavirus_tests_available=form.coronavirus_tests_available.data,

@@ -106,42 +106,53 @@
     <div id="data_table"></div>
 </section>
 <script>
-    function create_graph(
-        canvas_name,
-        times,
-        title,
-        label,
-        data,
-        color1,
-        color2,
-        color3,
-        color4,
-        text_color,
-        left,
-        right,
-        top,
-        bottom
-    ) {
-        var ctx = document.getElementById(canvas_name).getContext("2d");
-        var myChart = new Chart(ctx, {
-            type: "line",
-            data: {
-                labels: times,
-                datasets: [{
-                    label: title,
-                    data: data,
-                    backgroundColor: "rgba(" +
-                        color1 +
-                        ", " +
-                        color2 +
-                        ", " +
-                        color3 +
-                        ", " +
-                        color4 +
-                        ")",
-                    borderColor: "rgba(" + color1 + ", " + color2 + ", " + color3 + ", 1)",
-                    borderWidth: 2,
-                }, ],
+  function create_graph(
+    canvas_name,
+    dates,
+    title,
+    label,
+    data,
+    color1,
+    color2,
+    color3,
+    color4,
+    text_color,
+    left,
+    right,
+    top,
+    bottom
+  ) {
+    var ctx = document.getElementById(canvas_name).getContext("2d");
+    var myChart = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: dates,
+        datasets: [
+          {
+            label: title,
+            data: data,
+            backgroundColor: "rgba(" + color1 + ", " + color2 + ", " + color3 + ", " + color4 + ")",
+            borderColor: "rgba(" + color1 + ", " + color2 + ", " + color3 + ", 1)",
+            borderWidth: 2,
+          },
+        ],
+      },
+      options: {
+        title: {
+          display: true,
+          text: title,
+          fontSize: 18,
+          fontFamily: "Ubuntu",
+          fontColor: text_color,
+        },
+        legend: {
+          display: false,
+        },
+        tooltips: {
+          callbacks: {
+            title: function (tooltipItems, data) {
+              date = new Date(parseInt(tooltipItems[0].xLabel) * 1000);
+              return date.getMonth() + 1 + "/" + date.getDate();
             },
             options: {
                 title: {
