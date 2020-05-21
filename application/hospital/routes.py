@@ -124,7 +124,6 @@ def account():
         else:
             invite_link = ""
 
-        government = Government.query.get(current_user.association)
         return render_template('government_account.html', form=form, government=government)
     else:
         hospital = Hospital.query.get(current_user.association)
@@ -143,7 +142,7 @@ def account():
             form.email.data = current_user.email
 
         if current_user.user_type == "Admin":
-            users = User.query.filter_by(association=current_user.association).filter_by(user_type != "Government").order_by(
+            users = User.query.filter_by(association=current_user.association).filter(User.user_type != "Government").order_by(
                 User.user_type.desc()).all()
             data = Data.query.filter_by(
                 hospital=current_user.association).order_by(Data.date.desc()).all()
