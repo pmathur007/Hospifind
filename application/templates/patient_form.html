@@ -4,7 +4,7 @@
 {% endblock page_styles %}
 {% block content %}
     <h1>Get Personalized Results</h1>
-    <form class="mcontainer" onsubmit="validatePatientForm()" name="patientForm">
+    <form class="mcontainer" action="{{ url_for('patient_form') }}" method="POST" onsubmit="return validatePatientForm()" name="patientForm">
         <fieldset>
             <legend>Are you in a serious/life-threatening condition?</legend>
             <input id="emergency_y" type="radio" name="emergency" value="y"><label for="emergency_y">Yes</label>
@@ -87,23 +87,25 @@
 
             if (invalidSections.length > 0) {
                 alert("Please indicate\n" + invalidSections.concat());
+                return false;
             } else {
-                formData = {
-                    "emergency": getFieldValues("emergency"),
-                    "age": getFieldValues("age"),
-                    "symptoms": getFieldValues("symptoms"),
-                    "conditions": getFieldValues("conditions"),
-                    "near_covid": getFieldValues("near_covid")
-                };
+                // formData = {
+                //     "emergency": getFieldValues("emergency"),
+                //     "age": getFieldValues("age"),
+                //     "symptoms": getFieldValues("symptoms"),
+                //     "conditions": getFieldValues("conditions"),
+                //     "near_covid": getFieldValues("near_covid")
+                // };
 
-                $.ajax({
-                    type: "POST",
-                    url: "/patient_form",
-                    data: JSON.stringify(formData),
-                    contentType: "application/json"
-                }).done(function(data) {
-                    document.write(data);
-                });
+                // $.ajax({
+                //     type: "POST",
+                //     url: "/patient_form",
+                //     data: JSON.stringify(formData),
+                //     contentType: "application/json"
+                // }).done(function(data) {
+                //     document.write(data);
+                // });
+                return true;
             }
         }
     </script>
