@@ -23,15 +23,17 @@ def patient_form():
 
     print(session['HOSPITALS'])
     if request.method == "POST":
-        emergency = request.form.get("emergency")
-        patient = Patient(int(request.form.get("age")), request.form.getlist("symptoms"), request.form.getlist("conditions"), request.form.get("near_covid"))
+        form_data = request.get_json()
+        print(form_data)
+        emergency = form_data['emergency']
+        if emergency == "y":
+            return redirect(url_for('call_911'))
+        patient = Patient(int(form_data['age']), form_data['symptoms'], form_data['conditions'], form_data['near_covid'])
         decision_maker = PersonalDecision([Hospital.query.get(hospital) for hospital in session['HOSPITALS']], [Data.query.get(d) for d in session['DATA']], patient)
         distances = [distance(session['LATITUDE'], session['LONGITUDE'], Hospital.query.get(hosp).latitude, Hospital.query.get(hosp).longitude) for hosp in session['HOSPITALS']]
         results = decision_maker.get_rating(distances)
         session['PERSONALIZED_HOSPITALS'] = [hospital.id for hospital in results]
         session['PERSONALIZED_RATINGS'] = [results[hospital] for hospital in results]
-        if emergency == "y":
-            return redirect(url_for('call_911'))
         print('here')
         return redirect(url_for('patient_results'))
     return render_template('patient_form.html', title='Patient Form')
