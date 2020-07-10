@@ -26,10 +26,9 @@
             Hospifind shows you which hospitals have the capacity to treat you to ensure
             you get the care you need.
         </p>
+        <a href="{{ url_for('testing_centers') }}">Find a Testing Center</a>
         <a href="{{ url_for('patient_form') }}" class="btn-light btn-wide">Get Personalized Results</a>
-        <a href="{{ url_for('input_location') }}" class="btn-light btn-wide">
-            Enter My Location<br />
-        </a>
+        <a href="{{ url_for('input_location') }}" class="btn-light btn-wide"></a>
         <p><small>Automatic Location Detection: {{ address }}</small></p>
         <p>Note: All hospital data and calculated ratings are SIMULATED. Do not use this application when seeking urgent treatment.</p>
     </div>

@@ -1,0 +1,5 @@
+googlemaps
+geocoder
+sqlalchemy-json-querybuilder
+Flask-WTF
+email-validator

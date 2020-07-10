@@ -46,4 +46,5 @@ from application.main import routes
 from application.patient import routes
 from application.hospital import routes
 from application.government import routes
+from application.testing_centers import routes
 from application.errors import handlers

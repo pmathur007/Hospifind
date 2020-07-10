@@ -10,6 +10,11 @@ from application.main.forms import ContactForm
 from application.utils import send_contact_email
 import numpy as np
 
+# ROUTES
+# /
+# /home
+# /request_account
+# /db
 
 @app.route("/", methods=['GET', 'POST'])
 @app.route("/home", methods=['GET', 'POST'])
