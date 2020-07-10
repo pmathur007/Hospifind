@@ -1,0 +1,77 @@
+{% extends "layout.html" %} {% block content %}
+<div class="form-container">
+    <form method="POST" action="" enctype="multipart/form-data">
+        {{ form.csrf_token() }}
+        <fieldset class="form-group">
+            <legend>Update Location Information</legend>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    {% if form.street_address.errors %}
+                        {{ form.street_address(class="form-control form-control-lg is-invalid", placeholder="Street Address") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.street_address.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.street_address(class="form-control form-control-lg", placeholder="Street Address") }}
+                    {% endif %}
+                </div>
+                <div class="form-group col-md-6">
+                    {% if form.city.errors %}
+                        {{ form.city(class="form-control form-control-lg is-invalid", placeholder="City") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.city.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.city(class="form-control form-control-lg", placeholder="City") }}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-4">
+                    {% if form.state.errors %}
+                        {{ form.state(class="form-control form-control-lg is-invalid", placeholder="State") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.state.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.state(class="form-control form-control-lg", placeholder="State") }}
+                    {% endif %}
+                </div>
+                <div class="form-group col-sm-4">
+                    {% if form.country.errors %}
+                        {{ form.country(class="form-control form-control-lg is-invalid", placeholder="Country") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.country.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.country(class="form-control form-control-lg", placeholder="Country") }}
+                    {% endif %}
+                </div>
+                <div class="form-group col-md-4">
+                    {% if form.zip_code.errors %}
+                        {{ form.zip_code(class="form-control form-control-lg is-invalid", placeholder="Zip Code") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.zip_code.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.zip_code(class="form-control form-control-lg", placeholder="Zip Code") }}
+                    {% endif %}
+                </div>
+            </div>
+        </fieldset>
+        <div class="form-group">
+            {{ form.submit(class="btn-red btn-wide") }}
+        </div>
+    </form>
+</div>
+{% endblock content %}

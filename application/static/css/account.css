@@ -1,0 +1,43 @@
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Muli&display=swap");
+h2 {
+  font-size: 1.4em;
+}
+
+#account-info {
+  padding: 0 5%;
+}
+
+#users {
+  padding: 0 5%;
+}
+#users a {
+  margin: 2% auto;
+}
+#users #system-control {
+  text-align: center;
+}
+#users #system-control button {
+  padding: 10px 5%;
+}
+
+#data table {
+  margin: auto;
+}
+#data a {
+  margin: 10px auto;
+}
+#data tbody:nth-child(even) {
+  background-color: #fff0f0;
+  color: #333;
+}
+#data th {
+  background-color: #ff6666;
+  color: #fff;
+}
+#data th, #data td {
+  text-align: center;
+  padding: 5px 8px;
+}
+
+/*# sourceMappingURL=account.css.map */

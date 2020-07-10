@@ -1,0 +1,362 @@
+{% extends "layout.html" %}
+{% block page_styles %}
+    <link rel="stylesheet" href="../static/css/account.css">
+{% endblock page_styles %}
+{% block content %}
+<h1>{{ current_user.name }}</h1>
+<h2>{{ hospital.name }} - Admin</h2>
+<hr/>
+<section id="account-info">
+    <h3>Account Information</h3>
+    <form method="POST" action="" enctype="multipart/form-data">
+        {{ form.csrf_token() }}
+        <fieldset class="form-group">
+            <div class="form-group">
+                {% if form.name.errors %} 
+                    {{ form.name(class="form-control is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.name.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.name(class="form-control") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {% if form.username.errors %}
+                    {{ form.username(class="form-control is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.username.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.username(class="form-control") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {% if form.email.errors %}
+                    {{ form.email(class="form-control is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.email.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.email(class="form-control") }}
+                {% endif %}
+            </div>
+        </fieldset>
+        <div class="form-group">
+            {{ form.submit(class="btn-red btn-wide") }}
+        </div>
+    </form>
+</section>
+<section id="users">
+    <h3>Users</h3>
+    <div id="user_table"></div>
+    {% if hospital.system_open %}
+    <a href="{{ admin_invite_link }}" class="btn-red btn-wide">Invite an Admin</a>
+    <a href="{{ user_invite_link }}" class="btn-red btn-wide">Invite a Normal User</a>
+    <div id="system-control">
+        <button class="btn-light" data-toggle="modal" data-target="#regenerateModal">
+            Regenerate Links
+        </button>
+        <button class="btn-light" data-toggle="modal" data-target="#closeModal">
+            Close System
+        </button>
+    </div>
+    {% else %}
+    <button class="mt-2 mb-2 btn btn-light" data-toggle="modal" data-target="#openModal">
+        Open System
+    </button>
+    {% endif %}
+</section>
+<section>
+    <h3>Graphs</h3>
+    <div class="row">
+        <div class="column">
+            <canvas id="beds_available" width="500" height="200"></canvas>
+        </div>
+        <div class="column">
+            <canvas id="icus_available" width="500" height="200"></canvas>
+        </div>
+    </div>
+    <div class="row">
+        <div class="column">
+            <canvas id="ventilators_available" width="500" height="200"></canvas>
+        </div>
+        <div class="column">
+            <canvas id="coronavirus_tests_available" width="500" height="200"></canvas>
+        </div>
+    </div>
+    <div class="row">
+        <div class="column">
+            <canvas id="coronavirus_patients" width="500" height="200"></canvas>
+        </div>
+        <div class="column">
+            <canvas id="coronavirus_patient_proportion" width="500" height="200"></canvas>
+        </div>
+    </div>
+</section>
+<section id="data">
+    <h3>Data</h3>
+    <a href="{{ url_for('data_input') }}" class="btn-red btn-wide">Input Data</a>
+    <div id="data_table"></div>
+</section>
+<script>
+  function create_graph(
+    canvas_name,
+    dates,
+    title,
+    label,
+    data,
+    color1,
+    color2,
+    color3,
+    color4,
+    text_color,
+    left,
+    right,
+    top,
+    bottom
+  ) {
+    var ctx = document.getElementById(canvas_name).getContext("2d");
+    var myChart = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: dates,
+        datasets: [
+          {
+            label: title,
+            data: data,
+            backgroundColor: "rgba(" + color1 + ", " + color2 + ", " + color3 + ", " + color4 + ")",
+            borderColor: "rgba(" + color1 + ", " + color2 + ", " + color3 + ", 1)",
+            borderWidth: 2,
+          },
+        ],
+      },
+      options: {
+        title: {
+          display: true,
+          text: title,
+          fontSize: 18,
+          fontFamily: "Ubuntu",
+          fontColor: text_color,
+        },
+        legend: {
+          display: false,
+        },
+        tooltips: {
+          callbacks: {
+            title: function (tooltipItems, data) {
+              date = new Date(parseInt(tooltipItems[0].xLabel) * 1000);
+              return date.getMonth() + 1 + "/" + date.getDate();
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: title,
+                    fontSize: 18,
+                    fontFamily: "Ubuntu",
+                    fontColor: text_color,
+                },
+                legend: {
+                    display: false,
+                },
+                tooltips: {
+                    callbacks: {
+                        title: function (tooltipItems, data) {
+                            date = new Date(parseInt(tooltipItems[0].xLabel) * 1000);
+                            return date.getMonth() + 1 + "/" + date.getDate();
+                        },
+                    },
+                },
+                layout: {
+                    padding: {
+                        left: left,
+                        right: right,
+                        top: top,
+                        bottom: bottom,
+                    },
+                },
+                scales: {
+                    xAxes: [{
+                        ticks: {
+                            fontColor: text_color,
+                            fontFamily: "Ubuntu",
+                            maxTicksLimit: 6,
+                            maxRotation: 30,
+                            evenLabelSpacing: true,
+                            callback: function (value, index, values) {
+                                date = new Date(value * 1000);
+                                return date.getMonth() + 1 + "/" + date.getDate();
+                            },
+                        },
+                    }, ],
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            fontColor: text_color,
+                            fontFamily: "Ubuntu",
+                            maxTicksLimit: 5,
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: label,
+                            fontSize: 12,
+                            fontColor: text_color,
+                            fontFamily: "Ubuntu",
+                        },
+                    }, ],
+                },
+            },
+        });
+    }
+</script>
+<script>
+    color = 'black'
+    create_graph('beds_available', {{ dates }}, 'Beds Available', 'Beds Available', {{ beds_available }}, 255, 30, 50, 0.3, color, 0, 0, 0, 0);
+    create_graph('icus_available', {{ dates }}, 'ICU Beds Available', 'ICUs Available', {{ icus_available }}, 255, 130, 31, 0.3, color, 0, 0, 0, 0);
+    create_graph('ventilators_available', {
+        {
+            dates
+        }
+    }, 'Ventilators Available', 'Ventilators Available', {
+        {
+            ventilators_available
+        }
+    }, 255, 255, 50, 0.3, color, 0, 0, 0, 0)
+    create_graph('coronavirus_tests_available', {
+        {
+            dates
+        }
+    }, 'Coronavirus Tests Available', 'COVID-19 Tests Available', {
+        {
+            coronavirus_tests_available
+        }
+    }, 30, 255, 30, 0.3, color, 0, 0, 0, 0)
+    create_graph('coronavirus_patients', {
+        {
+            dates
+        }
+    }, 'Coronavirus Patients', 'COVID-19 Patients', {
+        {
+            coronavirus_patients
+        }
+    }, 100, 185, 255, 0.3, color, 0, 0, 0, 0)
+    create_graph('coronavirus_patient_proportion', {
+        {
+            dates
+        }
+    }, 'Coronavirus Patient Percent', 'COVID-19 Patient %', {
+        {
+            coronavirus_patient_percent
+        }
+    }, 255, 50, 255, 0.3, color, 0, 0, 0, 0)
+</script>
+<div class="modal custom fade" id="regenerateModal" tabindex="-1" role="dialog" aria-labelledby="regenerateModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="regenerateModalLabel">
+                    Are you sure you want to regenerate links? This will deactivate all
+                    current invitation links and generate new ones instead.
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    Cancel
+                </button>
+                <form action="{{ url_for('regenerate_links', hospital_id=hospital.id) }}" method="POST">
+                    <input class="btn btn-primary" type="submit" value="Regenerate" />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal custom fade" id="closeModal" tabindex="-1" role="dialog" aria-labelledby="closeModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="closeModalLabel">
+                    Are you sure you want to close your system? This will deactivate all
+                    current invitation links and prevent any new users from joining until
+                    the system is reopened.
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    Cancel
+                </button>
+                <form action="{{ url_for('close_system', hospital_id=hospital.id) }}" method="POST">
+                    <input class="btn btn-danger" type="submit" value="Close System" />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal custom fade" id="openModal" tabindex="-1" role="dialog" aria-labelledby="openModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="openModalLabel">
+                    Are you sure you want to open your system? This will reactive your
+                    most recent invitation links and allow new users to join.
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    Cancel
+                </button>
+                <form action="{{ url_for('open_system', hospital_id=hospital.id) }}" method="POST">
+                    <input class="btn btn-success" type="submit" value="Open System" />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal custom fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">
+                    Are you sure you want to delete this data? This cannot be undone.
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    Cancel
+                </button>
+                <form action="{{ url_for('delete_data', data_id=1) }}" method="POST">
+                    <input class="btn btn-success" type="submit" value="Open System" />
+                </form>
+            </div>
+        </div>
+        {% endblock content %} {% block scripts %}
+        <script src="../static/js/user_table.js"></script>
+        <script src="../static/js/data_table.js"></script>
+        <script>
+            reloadUserTable({{ hospital.id }});
+            reloadDataTable({{ hospital.id }});
+        </script>
+        {% endblock scripts %}
+    </div>
+</div>

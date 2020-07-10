@@ -1,0 +1,100 @@
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Muli&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Muli&display=swap");
+.mcontainer {
+  margin: 2%;
+}
+
+.btn-light, .btn-red {
+  border-radius: 50px;
+  border: none;
+  text-align: center;
+}
+
+.btn-red {
+  background-color: #ff6666;
+  color: #fff;
+  -webkit-transition: background 0.5s ease-in-out;
+  -moz-transition: background 0.5s ease-in-out;
+  -ms-transition: background 0.5s ease-in-out;
+  -o-transition: background 0.5s ease-in-out;
+  transition: background 0.5s ease-in-out;
+}
+.btn-red:hover {
+  background-color: #ff3d3d;
+  color: #fff;
+}
+
+.btn-light {
+  background-color: #fcfcfc;
+  color: #333;
+  color: #ff6666;
+  -webkit-transition: background 0.5s ease-in-out;
+  -moz-transition: background 0.5s ease-in-out;
+  -ms-transition: background 0.5s ease-in-out;
+  -o-transition: background 0.5s ease-in-out;
+  transition: background 0.5s ease-in-out;
+}
+.btn-light:hover {
+  background-color: #e6e6e6;
+  color: #333;
+  color: #ff6666;
+}
+
+.btn-wide {
+  text-align: center;
+  display: block;
+  margin: auto;
+  width: 90%;
+  max-width: 300px;
+  padding: 10px 0px;
+}
+
+.bg-salmon {
+  background-color: #ff6666;
+  color: #fff;
+}
+
+.pcontainer {
+  padding: 5%;
+}
+
+.form-container {
+  margin: 10% auto;
+  padding: 0 4%;
+  max-width: 800px;
+}
+
+fieldset {
+  text-align: center;
+  margin-bottom: 30px;
+}
+fieldset legend {
+  letter-spacing: 0.4px;
+}
+fieldset input {
+  display: none;
+}
+fieldset input[type=radio]:checked + label, fieldset input[type=checkbox]:checked + label {
+  background: #ffe6e6;
+}
+fieldset label {
+  background-color: #f7f7f7;
+  color: #333;
+  display: block;
+  width: 90%;
+  text-align: center;
+  margin: 5px auto;
+  padding: 13px 0px;
+  -webkit-transition: background 0.5s ease-in-out;
+  -moz-transition: background 0.5s ease-in-out;
+  -ms-transition: background 0.5s ease-in-out;
+  -o-transition: background 0.5s ease-in-out;
+  transition: background 0.5s ease-in-out;
+}
+fieldset label:hover {
+  background: #fff0f0;
+}
+
+/*# sourceMappingURL=patient_form.css.map */

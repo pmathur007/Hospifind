@@ -1,0 +1,56 @@
+@import 'config';
+
+.mcontainer {
+    margin: 2%;
+}
+
+%btn {
+    border-radius: 50px;
+    border: none;
+    text-align: center;
+}
+
+.btn-red {
+    @extend %btn;
+    @include set-background($salmon-color);
+
+    @include transition(background .5s ease-in-out);
+    &:hover {
+        @include set-background(darken($salmon-color, 8));
+    }
+}
+
+.btn-light {
+    @extend %btn;
+    @include set-background(darken(#ffffff, 1));
+
+    color: $salmon-color;
+    @include transition(background 0.5s ease-in-out);
+    &:hover {
+        @include set-background(darken(#ffffff, 10));
+        color: $salmon-color;
+    }
+}
+
+.btn-wide {
+    text-align: center;
+    display: block;
+    margin: auto;
+    width: 90%;
+    max-width: 300px;
+    padding: 10px 0px;
+}
+
+.bg-salmon {
+    @include set-background($salmon-color);
+}
+
+.pcontainer {
+    padding: 5%;
+}
+
+.form-container {
+    margin: 10% auto;
+    padding: 0 4%;
+    max-width: 800px;
+}

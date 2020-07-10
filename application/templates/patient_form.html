@@ -1,0 +1,112 @@
+{% extends "layout.html" %}
+{% block page_styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/patient_form.css') }}"/>
+{% endblock page_styles %}
+{% block content %}
+    <h1>Get Personalized Results</h1>
+    <form class="mcontainer" action="{{ url_for('patient_form') }}" method="POST" onsubmit="return validatePatientForm()" name="patientForm">
+        <fieldset>
+            <legend>Are you in a serious/life-threatening condition?</legend>
+            <input id="emergency_y" type="radio" name="emergency" value="y"><label for="emergency_y">Yes</label>
+            <input id="emergency_n" type="radio" name="emergency" value="n"><label for="emergency_n">No</label>
+        </fieldset>
+        <fieldset>
+            <legend>Age</legend>
+            <input id="age_0" type="radio" name="age" value="0"><label for="age_0">Younger than 18</label>
+            <input id="age_1" type="radio" name="age" value="1"><label for="age_1">18-64</label>
+            <input id="age_2" type="radio" name="age" value="2"><label for="age_2">65+</label>
+        </fieldset>
+        <fieldset class="pfield">
+            <legend>Which, if any, of the following symptoms do you have?</legend>
+            <input id="symptoms_0" type="checkbox" name="symptoms" value=0><label for="symptoms_0">Fever</label>
+            <input id="symptoms_1" type="checkbox" name="symptoms" value=1><label for="symptoms_1">Dry Cough</label>
+            <input id="symptoms_2" type="checkbox" name="symptoms" value=2><label for="symptoms_2">Fatigue</label>
+            <input id="symptoms_3" type="checkbox" name="symptoms" value=3><label for="symptoms_3">Phlegm</label>
+            <input id="symptoms_4" type="checkbox" name="symptoms" value=4><label for="symptoms_4">Shortness of Breath</label>
+            <input id="symptoms_5" type="checkbox" name="symptoms" value=5><label for="symptoms_5">Sore Throat or Headache</label>
+            <input id="symptoms_6" type="checkbox" name="symptoms" value=6><label for="symptoms_6">Chills</label>
+            <input id="symptoms_7" type="checkbox" name="symptoms" value=7><label for="symptoms_7">Vomiting</label>
+            <input id="symptoms_8" type="checkbox" name="symptoms" value=8><label for="symptoms_8">Nasal Congestion</label>
+            <input id="symptoms_9" type="checkbox" name="symptoms" value=9><label for="symptoms_9">Diarrhea</label>
+        </fieldset>
+        <fieldset class="pfield">
+            <legend>Which, if any, of the following underlying conditions do you have?</legend>
+            <input id="conditions_0" type="checkbox" name="conditions" value=0><label for="conditions_0">High Blood Pressure</label>
+            <input id="conditions_1" type="checkbox" name="conditions" value=1><label for="conditions_1">Heart Problems</label>
+            <input id="conditions_2" type="checkbox" name="conditions" value=2><label for="conditions_2">Diabetes</label>
+            <input id="conditions_3" type="checkbox" name="conditions" value=3><label for="conditions_3">Asthma</label>
+            <input id="conditions_4" type="checkbox" name="conditions" value=4><label for="conditions_4">Any smoking-related condition</label>
+        </fieldset>
+        <fieldset class="pfield">
+            <legend>Have you been in an area where COVID‑19 is widespread or have you been in contact with someone known to have COVID-19?</legend>
+            <input id="near_covid_y" type="radio" name="near_covid" value="y"><label for="near_covid_y">Yes</label>
+            <input id="near_covid_n" type="radio" name="near_covid" value="n"><label for="near_covid_n">No</label>
+            <input id="near_covid_idk" type="radio" name="near_covid" value="idk"><label for="near_covid_idk">I don't know</label>
+        </fieldset>
+        <input type="submit" class="btn-red btn-wide" value="Submit">
+    </form>
+{% endblock content %}
+{% block scripts %}
+    <script type="text/javascript">
+        function validateRadio(fieldName) {
+            radios = document.getElementsByName(fieldName);
+            for (let i = 0; i < radios.length; i++) {
+                if (radios[i].checked)
+                    return true;
+            }
+            return false;
+        }
+
+        function getFieldValues(fieldName) {
+            inputs = document.getElementsByName(fieldName);
+            selected = [];
+            for (let i = 0; i < inputs.length; i++) {
+                if (inputs[i].checked)
+                    selected.push(inputs[i].value)
+            }
+            if (selected.length === 1)
+                return selected[0];
+            return selected;
+        }
+
+        function validatePatientForm() {
+            let invalidSections = [];
+
+            if (!validateRadio("emergency")) {
+                formValid = false;
+                invalidSections.push("Whether you are in a serious/life threatening condition");
+            }
+            if (!validateRadio("age")) {
+                formValid = false;
+                invalidSections.push("Your age");
+            }
+            if (!validateRadio("near_covid")) {
+                formValid = false;
+                invalidSections.push("Whether you have been in an area where COVID 19 is widespread");
+            }
+
+            if (invalidSections.length > 0) {
+                alert("Please indicate\n" + invalidSections.concat());
+                return false;
+            } else {
+                // formData = {
+                //     "emergency": getFieldValues("emergency"),
+                //     "age": getFieldValues("age"),
+                //     "symptoms": getFieldValues("symptoms"),
+                //     "conditions": getFieldValues("conditions"),
+                //     "near_covid": getFieldValues("near_covid")
+                // };
+
+                // $.ajax({
+                //     type: "POST",
+                //     url: "/patient_form",
+                //     data: JSON.stringify(formData),
+                //     contentType: "application/json"
+                // }).done(function(data) {
+                //     document.write(data);
+                // });
+                return true;
+            }
+        }
+    </script>
+{% endblock scripts %}

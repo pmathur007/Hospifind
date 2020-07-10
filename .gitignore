@@ -1,1 +1,5 @@
 .idea
+hospifindvenv
+application/templates/site.db
+application/static/js/node_modules
+application/environment_variables.txt

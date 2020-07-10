@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block page_styles %}
+    <style>
+        #content-section {
+            margin: 10% auto;
+        }
+
+        .btn-wide {
+            margin: 1% auto;
+        }
+    </style>
+{% endblock page_styles %} 
+{% block content %}
+<div id="content-section">
+    <a class="btn-red btn-wide" href="{{ url_for('hospital_request_account') }}">Hospital</a>
+    <a class="btn-red btn-wide" href="{{ url_for('government_request_account') }}">Government</a>
+</div>
+{% endblock content %}

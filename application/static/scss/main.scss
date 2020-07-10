@@ -1,0 +1,68 @@
+@import 'config';
+@import 'utilities';
+
+* {
+    font-family: $font-stack;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    @include set-background(darken(#ffffff, 1));
+    margin-top: 10vh;
+}
+
+nav {
+    height: 10vh;
+    display: flex;
+    align-items: center;
+}
+
+#logo_title {
+    color: $salmon-color;
+    font-size: 2rem;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+
+    img {
+        margin-right: 7px;
+        width: 2.4rem;
+        height: 2.4rem;
+    }
+}
+
+a {
+    &:hover {
+        text-decoration: none;
+    }
+}
+
+h1, h2, h3 {
+    text-align: center;
+}
+
+footer {
+    text-align: center;
+}
+
+input[type="text"], input[type="email"], input[type="password"], .textareas {
+    @include set-background(darken(#ffffff, 5));
+    margin: auto;
+    border: none;
+    border-radius: 0px;
+    padding: 15px 15px;
+
+    @include transition(background 0.4s ease-in-out);
+    &:focus {
+        @include set-background(darken(#ffffff, 10));
+        border: none;
+        outline: 0px;
+        box-shadow: none;
+    }
+}
+
+legend {
+    margin: 0px auto 10px;
+    letter-spacing: 0.4px;
+}
