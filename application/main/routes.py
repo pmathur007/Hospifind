@@ -35,8 +35,8 @@ def home():
             session['COUNTRY'] = g.country
             latlng = g.latlng
         else:
-            session['ADDRESS'] = "FAILURE"
-            latlng = [38.8809, -77.3008]
+            session['ADDRESS'] = "6560 Braddock Rd, Alexandria, VA 22312"
+            latlng = [38.819, -77.169]
         session['LATITUDE'] = latlng[0]
         session['LONGITUDE'] = latlng[1]
     # print(session['ADDRESS'])
