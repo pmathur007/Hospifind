@@ -42,9 +42,9 @@ mail = Mail(app)
 
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 
-from application.main import routes
-from application.patient import routes
-from application.hospital import routes
-from application.government import routes
-from application.testing_centers import routes
+from application.routes import main_routes
+from application.routes import hospital_routes
+from application.routes import government_routes
+from application.routes import patient_routes
+from application.routes import testing_centers_routes
 from application.errors import handlers

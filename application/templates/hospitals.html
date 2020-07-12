@@ -1,0 +1,159 @@
+{% extends "layout.html" %}
+
+{% block page_styles %}
+    <link rel="stylesheet" href="../static/css/hospitals.css">
+{% endblock page_styles %}
+
+{% block content %}
+<section id="hospital_map">
+    <h2>Hospitals</h2>
+    <p><strong>If your condition is serious, leave this site and call 911</strong></p>
+    {% if original_length > 15 %}
+        <p style="text-align: center;">
+            We found <strong>{{original_length}}</strong> hospitals in your area and selected the
+            <strong>{{ length }}</strong> nearest for display, sorted by {{ header }}.
+        </p>
+    {% else %}
+        <h5 style="text-align: center;">
+            We found <strong>{{ length }}</strong> hospitals matching our distance
+            criteria.
+        </h5>
+    {% endif %}
+    <p class="mb-2" style="text-align: center;">
+        *Note: Ratings are based on hospital data only.
+    </p>
+
+    <div class="row">
+        <div id="map" class="col-lg-6"></div>
+        <div id="hospital_results" class="col-lg-6">
+            {% for hospital, rating, distance, time in results %}
+            <div class="hospital_result 
+                {% if rating == 'Great' %}
+                    green-top
+                {% elif rating == 'Good' %}
+                    yellow-top
+                {% elif rating == 'OK' %}
+                    orange-top
+                {% elif rating == 'Low Availability' %}
+                    red-top
+                {% endif %}
+            ">
+                <p>
+                    <strong>{{ hospital.name }}</strong><br />
+                    {{ hospital.address }}<br />
+                    {{ distance }} - {{ time }}
+                </p>
+                <div id="{{ hospital.name }}">
+                    {% if rating == 'Great' %}
+                    <p style="color: lime;">{{ rating }}</p>
+                    {% elif rating == 'Good' %}
+                    <p style="color: #e6e600;">{{ rating }}</p>
+                    {% elif rating == 'OK' %}
+                    <p style="color: #ffad33;">{{ rating }}</p>
+                    {% elif rating == 'Low Availability' %}
+                    <p style="color: red;">{{ rating }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}"></script>
+    <script>
+        var data = {{ map_list | tojson }};
+        var myLatLng = new google.maps.LatLng({
+            lat: 0,
+            lng: 0
+        });
+        var bounds = new google.maps.LatLngBounds;
+        var map = new google.maps.Map(document.getElementById('map'), {
+            center: {
+                lat: 55.53,
+                lng: 9.4
+            },
+            zoom: 10,
+        });
+        var markersArray = [];
+        var infoWindowsArray = [];
+        var originLatLng = new google.maps.LatLng({
+            lat: data[0][1],
+            lng: data[0][2]
+        });
+        map.fitBounds(bounds.extend(originLatLng));
+        var icons = [];
+
+        for (var i = 0; i < data.length - 1; i++) {
+            if (data[i + 1][4] === 'Great') {
+                icons.push('https://maps.google.com/mapfiles/ms/icons/green-dot.png')
+            } else if (data[i + 1][4] === 'Good') {
+                icons.push('https://maps.google.com/mapfiles/ms/icons/yellow-dot.png')
+            } else if (data[i + 1][4] === 'OK') {
+                icons.push('https://maps.google.com/mapfiles/ms/icons/orange-dot.png')
+            } else {
+                icons.push('https://maps.google.com/mapfiles/ms/icons/red-dot.png');
+            }
+        }
+
+        var originMarker = new google.maps.Marker({
+            map: map,
+            position: originLatLng,
+            icon: 'https://maps.google.com/mapfiles/ms/icons/blue.png',
+            zIndex: google.maps.Marker.MAX_ZINDEX + 1
+        })
+
+        var originWindow = new google.maps.InfoWindow({
+            content: '<div class="info_window">' +
+                '<h4>Your Location</h4>' +
+                '<p>' + data[0][0] + '</p>' +
+                '</div>'
+        });
+
+        for (var i = 0; i < data.length - 1; i++) {
+            var myLatLng = new google.maps.LatLng({
+                lat: data[i + 1][2],
+                lng: data[i + 1][3]
+            });
+            map.fitBounds(bounds.extend(myLatLng));
+            markersArray.push(new google.maps.Marker({
+                map: map,
+                position: myLatLng,
+                icon: icons[i]
+            }));
+
+            var link = "https://www.google.com/maps/dir/?api=1&" +
+                "origin=" + data[0][0].split(",").join("%2C").split(" ").join("+") +
+                "&destination=" + data[i + 1][1].split(" ").join("+");
+
+            document.getElementById(data[i + 1][0]).innerHTML += '<a href="' + link +
+                '" target="_blank" class="btn-red col-sm-3">Directions</a>';
+
+            infoWindowsArray.push(new google.maps.InfoWindow({
+                content: '<div class="info_window">' +
+                    '<h4>' + data[i + 1][0] + '</h4>' +
+                    '<p>' + data[i + 1][1] + '</p>' +
+                    '<a href="' +
+                    link + '" target="_blank">Directions</a>' +
+                    '</div>'
+            }));
+
+            google.maps.event.addListener(markersArray[i], 'click', (function (marker, i) {
+                return function () {
+                    infoWindowsArray.forEach((item, i) => {
+                        item.close();
+                    });
+                    originWindow.close();
+                    infoWindowsArray[i].open(map, markersArray[i]);
+                };
+            })(markersArray[i], i));
+        }
+
+        originMarker.addListener('click', function () {
+            infoWindowsArray.forEach((item, i) => {
+                item.close();
+            });
+            originWindow.open(map, originMarker);
+        });
+    </script>
+</section>
+{% endblock content %}

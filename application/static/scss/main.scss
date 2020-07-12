@@ -46,6 +46,23 @@ footer {
     text-align: center;
 }
 
+.section {
+    &-full {
+        height: 90vh;
+    }
+
+    &-center {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: auto 0px;
+    }
+
+    &-salmon {
+        @include set-background($salmon-color);
+    }
+}
+
 input[type="text"], input[type="email"], input[type="password"], .textareas {
     @include set-background(darken(#ffffff, 5));
     margin: auto;
