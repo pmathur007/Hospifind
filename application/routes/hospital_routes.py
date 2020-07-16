@@ -6,6 +6,7 @@ from application.models import Hospital, User, Data, Government
 from application.forms.hospital_forms import ResetPasswordForm, HospitalRegistrationForm, LoginForm, DataForm, UpdateAccountForm, HospitalRequestAccountForm, RequestPasswordResetForm
 from datetime import datetime
 from application.utils import send_hospital_request_email, send_password_reset_email
+import geocoder
 
 # ROUTES 
 
