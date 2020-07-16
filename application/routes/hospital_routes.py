@@ -7,6 +7,7 @@ from application.forms.hospital_forms import ResetPasswordForm, HospitalRegistra
 from datetime import datetime
 from application.utils import send_hospital_request_email, send_password_reset_email
 import geocoder
+from application.utils import distance
 
 # ROUTES 
 
@@ -25,7 +26,7 @@ import geocoder
 @app.route("/hospitals", methods=["GET"])
 def hospitals():
     if 'UPDATE_NEEDED' not in session:
-        session['UPDATE_NEEDED'] = False
+        session['UPDATE_NEEDED'] = True
         
     if 'ADDRESS' not in session:
         session['IP'] = str(request.remote_addr)
@@ -48,10 +49,8 @@ def hospitals():
         session['UPDATE_NEEDED'] = False
         hospitals = Hospital.query.all()
         # hospitals = hospitals[:10]
-        hospitals = [x for x in hospitals if distance(
-            session['LATITUDE'], session['LONGITUDE'], x.latitude, x.longitude) < 60]
-        hospitals.sort(key=lambda x: distance(
-            session['LATITUDE'], session['LONGITUDE'], x.latitude, x.longitude))
+        hospitals = [x for x in hospitals if distance(session['LATITUDE'], session['LONGITUDE'], x.latitude, x.longitude) < 60]
+        hospitals.sort(key=lambda x: distance(session['LATITUDE'], session['LONGITUDE'], x.latitude, x.longitude))
         session['ORIGINAL_LENGTH'] = len(hospitals)
         if len(hospitals) > 15:
             hospitals = hospitals[:15]

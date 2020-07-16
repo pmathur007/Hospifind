@@ -28,7 +28,7 @@
         </p>
         <a href="{{ url_for('hospitals') }}" class="btn-light btn-wide">Find a Hospital</a>
         <a href="{{ url_for('testing_centers') }}" class="btn-light btn-wide">Find a COVID-19 Testing Center</a>
-        <p><small>Automatic Location Detection: {{ address }}. If this is incorrect, please <a href="{{ url_for('input_location') }}">Enter your location</a>.</small></p>
+        <p><small>Your Location: {{ address }}. If this is incorrect, please <a href="{{ url_for('input_location') }}">Enter your location</a>.</small></p>
         <p>Note: All hospital data and calculated ratings are SIMULATED. Do not use this application when seeking urgent treatment.</p>
     </div>
 </section>
