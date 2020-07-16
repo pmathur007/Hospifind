@@ -44,9 +44,10 @@ def hospitals():
         session['LONGITUDE'] = latlng[1]
     # print(session['ADDRESS'])
     # print(state, latitude, longitude)
-
+    
+    session['UPDATE_NEEDED'] = True
     if session['UPDATE_NEEDED'] or ('HOSPITALS' not in session or 'DATA' not in session or 'DISTANCES' not in session or 'TIMES' not in session):
-        session['UPDATE_NEEDED'] = False
+        # session['UPDATE_NEEDED'] = False
         hospitals = Hospital.query.all()
         # hospitals = hospitals[:10]
         hospitals = [x for x in hospitals if distance(session['LATITUDE'], session['LONGITUDE'], x.latitude, x.longitude) < 60]
@@ -56,17 +57,16 @@ def hospitals():
             hospitals = hospitals[:15]
         session['LENGTH'] = len(hospitals)
         session['HOSPITALS'] = [hospital.id for hospital in hospitals]
-        data = [Data.query.filter_by(hospital=hospital).order_by(
-            Data.date.desc()).first() for hospital in session['HOSPITALS']]
+        data = [Data.query.filter_by(hospital=hospital).order_by(Data.date.desc()).first() for hospital in session['HOSPITALS']]
         # print(data)
-        session['DATA'] = [d.id for d in data]
-        info = app.config['GOOGLE_MAPS'].distance_matrix(session['ADDRESS'], [
-                                                         hospital.address for hospital in hospitals], mode="driving", units="imperial")
+        session['DATA'] = [d.id if d is not None else None for d in data]
+        # print("DATA", session['DATA'])
+        info = app.config['GOOGLE_MAPS'].distance_matrix(session['ADDRESS'], [hospital.address for hospital in hospitals], mode="driving", units="imperial")
         session['DISTANCES'] = {}
         session['TIMES'] = {}
         session['DISTANCE_STRINGS'] = {}
         session['TIME_STRINGS'] = {}
-        print(info)
+        # print(info)
         for i in range(len(info['rows'][0]['elements'])):
             if info['rows'][0]['elements'][i]['status'] == 'OK':
                 session['DISTANCES'][str(session['HOSPITALS'][i])] = float(
@@ -93,21 +93,24 @@ def hospitals():
                     session['HOSPITALS'][i])] = 'Error'
                 session['TIME_STRINGS'][str(session['HOSPITALS'][i])] = 'Error'
 
-    print(session['HOSPITALS'], session['DISTANCES'],
-          session['TIMES'], sep="\n")
+    # print(session['HOSPITALS'], session['DATA'], sep="\n")
 
-    decision_maker = HomeDecision([Hospital.query.get(hospital) for hospital in session['HOSPITALS']], [
-                                  Data.query.get(data) for data in session['DATA']])
+    no_data_hospitals = [session['HOSPITALS'][i] for i in range(len(session['HOSPITALS'])) if session['DATA'][i] is None]
+    data_hospitals = [session['DATA'][i] for i in range(len(session['HOSPITALS'])) if session['DATA'][i] is not None]
+
+    decision_maker = HomeDecision([Hospital.query.get(hospital) for hospital in data_hospitals], [Data.query.get(data) for data in session['DATA'] if data is not None])
     results = decision_maker.get_rating()
-
-    print(results)
+    for hospital in no_data_hospitals:
+        results[Hospital.query.get(hospital)] = None
 
     hospitals = []
     ratings = {}
     for hospital in results:
         hospitals.append(hospital)
         rating = results[hospital]
-        if rating > 8:
+        if rating is None:
+            rating = "No Data"
+        elif rating > 8:
             rating = "Great"
         elif rating > 5:
             rating = "Good"
@@ -129,17 +132,17 @@ def hospitals():
                              hospitals[i].latitude, hospitals[i].longitude, results[hospitals[i]]))
         return render_template('hospitals.html', results=results, header="rating",  map_list=map_list, original_length=session['ORIGINAL_LENGTH'], length=session['LENGTH'], api_key=app.config['GOOGLE_MAPS_API_KEY_FRONTEND'])
     elif sort == "time_and_rating" or sort == "rating_and_time":
-        results_with_dist = decision_maker.get_rating_with_distance(
-            session['TIMES'])
-        print(results_with_dist)
+        results_with_dist = decision_maker.get_rating_with_distance(session['TIMES'])
+        for hospital in no_data_hospitals:
+            results_with_dist[Hospital.query.get(hospital)] = "No Data"
+        # print(results_with_dist)
         hospitals = []
         new_ratings = []
         for hospital in results_with_dist:
             hospitals.append(hospital)
             new_ratings.append(ratings[hospital])
-        results = [(hospitals[i], new_ratings[i], session['DISTANCE_STRINGS'][str(
-            hospitals[i].id)], session['TIME_STRINGS'][str(hospitals[i].id)]) for i in range(len(hospitals))]
-        # print(results)
+        results = [(hospitals[i], new_ratings[i], session['DISTANCE_STRINGS'][str(hospitals[i].id)], session['TIME_STRINGS'][str(hospitals[i].id)]) for i in range(len(hospitals))]
+        print(results)
         for i in range(len(results)):
             map_list.append((results[i][0].name, results[i][0].address,
                              results[i][0].latitude, results[i][0].longitude, results[i][1]))

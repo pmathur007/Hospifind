@@ -36,6 +36,8 @@
                     orange-top
                 {% elif rating == 'Low Availability' %}
                     red-top
+                {% elif rating == 'No Data' %}
+                    grey-top
                 {% endif %}
             ">
                 <p>
@@ -52,6 +54,8 @@
                     <p style="color: #ffad33;">{{ rating }}</p>
                     {% elif rating == 'Low Availability' %}
                     <p style="color: red;">{{ rating }}</p>
+                    {% elif rating == 'No Data' %}
+                    <p style="color: grey;">{{ rating }}</p>
                     {% endif %}
                 </div>
             </div>
@@ -82,7 +86,7 @@
         });
         map.fitBounds(bounds.extend(originLatLng));
         var icons = [];
-
+    
         for (var i = 0; i < data.length - 1; i++) {
             if (data[i + 1][4] === 'Great') {
                 icons.push('https://maps.google.com/mapfiles/ms/icons/green-dot.png')
@@ -90,7 +94,9 @@
                 icons.push('https://maps.google.com/mapfiles/ms/icons/yellow-dot.png')
             } else if (data[i + 1][4] === 'OK') {
                 icons.push('https://maps.google.com/mapfiles/ms/icons/orange-dot.png')
-            } else {
+            } else if (data[i + 1][4] === 'No Data') {
+                icons.push("http://labs.google.com/ridefinder/images/mm_20_gray.png")
+            } else if (data[i + 1][4] === 'Low Availability') {
                 icons.push('https://maps.google.com/mapfiles/ms/icons/red-dot.png');
             }
         }

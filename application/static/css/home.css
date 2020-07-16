@@ -74,4 +74,8 @@ html {
   border-top: 6px solid #ff0000;
 }
 
+.grey-top {
+  border-top: 6px solid grey;
+}
+
 /*# sourceMappingURL=home.css.map */
