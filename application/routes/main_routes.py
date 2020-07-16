@@ -41,7 +41,7 @@ def home():
         flash('Your contact email has been sent to the Hospifind team!', 'success')
         return redirect(url_for('home'))
 
-    return render_template('home.html', form=form)
+    return render_template('home.html', form=form, address=session['ADDRESS'])
 
 
 @app.route("/request_account")
