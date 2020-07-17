@@ -98,8 +98,14 @@ def hospitals():
     no_data_hospitals = [session['HOSPITALS'][i] for i in range(len(session['HOSPITALS'])) if session['DATA'][i] is None]
     data_hospitals = [session['DATA'][i] for i in range(len(session['HOSPITALS'])) if session['DATA'][i] is not None]
 
-    decision_maker = HomeDecision([Hospital.query.get(hospital) for hospital in data_hospitals], [Data.query.get(data) for data in session['DATA'] if data is not None])
-    results = decision_maker.get_rating()
+    no_hospitals = False
+
+    if len(data_hospitals) != 0:
+        decision_maker = HomeDecision([Hospital.query.get(hospital) for hospital in data_hospitals], [Data.query.get(data) for data in session['DATA'] if data is not None])
+        results = decision_maker.get_rating()
+    else:
+        results = dict()
+        no_hospitals = True
     for hospital in no_data_hospitals:
         results[Hospital.query.get(hospital)] = None
 
@@ -121,45 +127,27 @@ def hospitals():
         ratings[hospital] = rating
 
     map_list = [(session['ADDRESS'], session['LATITUDE'], session['LONGITUDE'])]
-
-    sort = "time_and_rating"
-    if sort == "rating":
-        new_ratings = [ratings[hospital] for hospital in ratings]
-        results = [(session['HOSPITALS'][i], new_ratings[i], session['DISTANCES']
-                    [hospitals[i].id], session['TIMES'][hospitals[i].id]) for i in range(len(hospitals))]
-        for i in range(len(hospitals)):
-            map_list.append((hospitals[i].name, hospitals[i].address,
-                             hospitals[i].latitude, hospitals[i].longitude, results[hospitals[i]]))
-        return render_template('hospitals.html', results=results, header="rating",  map_list=map_list, original_length=session['ORIGINAL_LENGTH'], length=session['LENGTH'], api_key=app.config['GOOGLE_MAPS_API_KEY_FRONTEND'])
-    elif sort == "time_and_rating" or sort == "rating_and_time":
-        results_with_dist = decision_maker.get_rating_with_distance(session['TIMES'])
-        for hospital in no_data_hospitals:
-            results_with_dist[Hospital.query.get(hospital)] = "No Data"
-        # print(results_with_dist)
-        hospitals = []
-        new_ratings = []
-        for hospital in results_with_dist:
-            hospitals.append(hospital)
-            new_ratings.append(ratings[hospital])
-        results = [(hospitals[i], new_ratings[i], session['DISTANCE_STRINGS'][str(hospitals[i].id)], session['TIME_STRINGS'][str(hospitals[i].id)]) for i in range(len(hospitals))]
-        print(results)
-        for i in range(len(results)):
-            map_list.append((results[i][0].name, results[i][0].address,
-                             results[i][0].latitude, results[i][0].longitude, results[i][1]))
-        # print(map_list)
-        # print(results)
-        return render_template('hospitals.html', results=results, header="time & rating", address=session['ADDRESS'],  map_list=map_list, length=session['LENGTH'], original_length=session['ORIGINAL_LENGTH'], api_key=app.config['GOOGLE_MAPS_API_KEY_FRONTEND'])
+    
+    if no_hospitals:
+        results_with_dist = {}
     else:
-        hospitals = [Hospital.query.get(hospital)
-                     for hospital in session['HOSPITALS']]
-        new_ratings = [ratings[hospital] for hospital in hospitals]
-        results = [(hospitals[i], new_ratings[i], session['DISTANCE_STRINGS'][str(
-            hospitals[i].id)], session['TIME_STRINGS'][str(hospitals[i].id)]) for i in range(len(hospitals))]
-        for i in range(len(hospitals)):
-            map_list.append((hospitals[i].name, hospitals[i].address,
-                             hospitals[i].latitude, hospitals[i].longitude, results[hospitals[i]]))
-
-    return render_template('hospitals.html', results=results, header="distance", map_list=map_list, length=session['LENGTH'], original_length=session['ORIGINAL_LENGTH'], api_key=app.config['GOOGLE_MAPS_API_KEY_FRONTEND'])
+        results_with_dist = decision_maker.get_rating_with_distance(session['TIMES'])
+    for hospital in no_data_hospitals:
+        results_with_dist[Hospital.query.get(hospital)] = "No Data"
+    # print(results_with_dist)
+    hospitals = []
+    new_ratings = []
+    for hospital in results_with_dist:
+        hospitals.append(hospital)
+        new_ratings.append(ratings[hospital])
+    results = [(hospitals[i], new_ratings[i], session['DISTANCE_STRINGS'][str(hospitals[i].id)], session['TIME_STRINGS'][str(hospitals[i].id)]) for i in range(len(hospitals))]
+    print(results)
+    for i in range(len(results)):
+        map_list.append((results[i][0].name, results[i][0].address,
+                            results[i][0].latitude, results[i][0].longitude, results[i][1]))
+    # print(map_list)
+    # print(results)
+    return render_template('hospitals.html', results=results, no_hospitals=no_hospitals, header="time & rating", address=session['ADDRESS'],  map_list=map_list, length=session['LENGTH'], original_length=session['ORIGINAL_LENGTH'], api_key=app.config['GOOGLE_MAPS_API_KEY_FRONTEND'])
 
 @app.route("/hospital/request_account", methods=["GET", "POST"])
 def hospital_request_account():
