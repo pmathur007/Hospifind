@@ -7,8 +7,13 @@
 {% block content %}
 <section id="hospital_map">
     <h2>Hospitals</h2>
-    <p><strong>If your condition is serious, leave this site and call 911</strong></p>
-    {% if original_length > 15 %}
+    <p style="text-align: center;"><strong>If your condition is serious, leave this site and call 911</strong></p>
+    {% if no_hospitals %}
+        <p style="text-align: center;">
+            We don't have capacity data for the hospitals in your area, but don't worry, we'll be there soon!<br>
+            If you work at a hospital, testing center, or government and can help us reach your area, contact us here.
+        </p>
+    {% elif original_length > 15 %}
         <p style="text-align: center;">
             We found <strong>{{original_length}}</strong> hospitals in your area and selected the
             <strong>{{ length }}</strong> nearest for display, sorted by {{ header }}.
@@ -19,9 +24,9 @@
             criteria.
         </h5>
     {% endif %}
-    <p class="mb-2" style="text-align: center;">
+    <!-- <p class="mb-2" style="text-align: center;">
         *Note: Ratings are based on hospital data only.
-    </p>
+    </p> -->
 
     <div class="row">
         <div id="map" class="col-lg-6"></div>
@@ -36,6 +41,8 @@
                     orange-top
                 {% elif rating == 'Low Availability' %}
                     red-top
+                {% elif rating == 'No Data' %}
+                    grey-top
                 {% endif %}
             ">
                 <p>
@@ -52,6 +59,8 @@
                     <p style="color: #ffad33;">{{ rating }}</p>
                     {% elif rating == 'Low Availability' %}
                     <p style="color: red;">{{ rating }}</p>
+                    {% elif rating == 'No Data' %}
+                    <p style="color: grey;">{{ rating }}</p>
                     {% endif %}
                 </div>
             </div>
@@ -82,7 +91,7 @@
         });
         map.fitBounds(bounds.extend(originLatLng));
         var icons = [];
-
+    
         for (var i = 0; i < data.length - 1; i++) {
             if (data[i + 1][4] === 'Great') {
                 icons.push('https://maps.google.com/mapfiles/ms/icons/green-dot.png')
@@ -90,7 +99,9 @@
                 icons.push('https://maps.google.com/mapfiles/ms/icons/yellow-dot.png')
             } else if (data[i + 1][4] === 'OK') {
                 icons.push('https://maps.google.com/mapfiles/ms/icons/orange-dot.png')
-            } else {
+            } else if (data[i + 1][4] === 'No Data') {
+                icons.push("http://labs.google.com/ridefinder/images/mm_20_gray.png")
+            } else if (data[i + 1][4] === 'Low Availability') {
                 icons.push('https://maps.google.com/mapfiles/ms/icons/red-dot.png');
             }
         }

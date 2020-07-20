@@ -71,8 +71,8 @@ class HomeDecision:
             self.get_rating()
         distances = self.scale_distance(distance_dict)
 
-        print(self.hospitals)
-        print(distances)
+        # print(self.hospitals)
+        # print(distances)
 
         nratings = {}
         for i in range(len(self.hospitals)):

@@ -19,6 +19,21 @@ import numpy as np
 @app.route("/", methods=['GET', 'POST'])
 @app.route("/home", methods=['GET', 'POST'])
 def home():
+    if 'ADDRESS' not in session:
+        session['IP'] = str(request.remote_addr)
+        g = geocoder.ip(session['IP'])
+        if g.ok and len(g.latlng) == 2 and g.latlng[0] is not None and g.latlng[1] is not None:
+            session['ADDRESS'] = g.city + ", " + g.state + ", " + g.country
+            session['CITY'] = g.city
+            session['STATE'] = g.state
+            session['COUNTRY'] = g.country
+            latlng = g.latlng
+        else:
+            session['ADDRESS'] = "6560 Braddock Rd, Alexandria, VA 22312"
+            latlng = [38.819, -77.169]
+        session['LATITUDE'] = latlng[0]
+        session['LONGITUDE'] = latlng[1]
+
     form = ContactForm()
     if form.validate_on_submit():
         print('here')
@@ -26,7 +41,7 @@ def home():
         flash('Your contact email has been sent to the Hospifind team!', 'success')
         return redirect(url_for('home'))
 
-    return render_template('home.html', form=form)
+    return render_template('home.html', form=form, address=session['ADDRESS'])
 
 
 @app.route("/request_account")
