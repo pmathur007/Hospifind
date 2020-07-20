@@ -6,12 +6,6 @@ from flask_login import UserMixin
 from os import urandom
 import copy
 
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
-
-
 class Hospital(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
@@ -21,105 +15,38 @@ class Hospital(db.Model):
     county = db.Column(db.String, nullable=False)
     latitude = db.Column(db.Integer, nullable=True)
     longitude = db.Column(db.Integer, nullable=True)
-    admin_hex_id = db.Column(db.String, default=lambda: urandom(
-        32).hex(), unique=True, nullable=True)
-    normal_hex_id = db.Column(db.String, default=lambda: urandom(
-        32).hex(), unique=True, nullable=True)
-    system_open = db.Column(db.Boolean, default=True)
-    old_admin_hex_id = db.Column(db.String, default=None, nullable=True)
-    old_normal_hex_id = db.Column(db.String, default=None, nullable=True)
-
-    data = db.relationship('Data', backref='input', lazy=True)
-
-    def regenerate_hex_ids(self):
-        self.admin_hex_id = urandom(32).hex()
-        self.normal_hex_id = urandom(32).hex()
-
-    def close_system(self):
-        self.old_admin_hex_id = copy.deepcopy(self.admin_hex_id)
-        self.old_normal_hex_id = copy.deepcopy(self.normal_hex_id)
-        self.admin_hex_id = None
-        self.normal_hex_id = None
-        self.system_open = False
-
-    def open_system(self):
-        self.admin_hex_id = self.old_admin_hex_id
-        self.normal_hex_id = self.old_normal_hex_id
-        self.system_open = True
+    data = db.Column(db.JSON, nullable=True)
+    # timeSubmitted: DateTime
+    # bedsAvailable: Integer
+    # icusAvailable: Integer
 
     def __repr__(self):
         return "Hospital('" + str(self.id) + "', '" + self.name + "', '" + self.state + "')"
 
-
-class Government(db.Model):
+class TestingCenter(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     name = db.Column(db.String, nullable=False)
-    location = db.Column(db.String, nullable=False)
-    gov_type = db.Column(db.String, nullable=False)
-    hospitals = db.Column(db.String, nullable=False)
-    hex_id = db.Column(db.String, default=lambda: urandom(
-        32).hex(), unique=True, nullable=True)
-    system_open = db.Column(db.Boolean, default=True)
-    old_hex_id = db.Column(db.String, default=None, nullable=True)
+    address = db.Column(db.String, nullable=False)
+    state = db.Column(db.String, nullable=False)
+    county = db.Column(db.String, nullable=False)
+    latitude = db.Column(db.Integer, nullable=True)
+    longitude = db.Column(db.Integer, nullable=True)
 
-    def regenerate_hex_ids(self):
-        self.hex_id = urandom(32).hex()
+    hours = db.Column(db.JSON, nullable=False)
+    # day of week: [hours]
 
-    def close_system(self):
-        self.old_hex_id = copy.deepcopy(self.hex_id)
-        self.hex_id = None
-        self.system_open = False
+    walkUp = db.Column(db.Boolean, nullable=True)
+    referral = db.Column(db.Boolean, nullable=True)
+    appointment = db.Column(db.Boolean, nullable=True)
+    info = db.Column(db.String, nullable=True)
 
-    def open_system(self):
-        self.hex_id = self.old_hex_id
-        self.system_open = True
+    data = db.Column(db.JSON, nullable=True)
+    # [{wait time, time submitted, submission_ip}]
 
-    def __repr__(self):
-        return f"Government('{self.name}', '{self.gov_type}')"
-
-
-class User(db.Model, UserMixin):
-    id = db.Column(db.Integer(), primary_key=True)
-
-    name = db.Column(db.String, nullable=False)
-    username = db.Column(db.String, unique=True, nullable=False)
-    email = db.Column(db.String, unique=True, nullable=False)
-    user_type = db.Column(db.String, nullable=False)
-    password = db.Column(db.String, nullable=False)
-    association = db.Column(db.Integer, nullable=False)
-
-    def get_reset_token(self, expires_sec=1800):
-        s = Serializer(current_app.config['SECRET_KEY'], expires_sec)
-        return s.dumps({'user_id': self.id}).decode('utf-8')
-
-    @staticmethod
-    def verify_reset_token(token):
-        s = Serializer(current_app.config['SECRET_KEY'])
-        try:
-            user_id = s.loads(token)['user_id']
-        except:
-            return None
-        return User.query.get(user_id)
-
-    def __repr__(self):
-        return f"User('{self.id}', '{self.username}', '{self.association}')"
-
-
-class Data(db.Model):
+class Submission(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
-    date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    bed_capacity = db.Column(db.Integer, nullable=False)
-    beds_available = db.Column(db.Integer, nullable=False)
-    icus_available = db.Column(db.Integer, nullable=False)
-    ventilators_available = db.Column(db.Integer, nullable=False)
-    coronavirus_tests_available = db.Column(db.Integer, nullable=False)
-    coronavirus_patients = db.Column(db.Integer, nullable=False)
-    coronavirus_patient_percent = db.Column(db.Float, nullable=False)
-    user = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    hospital = db.Column(db.Integer, db.ForeignKey(
-        'hospital.id'), nullable=False)
-
-    def __repr__(self):
-        return f"Data('{self.id}', Hospital: '{self.hospital}', User: '{self.user}', Date: '{self.date}' -- {self.bed_capacity}, {self.beds_available}, {self.icus_available}, {self.ventilators_available}, {self.coronavirus_tests_available}, {self.coronavirus_patients}, {self.coronavirus_patient_percent})"
+    ip = db.Column(db.String, nullable=False)
+    submission_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    testing_center_name = db.Column(String, nullable=False)
