@@ -19,15 +19,10 @@
             criteria.
         </h5>
     {% endif %}
-<<<<<<< HEAD
-    <p class="mb-2" style="text-align: center;">
-        Note: Hospital capacity data (ratings) are currently <strong>SIMULATED</strong>.
-=======
     {% if no_hospitals %}
     <p style="text-align: center;">
         We don't have capacity data for the hospitals in your area, but don't worry, we'll be there soon!<br>
-        If you work at a hospital, testing center, or government and can help us reach your area, contact us here.
->>>>>>> 900e9036ed1c1d6f9486dd5da710cbcb6051999d
+        If you work at a hospital, testing center, or government and can help us reach your area, contact us <a href={{ url_for('home', _anchor='contact') }}>here</a>.
     </p>
     {% endif %}
     <!-- <p class="mb-2" style="text-align: center;">
