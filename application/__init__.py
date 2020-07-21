@@ -15,9 +15,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
-login_manager = LoginManager(app)
-login_manager.login_view = 'login'
-login_manager.login_message_category = 'info'
+# login_manager = LoginManager(app)
+# login_manager.login_view = 'login'
+# login_manager.login_message_category = 'info'
 
 app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
 app.config['MAIL_PORT'] = 587
@@ -27,8 +27,7 @@ if path.exists(os.path.join('application', 'environment_variables.txt')):
     f = open(os.path.join('application', 'environment_variables.txt'), 'r')
     app.config['GOOGLE_MAPS_API_KEY_BACKEND'] = f.readline().strip()
     app.config['GOOGLE_MAPS_API_KEY_FRONTEND'] = f.readline().strip()
-    app.config['GOOGLE_MAPS'] = googlemaps.Client(
-        key=app.config['GOOGLE_MAPS_API_KEY_BACKEND'])
+    app.config['GOOGLE_MAPS'] = googlemaps.Client(key=app.config['GOOGLE_MAPS_API_KEY_BACKEND'])
     app.config['MAIL_USERNAME'] = f.readline().strip()
     app.config['MAIL_PASSWORD'] = f.readline().strip()
 else:
@@ -44,7 +43,6 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 
 from application.routes import main_routes
 from application.routes import hospital_routes
-from application.routes import government_routes
 from application.routes import patient_routes
 from application.routes import testing_centers_routes
 from application.errors import handlers

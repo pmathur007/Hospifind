@@ -17,8 +17,11 @@ def press_button(driver, type, identifier):
             buttons = driver.find_elements_by_class_name(identifier)
         elif type == 'id':
             buttons = driver.find_elements_by_id(identifier)
+        elif type == 'text':
+            buttons = driver.find_elements_by_link_text(identifier)
         for button in buttons:
             try:
+                print(button.get_attribute('innerHTML'))
                 button.click()
                 clicked = True
             except Exception:
@@ -31,6 +34,7 @@ driver = webdriver.Chrome(executable_path='C:\\Users\\Ron\\GMUInternship\\Fitbit
 
 driver.get(beds)
 press_button(driver, 'id', 'download-ToolbarButton')
-print("TITLE: ", driver.title, sep="")
-soup = BeautifulSoup(driver.page_source, 'html.parser')
-print("SOURCE", soup, sep="\n")
+press_button(driver, 'text', 'Crosstab')
+# print("TITLE: ", driver.title, sep="")
+# soup = BeautifulSoup(driver.page_source, 'html.parser')
+# print("SOURCE", soup, sep="\n")

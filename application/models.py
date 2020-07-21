@@ -1,7 +1,7 @@
 from datetime import datetime
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app
-from application import db, login_manager
+from application import db # , login_manager
 from flask_login import UserMixin
 from os import urandom
 import copy
@@ -49,4 +49,4 @@ class Submission(db.Model):
 
     ip = db.Column(db.String, nullable=False)
     submission_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    testing_center_name = db.Column(String, nullable=False)
+    testing_center_name = db.Column(db.String, nullable=False)

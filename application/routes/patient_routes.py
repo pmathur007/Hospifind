@@ -1,6 +1,6 @@
 from flask import render_template, request, url_for, redirect, session, flash
 from application import app
-from application.models import Hospital, Data
+from application.models import Hospital
 from application.data_analysis import PersonalDecision
 from application.utils import distance
 from application.forms.patient_forms import InputLocationForm
