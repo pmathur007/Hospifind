@@ -4,7 +4,7 @@ from flask import render_template, request, session, redirect, url_for, flash
 from sqlalchemy_json_querybuilder.querybuilder.search import Search
 from application import app, db
 from application.data_analysis import HomeDecision
-from application.models import User, Hospital, Data
+from application.models import Hospital
 from application.utils import distance
 from application.forms.main_forms import ContactForm
 from application.utils import send_contact_email
@@ -13,7 +13,6 @@ import numpy as np
 # ROUTES
 # /
 # /home
-# /request_account
 # /db
 
 @app.route("/", methods=['GET', 'POST'])
@@ -42,12 +41,6 @@ def home():
         return redirect(url_for('home'))
 
     return render_template('home.html', form=form, address=session['ADDRESS'])
-
-
-@app.route("/request_account")
-def request_account():
-    return render_template("request_account.html")
-
 
 @app.route("/db", methods=['POST', 'DELETE'])
 def query_db():

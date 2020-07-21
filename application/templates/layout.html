@@ -47,21 +47,11 @@
                 <div class="navbar-nav">
                     <a class="nav-item nav-link" href="{{ url_for('hospitals') }}">Hospitals</a>
                     <a class="nav-item nav-link" href="{{ url_for('testing_centers') }}">Testing Centers</a>
-                    <a class="nav-item nav-link" href="{{ url_for('home', _anchor='about') }}">About</a>
-                    <a class="nav-item nav-link" href="{{ url_for('home', _anchor='contact') }}">Contact Us</a>
                 </div>
                 <!-- Navbar Right Side -->
                 <div class="navbar-nav ml-auto">
-                    {% if current_user.is_authenticated %}
-                    {% if current_user.user_type != "Government" %}
-                    <a class="nav-item nav-link" href="{{ url_for('data_input') }}">Input Data</a>
-                    {% endif %}
-                    <a class="nav-item nav-link" href="{{ url_for('account') }}">Account</a>
-                    <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
-                    {% else %}
-                    <a class="nav-item nav-link" href="{{ url_for('request_account') }}">Request Account</a>
-                    <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
-                    {% endif %}
+                    <a class="nav-item nav-link" href="{{ url_for('home', _anchor='about') }}">About</a>
+                    <a class="nav-item nav-link" href="{{ url_for('home', _anchor='contact') }}">Contact Us</a>
                 </div>
             </div>
         </nav>
