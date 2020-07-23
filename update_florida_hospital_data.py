@@ -36,6 +36,8 @@ for i, hospital in enumerate(hospitals):
         hospital = db.session.query(Hospital).filter(Hospital.name.like("%" + hospital + "%")).first()
     else:
         continue
+    if hospital.state != "FL":
+        continue
 
     count += 1
     if hospital.data is None:

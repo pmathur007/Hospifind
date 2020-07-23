@@ -4,6 +4,7 @@ import pandas as pd
 import os
 import time
 import random
+from string import * 
 
 db.drop_all()
 db.create_all()
@@ -15,7 +16,7 @@ data = data.dropna(how='any')
 
 count = 1
 for i, row in data.iterrows():
-    hospital = Hospital(name=row[0].title(), address=row[1].title(), state=row[2], county=row[9].title(), latitude=row[10], longitude=row[11], data=None)
+    hospital = Hospital(name=row[0].title(), address=capwords(row[1]) + ", " + row[2].title() + ", " + row[3], state=row[3], county=row[9].title(), latitude=row[10], longitude=row[11], data=None)
     db.session.add(hospital)
     count += 1
 

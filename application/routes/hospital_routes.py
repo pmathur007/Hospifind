@@ -95,11 +95,13 @@ def hospitals():
     if len(data_hospitals) != 0:
         for hospital in data_hospitals:
             hospital = Hospital.query.get(hospital)
-            data = json.loads(hospital.data); data = data[max(data, key=float)]
-            rating = (data['Beds Available Percent'] + 0.3 * data['Adult ICUs Available Percent'])/10 + 0.02 * data['Beds Available']
-            session['SPECIFIC_DATA'][str(hospital.id)] = [data['Bed Capacity'], data['Beds Available'], data['Beds Available Percent'], data['Adult ICUs Available'], data['Adult ICUs Available Percent']]
-            results[hospital] = rating
-
+            if hospital.state == "FL":
+                data = json.loads(hospital.data); data = data[max(data, key=float)]
+                rating = (data['Beds Available Percent'] + 0.3 * data['Adult ICUs Available Percent'])/10 + 0.02 * data['Beds Available']
+                session['SPECIFIC_DATA'][str(hospital.id)] = [data['Bed Capacity'], data['Beds Available'], data['Beds Available Percent'], data['Adult ICUs Available'], data['Adult ICUs Available Percent']]
+                results[hospital] = rating
+            else:
+                results[hospital] = None
         print(results.items())
         results = sorted(results.items(), reverse=True, key=lambda info: info[1] - 0.1 * session['TIMES'][str(info[0].id)])
         results = {hospital[0]: hospital[1] for hospital in results}
