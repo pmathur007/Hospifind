@@ -138,7 +138,7 @@ def hospitals():
     # print(results)
     time = float(max(json.loads(Hospital.query.get(2706).data), key=float))
     last_updated = datetime.fromtimestamp(time/1000.0)
-    last_updated = last_updated.strftime('%H:%M, %m/%d')
+    last_updated = last_updated.strftime('%H:%M EST, %m/%d')
     
     return render_template('hospitals.html', random=False, results=results, no_hospitals=no_hospitals, header="time & rating", address=session['ADDRESS'],  map_list=map_list, length=session['LENGTH'], original_length=session['ORIGINAL_LENGTH'], last_updated=last_updated, api_key=app.config['GOOGLE_MAPS_API_KEY_FRONTEND'])
 
@@ -240,6 +240,6 @@ def hospitals_address():
     # print(results)
     time = float(max(json.loads(Hospital.query.get(2706).data), key=float))
     last_updated = datetime.fromtimestamp(time/1000.0)
-    last_updated = last_updated.strftime('%H:%M, %m/%d')
+    last_updated = last_updated.strftime('%H:%M EST, %m/%d')
 
     return render_template('hospitals.html', random=True, results=results, no_hospitals=no_hospitals, header="time & rating", address=address,  map_list=map_list, length=length, original_length=original_length, last_updated=last_updated, api_key=app.config['GOOGLE_MAPS_API_KEY_FRONTEND'])
