@@ -3,7 +3,7 @@ import geocoder
 data = []
 f = open("C:\\Users\\Ron\\Hospifind\\data\\florida_addresses.txt", "r")
 for address in f.readlines():
-    g = geocoder.google(address, sensor=False, api_key="AIzaSyB3iTyWPBM6p0-aFYFov8d0HRtFtN1cnL8")
+    g = geocoder.google(address, sensor=False, api_key="")
     print(g.status)
     if g.ok and g.latlng is not None:
         lat, long = g.latlng
