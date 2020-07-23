@@ -35,6 +35,11 @@ class TestingCenter(db.Model):
 
     hours = db.Column(db.JSON, nullable=False)
     # day of week: [hours]
+    # {
+    #   "Monday": {
+    #           "Open": "9:00 AM" <-- DateTime Object
+    #           "Close": "5:00 PM"
+    # }
 
     walkUp = db.Column(db.Boolean, nullable=True)
     referral = db.Column(db.Boolean, nullable=True)
@@ -44,9 +49,15 @@ class TestingCenter(db.Model):
     data = db.Column(db.JSON, nullable=True)
     # [{wait time, time submitted, submission_ip}]
 
+    def __repr__(self):
+        return "TestingCenter('" + str(self.id) + "', '" + self.name + "', '" + self.state + "')"
+
 class Submission(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     ip = db.Column(db.String, nullable=False)
     submission_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     testing_center_name = db.Column(db.String, nullable=False)
+
+    def __repr__(self):
+        return "Submission('" + str(self.id) + "', '" + self.ip + "', '" + self.testing_center_name + "')"
