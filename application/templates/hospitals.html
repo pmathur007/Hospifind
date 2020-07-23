@@ -6,25 +6,49 @@
 
 {% block content %}
 <section id="hospital_map">
-    <h2>Hospitals</h2>
-    <p style="text-align: center;"><strong>If your condition is serious, leave this site and call 911</strong></p>
-    {% if no_hospitals %}
-        <p style="text-align: center;">
-            We don't have capacity data for the hospitals in your area, but don't worry, we'll be there soon!<br>
-            If you work at a hospital, testing center, or government and can help us reach your area, contact us <a href={{ url_for('home', _anchor='contact') }}>here</a>.
-        </p>
-    {% elif original_length > 15 %}
-        <p style="text-align: center;">
-            We found <strong>{{original_length}}</strong> hospitals in your area and selected the
-            <strong>{{ length }}</strong> nearest for display, sorted by {{ header }}.
-        </p>
+    {% if not random %}
+        <h2>Hospitals</h2>
     {% else %}
-        <h5 style="text-align: center;">
-            We found <strong>{{ length }}</strong> hospitals matching our distance
-            criteria.
-        </h5>
+        <h2>Hospitals - Random FL Location</h2>
     {% endif %}
-    <p style="text-align: center;"><small>Your Location: {{ address }}. If this is incorrect, please <a href="{{ url_for('input_location') }}">Enter your location</a>.</small></p>
+    <p style="text-align: center;"><strong>If your condition is serious, leave this site and call 911</strong></p>
+    {% if not random %}
+        {% if no_hospitals %}
+            <p style="text-align: center;">
+                We don't have capacity data for the hospitals in your area, but don't worry, we'll be there soon!<br>
+                If you work at a hospital, testing center, or government and can help us reach your area, contact us <a href={{ url_for('home', _anchor='contact') }}>here</a>.
+            </p>
+        {% elif original_length > 15 %}
+            <p style="text-align: center;">
+                We found <strong>{{original_length}}</strong> hospitals in your area and selected the
+                <strong>{{ length }}</strong> nearest for display, sorted by {{ header }}.
+            </p>
+        {% else %}
+            <h5 style="text-align: center;">
+                We found <strong>{{ length }}</strong> hospitals matching our distance
+                criteria.
+            </h5>
+        {% endif %}
+        <p style="text-align: center;"><small>Your Location: {{ address }}. If this is incorrect, please <a href="{{ url_for('input_location') }}">Enter your location</a>.</small></p>
+    {% else %}
+        <p style="text-align: center;">Your Random Florida Location: {{ address }}.</small></p>
+        {% if no_hospitals %}
+            <p style="text-align: center;">
+                We don't have capacity data for the hospitals in this area, but don't worry, we'll be there soon!<br>
+                If you work at a hospital, testing center, or government and can help us reach this area, contact us <a href={{ url_for('home', _anchor='contact') }}>here</a>.
+            </p>
+        {% elif original_length > 15 %}
+            <p style="text-align: center;">
+                We found <strong>{{original_length}}</strong> hospitals in this area and selected the
+                <strong>{{ length }}</strong> nearest for display, sorted by {{ header }}.
+            </p>
+        {% else %}
+            <h5 style="text-align: center;">
+                We found <strong>{{ length }}</strong> hospitals matching our distance
+                criteria.
+            </h5>
+        {% endif %}
+    {% endif %}
     <!-- <p class="mb-2" style="text-align: center;">
         *Note: Ratings are based on hospital data only.
     </p> -->

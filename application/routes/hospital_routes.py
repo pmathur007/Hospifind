@@ -11,6 +11,7 @@ from application.utils import distance
 import geocoder
 import json
 import operator
+import random
 
 # ROUTES 
 
@@ -97,15 +98,13 @@ def hospitals():
             hospital = Hospital.query.get(hospital)
             if hospital.state == "FL":
                 data = json.loads(hospital.data); data = data[max(data, key=float)]
-                rating = (data['Beds Available Percent'] + 0.3 * data['Adult ICUs Available Percent'])/10 + 0.02 * data['Beds Available']
+                rating = data['Beds Available Percent']/15 + data['Adult ICUs Available Percent']/45 + data['Beds Available']/25
                 session['SPECIFIC_DATA'][str(hospital.id)] = [data['Bed Capacity'], data['Beds Available'], data['Beds Available Percent'], data['Adult ICUs Available'], data['Adult ICUs Available Percent']]
                 results[hospital] = rating
             else:
                 results[hospital] = None
-        print(results.items())
         results = sorted(results.items(), reverse=True, key=lambda info: info[1] - 0.1 * session['TIMES'][str(info[0].id)])
         results = {hospital[0]: hospital[1] for hospital in results}
-        print(results)
     else:
         no_hospitals = True
 
@@ -131,7 +130,7 @@ def hospitals():
         ratings[hospital] = rating
 
     map_list = [(session['ADDRESS'], session['LATITUDE'], session['LONGITUDE'])]
-    
+
     results = [(hospitals[i], ratings[hospitals[i]], session['DISTANCE_STRINGS'][str(hospitals[i].id)], session['TIME_STRINGS'][str(hospitals[i].id)], session['SPECIFIC_DATA'][str(hospitals[i].id)]) for i in range(len(hospitals))]
     for i in range(len(results)):
         map_list.append((results[i][0].name, results[i][0].address, results[i][0].latitude, results[i][0].longitude, results[i][1]))
@@ -141,4 +140,106 @@ def hospitals():
     last_updated = datetime.fromtimestamp(time/1000.0)
     last_updated = last_updated.strftime('%H:%M, %m/%d')
     
-    return render_template('hospitals.html', results=results, no_hospitals=no_hospitals, header="time & rating", address=session['ADDRESS'],  map_list=map_list, length=session['LENGTH'], original_length=session['ORIGINAL_LENGTH'], last_updated=last_updated, api_key=app.config['GOOGLE_MAPS_API_KEY_FRONTEND'])
+    return render_template('hospitals.html', random=False, results=results, no_hospitals=no_hospitals, header="time & rating", address=session['ADDRESS'],  map_list=map_list, length=session['LENGTH'], original_length=session['ORIGINAL_LENGTH'], last_updated=last_updated, api_key=app.config['GOOGLE_MAPS_API_KEY_FRONTEND'])
+
+@app.route("/hospitals/random", methods=["GET"])
+def hospitals_address():
+    addresses = [('323 Applegate Court, Miami, FL, USA 33135', 25.76193, -80.221183)]
+    address, latitude, longitude = random.choice(addresses)
+
+    hospital_list = Hospital.query.all()
+    hospital_list = [x for x in hospital_list if distance(latitude, longitude, x.latitude, x.longitude) < 60]
+    hospital_list.sort(key=lambda x: distance(latitude, longitude, x.latitude, x.longitude))
+    original_length = len(hospital_list)
+    if len(hospital_list) > 15:
+        hospital_list = hospital_list[:15]
+    length = len(hospital_list)
+    hospitals = [hospital.id for hospital in hospital_list]
+    data = [hospital.data for hospital in hospital_list]
+
+    info = app.config['GOOGLE_MAPS'].distance_matrix(address, [hospital.address for hospital in hospital_list], mode="driving", units="imperial")
+    distances = {}
+    times = {}
+    distance_strings = {}
+    time_strings = {}
+    # print(info)
+    for i in range(len(info['rows'][0]['elements'])):
+        if info['rows'][0]['elements'][i]['status'] == 'OK':
+            distances[str(hospitals[i])] = float(info['rows'][0]['elements'][i]['distance']['text'].replace(",", "").split(" ")[0])
+
+            arr = info['rows'][0]['elements'][i]['duration']['text'].replace(",", "").split(" ")
+            if len(arr) == 2:
+                time = float(arr[0])
+            elif len(arr) == 4 and arr[1].strip()[0:4] == "hour":
+                time = float(arr[0]) * 60 + float(arr[2])
+            elif len(arr) == 4 and arr[1].strip()[0:3] == "day":
+                time = float(arr[0]) * 1440 + float(arr[2]) * 60
+            times[str(hospitals[i])] = time
+
+            distance_strings[str(hospitals[i])] = info['rows'][0]['elements'][i]['distance']['text']
+            time_strings[str(hospitals[i])] = info['rows'][0]['elements'][i]['duration']['text']
+        else:
+            distances[str(hospitals[i])] = 99999
+            times[str(hospitals[i])] = 99999
+            distance_strings[str(hospitals[i])] = 'Error'
+            time_strings[str(hospitals[i])] = 'Error'
+
+    # print(session['HOSPITALS'], session['DATA'], sep="\n")
+
+    no_data_hospitals = [hospitals[i] for i in range(len(hospitals)) if data[i] is None]
+    data_hospitals = [hospitals[i] for i in range(len(hospitals)) if data[i] is not None]
+
+    no_hospitals = False
+
+    specific_data = dict()
+    results = dict()
+    if len(data_hospitals) != 0:
+        for hospital in data_hospitals:
+            hospital = Hospital.query.get(hospital)
+            if hospital.state == "FL":
+                data = json.loads(hospital.data); data = data[max(data, key=float)]
+                rating = data['Beds Available Percent']/15 + data['Adult ICUs Available Percent']/45 + data['Beds Available']/25
+                specific_data[str(hospital.id)] = [data['Bed Capacity'], data['Beds Available'], data['Beds Available Percent'], data['Adult ICUs Available'], data['Adult ICUs Available Percent']]
+                results[hospital] = rating
+            else:
+                results[hospital] = None
+        print(results.items())
+        results = sorted(results.items(), reverse=True, key=lambda info: info[1] - 0.1 * times[str(info[0].id)])
+        results = {hospital[0]: hospital[1] for hospital in results}
+        print(results)
+    else:
+        no_hospitals = True
+
+    for hospital in no_data_hospitals:
+        specific_data[str(hospital)] = None
+        results[Hospital.query.get(hospital)] = None
+
+    hospitals = []
+    ratings = {}
+    for hospital in results:
+        hospitals.append(hospital)
+        rating = results[hospital]
+        if rating is None:
+            rating = "No Data"
+        elif rating > 7.5:
+            rating = "Great"
+        elif rating > 5:
+            rating = "Good"
+        elif rating > 2.5:
+            rating = "OK"
+        else:
+            rating = "Low Availability"
+        ratings[hospital] = rating
+
+    map_list = [(address, latitude, longitude)]
+
+    results = [(hospitals[i], ratings[hospitals[i]], distance_strings[str(hospitals[i].id)], time_strings[str(hospitals[i].id)], specific_data[str(hospitals[i].id)]) for i in range(len(hospitals))]
+    for i in range(len(results)):
+        map_list.append((results[i][0].name, results[i][0].address, results[i][0].latitude, results[i][0].longitude, results[i][1]))
+    # print(map_list)
+    # print(results)
+    time = float(max(json.loads(Hospital.query.get(2706).data), key=float))
+    last_updated = datetime.fromtimestamp(time/1000.0)
+    last_updated = last_updated.strftime('%H:%M, %m/%d')
+
+    return render_template('hospitals.html', random=True, results=results, no_hospitals=no_hospitals, header="time & rating", address=address,  map_list=map_list, length=length, original_length=original_length, last_updated=last_updated, api_key=app.config['GOOGLE_MAPS_API_KEY_FRONTEND'])

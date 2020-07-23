@@ -33,6 +33,7 @@ chrome_options = webdriver.ChromeOptions()
 driver = webdriver.Chrome(executable_path='C:\\Users\\Ron\\GMUInternship\\FitbitAnalysis\\Scripts\\chromedriver.exe', options=chrome_options) # service_args=['--verbose', '--log-path=/tmp/chromedriver.log'])
 
 driver.get(beds)
+
 press_button(driver, 'id', 'download-ToolbarButton')
 press_button(driver, 'text', 'Crosstab')
 # print("TITLE: ", driver.title, sep="")
