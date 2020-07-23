@@ -6,8 +6,11 @@ from application.models import Hospital
 from application.forms.hospital_forms import ResetPasswordForm, HospitalRegistrationForm, LoginForm, DataForm, UpdateAccountForm, HospitalRequestAccountForm, RequestPasswordResetForm
 from datetime import datetime
 from application.utils import send_hospital_request_email, send_password_reset_email
-import geocoder
 from application.utils import distance
+
+import geocoder
+import json
+import operator
 
 # ROUTES 
 
@@ -35,6 +38,7 @@ def hospitals():
     if 'ADDRESS' not in session:
         update_address()
     
+    session['UPDATE_NEEDED'] = True
     if session['UPDATE_NEEDED'] or ('HOSPITALS' not in session or 'DATA' not in session or 'DISTANCES' not in session or 'TIMES' not in session):
         session['UPDATE_NEEDED'] = False
         hospitals = Hospital.query.all()
@@ -82,15 +86,24 @@ def hospitals():
     # print(session['HOSPITALS'], session['DATA'], sep="\n")
 
     no_data_hospitals = [session['HOSPITALS'][i] for i in range(len(session['HOSPITALS'])) if session['DATA'][i] is None]
-    data_hospitals = [session['DATA'][i] for i in range(len(session['HOSPITALS'])) if session['DATA'][i] is not None]
+    data_hospitals = [session['HOSPITALS'][i] for i in range(len(session['HOSPITALS'])) if session['DATA'][i] is not None]
 
     no_hospitals = False
-
+    
+    results = dict()
     if len(data_hospitals) != 0:
-        results = {data_hospital: 0 for data_hospital in data_hospitals}
+        for hospital in data_hospitals:
+            hospital = Hospital.query.get(hospital)
+            data = json.loads(hospital.data); data = data[max(data, key=float)]
+            rating = data['Beds Available Percent']/5
+            results[hospital] = rating
+
+        results = sorted(results.items(), reverse=True, key=operator.itemgetter(1))
+        results = {hospital[0]: hospital[1] for hospital in results}
+        print(results)
     else:
-        results = dict()
         no_hospitals = True
+
     for hospital in no_data_hospitals:
         results[Hospital.query.get(hospital)] = None
 
@@ -113,21 +126,13 @@ def hospitals():
 
     map_list = [(session['ADDRESS'], session['LATITUDE'], session['LONGITUDE'])]
     
-    if no_hospitals:
-        results_with_dist = {}
-    else:
-        results_with_dist = {data_hospital: "No Data" for data_hospital in data_hospitals}
-    for hospital in no_data_hospitals:
-        results_with_dist[Hospital.query.get(hospital)] = "No Data"
-    # print(results_with_dist)
-    hospitals = []
-    new_ratings = []
-    for hospital in results_with_dist:
-        hospitals.append(hospital)
-        new_ratings.append(ratings[hospital])
-    results = [(hospitals[i], new_ratings[i], session['DISTANCE_STRINGS'][str(hospitals[i].id)], session['TIME_STRINGS'][str(hospitals[i].id)]) for i in range(len(hospitals))]
+    results = [(hospitals[i], ratings[hospitals[i]], session['DISTANCE_STRINGS'][str(hospitals[i].id)], session['TIME_STRINGS'][str(hospitals[i].id)]) for i in range(len(hospitals))]
     for i in range(len(results)):
         map_list.append((results[i][0].name, results[i][0].address, results[i][0].latitude, results[i][0].longitude, results[i][1]))
     # print(map_list)
     # print(results)
-    return render_template('hospitals.html', results=results, no_hospitals=no_hospitals, header="time & rating", address=session['ADDRESS'],  map_list=map_list, length=session['LENGTH'], original_length=session['ORIGINAL_LENGTH'], api_key=app.config['GOOGLE_MAPS_API_KEY_FRONTEND'])
+    time = float(max(json.loads(Hospital.query.get(2706).data), key=float))
+    last_updated = datetime.fromtimestamp(time/1000.0)
+    last_updated = last_updated.strftime('%H:%M, %m/%d')
+    
+    return render_template('hospitals.html', results=results, no_hospitals=no_hospitals, header="time & rating", address=session['ADDRESS'],  map_list=map_list, length=session['LENGTH'], original_length=session['ORIGINAL_LENGTH'], last_updated=last_updated, api_key=app.config['GOOGLE_MAPS_API_KEY_FRONTEND'])
