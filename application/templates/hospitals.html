@@ -32,7 +32,7 @@
     <div class="row">
         <div id="map" class="col-lg-6"></div>
         <div id="hospital_results" class="col-lg-6">
-            {% for hospital, rating, distance, time in results %}
+            {% for hospital, rating, distance, time, data in results %}
             <div class="hospital_result 
                 {% if rating == 'Great' %}
                     green-top
@@ -64,6 +64,11 @@
                     <p style="color: grey;">{{ rating }}</p>
                     {% endif %}
                 </div>
+                {% if rating != 'No Data' %}
+                    <!-- <p>Total Bed Capacity: <strong>{{ data[0] }}</strong></p> -->
+                    <p>Beds Available: <strong>{{ data[1] }} ({{ data[2] }}%)</strong></p>
+                    <p>Adult ICUs Available: <strong>{{ data[3] }} ({{ data[4] }}%)</strong></p>
+                {% endif %}
             </div>
             {% endfor %}
         </div>

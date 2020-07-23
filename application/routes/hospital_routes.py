@@ -90,21 +90,25 @@ def hospitals():
 
     no_hospitals = False
     
+    session['SPECIFIC_DATA'] = dict()
     results = dict()
     if len(data_hospitals) != 0:
         for hospital in data_hospitals:
             hospital = Hospital.query.get(hospital)
             data = json.loads(hospital.data); data = data[max(data, key=float)]
-            rating = data['Beds Available Percent']/5
+            rating = (data['Beds Available Percent'] + 0.3 * data['Adult ICUs Available Percent'])/10 + 0.02 * data['Beds Available']
+            session['SPECIFIC_DATA'][str(hospital.id)] = [data['Bed Capacity'], data['Beds Available'], data['Beds Available Percent'], data['Adult ICUs Available'], data['Adult ICUs Available Percent']]
             results[hospital] = rating
 
-        results = sorted(results.items(), reverse=True, key=operator.itemgetter(1))
+        print(results.items())
+        results = sorted(results.items(), reverse=True, key=lambda info: info[1] - 0.1 * session['TIMES'][str(info[0].id)])
         results = {hospital[0]: hospital[1] for hospital in results}
         print(results)
     else:
         no_hospitals = True
 
     for hospital in no_data_hospitals:
+        session['SPECIFIC_DATA'][str(hospital)] = None
         results[Hospital.query.get(hospital)] = None
 
     hospitals = []
@@ -114,11 +118,11 @@ def hospitals():
         rating = results[hospital]
         if rating is None:
             rating = "No Data"
-        elif rating > 8:
+        elif rating > 7.5:
             rating = "Great"
         elif rating > 5:
             rating = "Good"
-        elif rating > 1:
+        elif rating > 2.5:
             rating = "OK"
         else:
             rating = "Low Availability"
@@ -126,7 +130,7 @@ def hospitals():
 
     map_list = [(session['ADDRESS'], session['LATITUDE'], session['LONGITUDE'])]
     
-    results = [(hospitals[i], ratings[hospitals[i]], session['DISTANCE_STRINGS'][str(hospitals[i].id)], session['TIME_STRINGS'][str(hospitals[i].id)]) for i in range(len(hospitals))]
+    results = [(hospitals[i], ratings[hospitals[i]], session['DISTANCE_STRINGS'][str(hospitals[i].id)], session['TIME_STRINGS'][str(hospitals[i].id)], session['SPECIFIC_DATA'][str(hospitals[i].id)]) for i in range(len(hospitals))]
     for i in range(len(results)):
         map_list.append((results[i][0].name, results[i][0].address, results[i][0].latitude, results[i][0].longitude, results[i][1]))
     # print(map_list)
