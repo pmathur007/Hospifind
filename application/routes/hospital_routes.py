@@ -143,7 +143,7 @@ def hospitals():
     return render_template('hospitals.html', random=False, results=results, no_hospitals=no_hospitals, header="time & rating", address=session['ADDRESS'],  map_list=map_list, length=session['LENGTH'], original_length=session['ORIGINAL_LENGTH'], last_updated=last_updated, api_key=app.config['GOOGLE_MAPS_API_KEY_FRONTEND'])
 
 @app.route("/hospitals/random", methods=["GET"])
-def hospitals_address():
+def hospitals_random():
     addresses = [('323 Applegate Court, Miami, FL, USA 33135', 25.76193, -80.221183)]
     address, latitude, longitude = random.choice(addresses)
 

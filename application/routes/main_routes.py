@@ -28,6 +28,7 @@ def home():
             session['COUNTRY'] = g.country
             latlng = g.latlng
         else:
+            session['STATE'] = "VA"
             session['ADDRESS'] = "6560 Braddock Rd, Alexandria, VA 22312"
             latlng = [38.819, -77.169]
         session['LATITUDE'] = latlng[0]
@@ -40,7 +41,7 @@ def home():
         flash('Your contact email has been sent to the Hospifind team!', 'success')
         return redirect(url_for('home'))
 
-    return render_template('home.html', form=form, address=session['ADDRESS'])
+    return render_template('home.html', form=form, state=session["STATE"], address=session['ADDRESS'])
 
 @app.route("/db", methods=['POST', 'DELETE'])
 def query_db():

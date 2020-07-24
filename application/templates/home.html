@@ -29,8 +29,9 @@
         <a href="{{ url_for('hospitals') }}" class="btn-light btn-wide">Find a Hospital</a>
         <a href="{{ url_for('testing_centers') }}" class="btn-light btn-wide">Find a COVID-19 Testing Center</a>
         <p><small>Your Location: {{ address }}. If this is incorrect, please <a href="{{ url_for('input_location') }}">Enter your location</a>.</small></p>
-        <p>Note: Currently, all hospital data and calculated ratings are <strong>SIMULATED</strong>. Do not use this application when seeking urgent treatment.<p>
-	<h5>Functionality for the state of <strong>Florida</strong> is coming very soon!</h5>
+        {% if state != "FL" %}
+            <p>Hospifind is currently only available in <strong>Florida</strong><br>Want a preview of how the app works? Click <a style="color: white; text-decoration: underline;" href="{{ url_for('hospitals_random') }}">here</a>.</p>
+        {% endif %}
     </div>
     <!-- <script type='text/javascript' src='https://bi.ahca.myflorida.com/javascripts/api/viz_v1.js'></script><div class='tableauPlaceholder' style='width: 1000px; height: 850px;'><object class='tableauViz' width='1000' height='850' style='display:none;'><param name='host_url' value='https%3A%2F%2Fbi.ahca.myflorida.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='&#47;t&#47;ABICC' /><param name='name' value='Public&#47;ICUBedsHospital' /><param name='tabs' value='yes' /><param name='toolbar' value='yes' /><param name='isGuestRedirectFromVizportal' value='y' /></object></div> -->
 </section>
