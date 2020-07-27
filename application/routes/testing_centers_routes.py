@@ -64,7 +64,8 @@ def testing_centers():
                 session['TESTING_CENTER_DISTANCE_STRINGS'].append('Error')
                 session['TESTING_CENTER_TIME_STRINGS'].append('Error')
 
-    return render_template('testing_centers.html', testing_centers=session['TESTING_CENTERS'], distances=session['TESTING_CENTER_DISTANCES'], times=session['TESTING_CENTER_TIMES'], distance_strings=session['TESTING_CENTER_DISTANCE_STRINGS'], time_strings=session['TESTING_CENTER_TIME_STRINGS'], map_list=session['TESTING_CENTERS_MAP_LIST'])
+    testing_centers = [TestingCenter.query.get(i) for i in session['TESTING_CENTERS']]
+    return render_template('testing_centers.html', address=session['ADDRESS'], testing_centers=testing_centers, distances=session['TESTING_CENTER_DISTANCES'], times=session['TESTING_CENTER_TIMES'], distance_strings=session['TESTING_CENTER_DISTANCE_STRINGS'], time_strings=session['TESTING_CENTER_TIME_STRINGS'], map_list=session['TESTING_CENTERS_MAP_LIST'], api_key=app.config['GOOGLE_MAPS_API_KEY_FRONTEND'])
 
 @app.route('/testing_centers/report_wait_time/<int:id>/<int:report>')
 def wait_time_submission(id, report):
