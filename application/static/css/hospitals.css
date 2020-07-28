@@ -1,12 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Ubuntu&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Muli&display=swap");
-p {
-  padding: 0%;
-}
-
 #hospital_map {
   padding: 5%;
-  padding-top: 1%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -49,26 +44,6 @@ p {
 .hospital_result div a {
   width: 35%;
   padding: 10px 0;
-}
-
-.green-top {
-  border-top: 6px solid #00ff00;
-}
-
-.orange-top {
-  border-top: 6px solid #ff8800;
-}
-
-.yellow-top {
-  border-top: 6px solid #ffff00;
-}
-
-.red-top {
-  border-top: 6px solid #ff0000;
-}
-
-.grey-top {
-  border-top: 6px solid grey;
 }
 
 /*# sourceMappingURL=hospitals.css.map */
