@@ -18,7 +18,7 @@ print(data.shape)
 count = 1
 for i, row in data.iterrows():
     address = capwords(row[1]) + ", " + row[2].title() + ", " + row[4]
-    g = geocoder.google(address, key='AIzaSyB3iTyWPBM6p0-aFYFov8d0HRtFtN1cnL8')
+    g = geocoder.google(address, key='')
     # print(g.url)
     if g.ok:
         lat, long = g.latlng
