@@ -3,10 +3,12 @@ function TCList(props) {
         <div id="tc_results">
             {props.data.map((d, i) => {
                 return (
-                    <div key={i} className="tc_result">
+                    <div key={i} id={ d.id } className="tc_result">
                         <p>
                             <strong>{ d.name }</strong><br/>
                             { d.address }<br/>
+                            { d.distance } - {d.time}<br/>
+                            <strong>Details:</strong><br/>
                             { d.walkUp ? "Walk Up" : "Drive Thru" }<br/>
                             Referral required: { d.referral ? "Yes" : "No" }<br/>
                             Appointment required: { d.appointment ? "Yes": "No" }<br/>

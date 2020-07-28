@@ -13,7 +13,7 @@ function TCList(props) {
         props.data.map(function (d, i) {
             return React.createElement(
                 "div",
-                { key: i, className: "tc_result" },
+                { key: i, id: d.id, className: "tc_result" },
                 React.createElement(
                     "p",
                     null,
@@ -24,6 +24,16 @@ function TCList(props) {
                     ),
                     React.createElement("br", null),
                     d.address,
+                    React.createElement("br", null),
+                    d.distance,
+                    " - ",
+                    d.time,
+                    React.createElement("br", null),
+                    React.createElement(
+                        "strong",
+                        null,
+                        "Details:"
+                    ),
                     React.createElement("br", null),
                     d.walkUp ? "Walk Up" : "Drive Thru",
                     React.createElement("br", null),

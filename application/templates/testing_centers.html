@@ -31,7 +31,7 @@
         var infoWindowsArray = [];
         var originLatLng = new google.maps.LatLng({
             lat: data[0].lat,
-            lng: data[0].long
+            lng: data[0].lng
         });
         map.fitBounds(bounds.extend(originLatLng));
         var icons = [];
@@ -57,7 +57,7 @@
         for (var i = 0; i < data.length - 1; i++) {
             var myLatLng = new google.maps.LatLng({
                 lat: data[i + 1].lat,
-                lng: data[i + 1].long
+                lng: data[i + 1].lng
             });
             map.fitBounds(bounds.extend(myLatLng));
             markersArray.push(new google.maps.Marker({
@@ -70,7 +70,7 @@
                 "origin=" + data[0].address.split(",").join("%2C").split(" ").join("+") +
                 "&destination=" + data[i + 1].address.split(" ").join("+");
 
-            // document.getElementById(data[i + 1].name).innerHTML += '<a href="' + link +
+            // document.getElementById(data[i + 1].id).innerHTML += '<a href="' + link +
             //     '" target="_blank" class="btn-red col-sm-3">Directions</a>';
 
             infoWindowsArray.push(new google.maps.InfoWindow({

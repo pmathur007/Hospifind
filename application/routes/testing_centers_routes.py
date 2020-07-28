@@ -23,54 +23,54 @@ def update_address():
 
 @app.route('/testing_centers', methods=['GET'])
 def testing_centers():
-    # if 'UPDATE_NEEDED' not in session:
-    #     session['UPDATE_NEEDED'] = True
+    if 'UPDATE_NEEDED' not in session:
+        session['UPDATE_NEEDED'] = True
         
-    # if 'ADDRESS' not in session:
-    #     update_address()
-    
+    if 'ADDRESS' not in session:
+        update_address()
+
     session['UPDATE_NEEDED'] = True
     if session['UPDATE_NEEDED'] or 'TESTING_CENTERS' not in session:
         session['UPDATE_NEEDED'] = False
-        testing_centers = TestingCenter.query.all()
-        testing_centers = [x for x in testing_centers if x.latitude is not None and distance(session['LATITUDE'], session['LONGITUDE'], x.latitude, x.longitude) < 60]
+        tc_objects = [x for x in TestingCenter.query.all() if x.latitude is not None and distance(session['LATITUDE'], session['LONGITUDE'], x.latitude, x.longitude) < 60]
         session['TESTING_CENTERS'] = []
-        session['TESTING_CENTER_DISTANCES'] = []
-        session['TESTING_CENTER_TIMES'] = []
-        session['TESTING_CENTER_DISTANCE_STRINGS'] = []
-        session['TESTING_CENTER_TIME_STRINGS'] = []
-        session['TESTING_CENTER_MAP_LIST'] = []
 
-        if len(testing_centers) > 0:
-            print(testing_centers)
-            testing_centers.sort(key=lambda x: distance(session['LATITUDE'], session['LONGITUDE'], x.latitude, x.longitude))
-            session['TESTING_CENTERS'] = [testing_center.id for testing_center in testing_centers]
-            session['TESTING_CENTER_MAP_LIST'] = [[t.address, t.latitude, t.longitude] for t in testing_centers]
+        if len(tc_objects) > 0:
+            tc_objects.sort(key=lambda x: distance(session['LATITUDE'], session['LONGITUDE'], x.latitude, x.longitude))
+            info = app.config['GOOGLE_MAPS'].distance_matrix(session['ADDRESS'], [tc_object.address for tc_object in tc_objects], mode="driving", units="imperial")
 
-            info = app.config['GOOGLE_MAPS'].distance_matrix(session['ADDRESS'], [testing_center.address for testing_center in testing_centers], mode="driving", units="imperial")
+            for i in range(len(tc_objects)):
+                tc = {}
+                tc["id"] = tc_objects[i].id
+                tc["name"] = tc_objects[i].name
+                tc["address"] = tc_objects[i].address
+                tc["lat"] = tc_objects[i].latitude
+                tc["lng"] = tc_objects[i].longitude
 
-            for i in range(len(info['rows'][0]['elements'])):
                 if info['rows'][0]['elements'][i]['status'] == 'OK':
-                    session['TESTING_CENTER_DISTANCES'].append(float(info['rows'][0]['elements'][i]['distance']['text'].replace(",", "").split(" ")[0]))
+                    tc["distance_num"] = float(info['rows'][0]['elements'][i]['distance']['text'].replace(",", "").split(" ")[0])
+
                     arr = info['rows'][0]['elements'][i]['duration']['text'].replace(",", "").split(" ")
+                    time = 99999
                     if len(arr) == 2:
                         time = float(arr[0])
                     elif len(arr) == 4 and arr[1].strip()[0:4] == "hour":
                         time = float(arr[0]) * 60 + float(arr[2])
                     elif len(arr) == 4 and arr[1].strip()[0:3] == "day":
                         time = float(arr[0]) * 1440 + float(arr[2]) * 60
-                    session['TESTING_CENTER_TIMES'].append(time)
+                    tc["time_num"] = time
 
-                    session['TESTING_CENTER_DISTANCE_STRINGS'].append(info['rows'][0]['elements'][i]['distance']['text'])
-                    session['TESTING_CENTER_TIME_STRINGS'].append(info['rows'][0]['elements'][i]['duration']['text'])
+                    tc["distance"] = info['rows'][0]['elements'][i]['distance']['text']
+                    tc["time"] = info['rows'][0]['elements'][i]['duration']['text']
                 else:
-                    session['TESTING_CENTER_DISTANCES'].append(99999)
-                    session['TESTING_CENTER_TIMES'].append(99999)
-                    session['TESTING_CENTER_DISTANCE_STRINGS'].append('Error')
-                    session['TESTING_CENTER_TIME_STRINGS'].append('Error')
-
-    testing_centers = [TestingCenter.query.get(i) for i in session['TESTING_CENTERS']]
-    return render_template('testing_centers.html', address=session['ADDRESS'], testing_centers=testing_centers, distances=session['TESTING_CENTER_DISTANCES'], times=session['TESTING_CENTER_TIMES'], distance_strings=session['TESTING_CENTER_DISTANCE_STRINGS'], time_strings=session['TESTING_CENTER_TIME_STRINGS'], map_list=session['TESTING_CENTER_MAP_LIST'], api_key=app.config['GOOGLE_MAPS_API_KEY_FRONTEND'])
+                    tc["distance_num"] = 99999
+                    tc["time_num"] = 99999
+                    tc["distance"] = "Error"
+                    tc["time"] = "Error"
+                
+                session["TESTING_CENTERS"].append(tc)
+                
+    return render_template('testing_centers.html', address=session['ADDRESS'], testing_centers=session["TESTING_CENTERS"], api_key=app.config['GOOGLE_MAPS_API_KEY_FRONTEND'])
 
 @app.route('/testing_centers/report_wait_time/<int:id>/<int:report>')
 def wait_time_submission(id, report):
