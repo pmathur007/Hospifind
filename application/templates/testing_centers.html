@@ -5,10 +5,11 @@
 {% endblock page_styles %}
 
 {% block content %}
-<section id="testing_center_results">
+<section id="testing_centers_map">
     <h2>Testing Centers</h2>
-    <div id="map"></div>
-    <div id="results"></div>
+    <p style="text-align: center;"><strong>If your condition is serious, leave this site and call 911</strong></p>
+    <div id="tc_map_container"></div>
+    <div id="tc_results_container"></div>
 
     <script src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}"></script>
     <script>
@@ -19,7 +20,7 @@
             lng: 0
         });
         var bounds = new google.maps.LatLngBounds;
-        var map = new google.maps.Map(document.getElementById('map'), {
+        var map = new google.maps.Map(document.getElementById('tc_map_container'), {
             center: {
                 lat: 55.53,
                 lng: 9.4

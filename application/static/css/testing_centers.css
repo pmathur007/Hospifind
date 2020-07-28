@@ -1,10 +1,80 @@
 @import url("https://fonts.googleapis.com/css2?family=Ubuntu&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Muli&display=swap");
-#map {
+#testing_centers_map {
+  padding: 5%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#tc_map_container {
   width: 100%;
-  max-width: 1000px;
   height: 500px;
   margin: auto;
+}
+
+#tc_results_control {
+  display: flex;
+  margin: 3% auto;
+}
+
+#filterForm {
+  flex-grow: 1;
+}
+#filterForm p {
+  font-weight: bold;
+  font-size: 1.5em;
+  text-align: center;
+}
+#filterForm fieldset {
+  display: block;
+  margin: 0 2% 10px 2%;
+}
+#filterForm fieldset legend {
+  font-size: 1em;
+  font-weight: bold;
+  text-align: center;
+}
+#filterForm fieldset input {
+  display: none;
+}
+#filterForm fieldset input[type=radio]:checked + label, #filterForm fieldset input[type=checkbox]:checked + label {
+  background: #ffe6e6;
+}
+#filterForm fieldset label {
+  background-color: #f7f7f7;
+  color: #333;
+  display: block;
+  text-align: center;
+  width: 70%;
+  margin: 5px auto;
+  padding: 5px 0px;
+  -webkit-transition: background 0.5s ease-in-out;
+  -moz-transition: background 0.5s ease-in-out;
+  -ms-transition: background 0.5s ease-in-out;
+  -o-transition: background 0.5s ease-in-out;
+  transition: background 0.5s ease-in-out;
+}
+#filterForm fieldset label:hover {
+  background: #fff0f0;
+}
+#filterForm #filter_buttons {
+  display: flex;
+  text-align: center;
+  justify-content: center;
+}
+#filterForm #filter_buttons button {
+  padding: 5px 12px;
+}
+
+#tc_results {
+  flex-grow: 4;
+}
+
+.tc_result {
+  background: #f2f2f2;
+  margin: 10px 5%;
+  padding: 20px;
 }
 
 /*# sourceMappingURL=testing_centers.css.map */

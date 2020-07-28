@@ -75,6 +75,11 @@
                     {{ hospital.address }}<br />
                     {{ distance }} - {{ time }}
                 </p>
+                {% if rating != 'No Data' %}
+                    <!-- <p>Total Bed Capacity: <strong>{{ data[0] }}</strong></p> -->
+                    <p>Beds Available: <strong>{{ data[1] }} ({{ data[2] }}% capacity)</strong><br/>
+                       Adult ICUs Available: <strong>{{ data[3] }} ({{ data[4] }}% capacity)</strong></p>
+                {% endif %}
                 <div id="{{ hospital.name }}">
                     {% if rating == 'Great' %}
                     <p style="color: lime;">{{ rating }}</p>
@@ -88,11 +93,6 @@
                     <p style="color: grey;">{{ rating }}</p>
                     {% endif %}
                 </div>
-                {% if rating != 'No Data' %}
-                    <!-- <p>Total Bed Capacity: <strong>{{ data[0] }}</strong></p> -->
-                    <p>Beds Available: <strong>{{ data[1] }} ({{ data[2] }}%)</strong></p>
-                    <p>Adult ICUs Available: <strong>{{ data[3] }} ({{ data[4] }}%)</strong></p>
-                {% endif %}
             </div>
             {% endfor %}
         </div>
