@@ -39,13 +39,16 @@ if os.path.exists(beds) and os.path.exists(icus):
             continue
         if hospital.state != "FL":
             continue
-
+        
+        hospital.data = None
         count += 1
         if hospital.data is None:
             data = dict()
         else:
             data = json.loads(hospital.data)        
-        time = datetime.now(tz).timestamp() * 1000
+        time = datetime.now(tz)
+        time = time.timestamp() * 1000
+        print(time)
         data[time] = dict()
         data[time]["Bed Capacity"] = bed_capacity[i]
         data[time]["Beds Available"] = beds_available[i]
