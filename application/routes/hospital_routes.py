@@ -98,7 +98,7 @@ def hospitals():
             hospital = Hospital.query.get(hospital)
             if hospital.state == "FL":
                 data = json.loads(hospital.data); data = data[max(data, key=float)]
-                rating = data['Beds Available Percent']/15 + data['Adult ICUs Available Percent']/45 + data['Beds Available']/25
+                rating = data['Beds Available Percent']/35 + data['Adult ICUs Available Percent']/45 + data['Beds Available']/20 + data['Adult ICUs Available']/15
                 session['SPECIFIC_DATA'][str(hospital.id)] = [data['Bed Capacity'], data['Beds Available'], data['Beds Available Percent'], data['Adult ICUs Available'], data['Adult ICUs Available Percent']]
                 results[hospital] = rating
             else:
