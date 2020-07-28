@@ -23,11 +23,11 @@ def update_address():
 
 @app.route('/testing_centers', methods=['GET'])
 def testing_centers():
-    if 'UPDATE_NEEDED' not in session:
-        session['UPDATE_NEEDED'] = True
+    # if 'UPDATE_NEEDED' not in session:
+    #     session['UPDATE_NEEDED'] = True
         
-    if 'ADDRESS' not in session:
-        update_address()
+    # if 'ADDRESS' not in session:
+    #     update_address()
     
     session['UPDATE_NEEDED'] = True
     if session['UPDATE_NEEDED'] or 'TESTING_CENTERS' not in session:

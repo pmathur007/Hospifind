@@ -39,7 +39,6 @@ def hospitals():
     if 'ADDRESS' not in session:
         update_address()
     
-    session['UPDATE_NEEDED'] = True
     if session['UPDATE_NEEDED'] or ('HOSPITALS' not in session or 'DATA' not in session or 'DISTANCES' not in session or 'TIMES' not in session):
         session['UPDATE_NEEDED'] = False
         hospitals = Hospital.query.all()

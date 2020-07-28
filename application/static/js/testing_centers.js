@@ -6,78 +6,36 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-function TCTable(props) {
+function TCList(props) {
     return React.createElement(
-        "table",
-        null,
-        React.createElement(
-            "thead",
-            null,
-            React.createElement(
-                "tr",
-                null,
+        "div",
+        { id: "tc_results" },
+        props.data.map(function (d, i) {
+            return React.createElement(
+                "div",
+                { key: i, className: "tc_result" },
                 React.createElement(
-                    "th",
+                    "p",
                     null,
-                    "Name"
-                ),
-                React.createElement(
-                    "th",
-                    null,
-                    "Address"
-                ),
-                React.createElement(
-                    "th",
-                    null,
-                    "Type"
-                ),
-                React.createElement(
-                    "th",
-                    null,
-                    "Referal Required"
-                ),
-                React.createElement(
-                    "th",
-                    null,
-                    "Appointement Required"
-                )
-            )
-        ),
-        React.createElement(
-            "tbody",
-            null,
-            props.data.map(function (d, i) {
-                return React.createElement(
-                    "tr",
-                    { key: i },
                     React.createElement(
-                        "td",
+                        "strong",
                         null,
                         d.name
                     ),
-                    React.createElement(
-                        "td",
-                        null,
-                        d.address
-                    ),
-                    React.createElement(
-                        "td",
-                        null,
-                        d.walkUp ? "Walk Up" : "Drive Thru"
-                    ),
-                    React.createElement(
-                        "td",
-                        null,
-                        d.referral ? "Yes" : "No"
-                    ),
-                    React.createElement(
-                        "td",
-                        null,
-                        d.appointment ? "Yes" : "No"
-                    )
-                );
-            })
-        )
+                    React.createElement("br", null),
+                    d.address,
+                    React.createElement("br", null),
+                    d.walkUp ? "Walk Up" : "Drive Thru",
+                    React.createElement("br", null),
+                    "Referral required: ",
+                    d.referral ? "Yes" : "No",
+                    React.createElement("br", null),
+                    "Appointment required: ",
+                    d.appointment ? "Yes" : "No",
+                    React.createElement("br", null)
+                )
+            );
+        })
     );
 }
 
@@ -128,6 +86,11 @@ var FilterForm = function (_React$Component) {
                 "div",
                 { id: "filterForm" },
                 React.createElement(
+                    "p",
+                    null,
+                    "Filter Centers"
+                ),
+                React.createElement(
                     "fieldset",
                     null,
                     React.createElement(
@@ -135,32 +98,32 @@ var FilterForm = function (_React$Component) {
                         null,
                         "Type"
                     ),
+                    React.createElement("input", {
+                        id: "typeWalk",
+                        type: "radio",
+                        name: "type",
+                        checked: this.state.walkUp !== null && this.state.walkUp,
+                        onChange: function onChange() {
+                            return _this2.changeFilter("walkUp", true);
+                        }
+                    }),
                     React.createElement(
                         "label",
                         { htmlFor: "typeWalk" },
-                        React.createElement("input", {
-                            id: "typeWalk",
-                            type: "radio",
-                            name: "type",
-                            checked: this.state.walkUp !== null && this.state.walkUp,
-                            onChange: function onChange() {
-                                return _this2.changeFilter("walkUp", true);
-                            }
-                        }),
                         "Walk Up"
                     ),
+                    React.createElement("input", {
+                        id: "typeDrive",
+                        type: "radio",
+                        name: "type",
+                        checked: this.state.walkUp !== null && !this.state.walkUp,
+                        onChange: function onChange() {
+                            return _this2.changeFilter("walkUp", false);
+                        }
+                    }),
                     React.createElement(
                         "label",
                         { htmlFor: "typeDrive" },
-                        React.createElement("input", {
-                            id: "typeDrive",
-                            type: "radio",
-                            name: "type",
-                            checked: this.state.walkUp !== null && !this.state.walkUp,
-                            onChange: function onChange() {
-                                return _this2.changeFilter("walkUp", false);
-                            }
-                        }),
                         "Drive Thru"
                     )
                 ),
@@ -172,32 +135,32 @@ var FilterForm = function (_React$Component) {
                         null,
                         "Referral Required"
                     ),
+                    React.createElement("input", {
+                        id: "referralYes",
+                        type: "radio",
+                        name: "referral",
+                        checked: this.state.referral !== null && this.state.referral,
+                        onChange: function onChange() {
+                            return _this2.changeFilter("referral", true);
+                        }
+                    }),
                     React.createElement(
                         "label",
                         { htmlFor: "referralYes" },
-                        React.createElement("input", {
-                            id: "referralYes",
-                            type: "radio",
-                            name: "referral",
-                            checked: this.state.referral !== null && this.state.referral,
-                            onChange: function onChange() {
-                                return _this2.changeFilter("referral", true);
-                            }
-                        }),
                         "Yes"
                     ),
+                    React.createElement("input", {
+                        id: "referralNo",
+                        type: "radio",
+                        name: "referral",
+                        checked: this.state.referral !== null && !this.state.referral,
+                        onChange: function onChange() {
+                            return _this2.changeFilter("referral", false);
+                        }
+                    }),
                     React.createElement(
                         "label",
                         { htmlFor: "referralNo" },
-                        React.createElement("input", {
-                            id: "referralNo",
-                            type: "radio",
-                            name: "referral",
-                            checked: this.state.referral !== null && !this.state.referral,
-                            onChange: function onChange() {
-                                return _this2.changeFilter("referral", false);
-                            }
-                        }),
                         "No"
                     )
                 ),
@@ -209,46 +172,50 @@ var FilterForm = function (_React$Component) {
                         null,
                         "Appointment Required"
                     ),
+                    React.createElement("input", {
+                        id: "appointmentYes",
+                        type: "radio",
+                        name: "appointment",
+                        checked: this.state.appointment !== null && this.state.appointment,
+                        onChange: function onChange() {
+                            return _this2.changeFilter("appointment", true);
+                        }
+                    }),
                     React.createElement(
                         "label",
                         { htmlFor: "appointmentYes" },
-                        React.createElement("input", {
-                            id: "appointmentYes",
-                            type: "radio",
-                            name: "appointment",
-                            checked: this.state.appointment !== null && this.state.appointment,
-                            onChange: function onChange() {
-                                return _this2.changeFilter("appointment", true);
-                            }
-                        }),
                         "Yes"
                     ),
+                    React.createElement("input", {
+                        id: "appointmentNo",
+                        type: "radio",
+                        name: "appointment",
+                        checked: this.state.appointment !== null && !this.state.appointment,
+                        onChange: function onChange() {
+                            return _this2.changeFilter("appointment", false);
+                        }
+                    }),
                     React.createElement(
                         "label",
                         { htmlFor: "appointmentNo" },
-                        React.createElement("input", {
-                            id: "appointmentNo",
-                            type: "radio",
-                            name: "appointment",
-                            checked: this.state.appointment !== null && !this.state.appointment,
-                            onChange: function onChange() {
-                                return _this2.changeFilter("appointment", false);
-                            }
-                        }),
                         "No"
                     )
                 ),
                 React.createElement(
-                    "button",
-                    { onClick: function onClick() {
-                            return _this2.props.applyFilters(_this2.state);
-                        } },
-                    "Apply Filters"
-                ),
-                React.createElement(
-                    "button",
-                    { onClick: this.clearFilters },
-                    "Clear Filters"
+                    "div",
+                    { id: "filter_buttons" },
+                    React.createElement(
+                        "button",
+                        { className: "btn-light", onClick: function onClick() {
+                                return _this2.props.applyFilters(_this2.state);
+                            } },
+                        "Apply Filters"
+                    ),
+                    React.createElement(
+                        "button",
+                        { className: "btn-light", onClick: this.clearFilters },
+                        "Clear Filters"
+                    )
                 )
             );
         }
@@ -284,7 +251,6 @@ var FilteredTestCenters = function (_React$Component2) {
         value: function applyFilters(filters) {
             var filteredData = this.state.data;
             filteredData = filteredData.filter(function (d) {
-                console.log(d);
                 var keep = true;
                 keep &= filters.walkUp === null || d.walkUp == filters.walkUp;
                 keep &= filters.referral === null || d.referral == filters.referral;
@@ -301,9 +267,9 @@ var FilteredTestCenters = function (_React$Component2) {
         value: function render() {
             return React.createElement(
                 "div",
-                null,
+                { id: "tc_results_control" },
                 React.createElement(FilterForm, { clearFilters: this.clearFilters, applyFilters: this.applyFilters }),
-                React.createElement(TCTable, { data: this.state.filteredData })
+                React.createElement(TCList, { data: this.state.filteredData })
             );
         }
     }]);
@@ -312,5 +278,5 @@ var FilteredTestCenters = function (_React$Component2) {
 }(React.Component);
 
 function loadTestingCenters(data) {
-    ReactDOM.render(React.createElement(FilteredTestCenters, { data: data }), document.getElementById("results"));
+    ReactDOM.render(React.createElement(FilteredTestCenters, { data: data }), document.getElementById("tc_results_container"));
 }

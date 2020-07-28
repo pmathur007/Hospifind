@@ -1,29 +1,20 @@
-function TCTable(props) {
+function TCList(props) {
     return (
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Address</th>
-                    <th>Type</th>
-                    <th>Referal Required</th>
-                    <th>Appointement Required</th>
-                </tr>
-            </thead>
-            <tbody>
+        <div id="tc_results">
             {props.data.map((d, i) => {
                 return (
-                    <tr key={i}>
-                        <td>{ d.name }</td>
-                        <td>{ d.address }</td>
-                        <td>{ d.walkUp ? "Walk Up" : "Drive Thru" }</td>
-                        <td>{ d.referral ? "Yes" : "No" }</td>
-                        <td>{ d.appointment ? "Yes": "No" }</td>
-                    </tr>
+                    <div key={i} className="tc_result">
+                        <p>
+                            <strong>{ d.name }</strong><br/>
+                            { d.address }<br/>
+                            { d.walkUp ? "Walk Up" : "Drive Thru" }<br/>
+                            Referral required: { d.referral ? "Yes" : "No" }<br/>
+                            Appointment required: { d.appointment ? "Yes": "No" }<br/>
+                        </p>
+                    </div>
                 );
             })}
-            </tbody>
-        </table>
+        </div>
     );
 }
 
@@ -60,71 +51,68 @@ class FilterForm extends React.Component {
     render() {
         return (
             <div id="filterForm">
+                <p>Filter Centers</p>
                 <fieldset>
                     <legend>Type</legend>
-                    <label htmlFor="typeWalk">
-                        <input 
-                            id="typeWalk"
-                            type="radio"
-                            name="type"
-                            checked={this.state.walkUp !== null && this.state.walkUp}
-                            onChange={() => this.changeFilter("walkUp", true)}
-                        />
-                    Walk Up</label>
-                    <label htmlFor="typeDrive">
-                        <input
-                            id="typeDrive"
-                            type="radio"
-                            name="type"
-                            checked={this.state.walkUp !== null && !this.state.walkUp}
-                            onChange={() => this.changeFilter("walkUp", false)}
-                        /> 
-                    Drive Thru</label>
+                    <input 
+                        id="typeWalk"
+                        type="radio"
+                        name="type"
+                        checked={this.state.walkUp !== null && this.state.walkUp}
+                        onChange={() => this.changeFilter("walkUp", true)}
+                    />
+                    <label htmlFor="typeWalk">Walk Up</label>
+                    <input
+                        id="typeDrive"
+                        type="radio"
+                        name="type"
+                        checked={this.state.walkUp !== null && !this.state.walkUp}
+                        onChange={() => this.changeFilter("walkUp", false)}
+                    /> 
+                    <label htmlFor="typeDrive">Drive Thru</label>
                 </fieldset>
                 <fieldset>
                     <legend>Referral Required</legend>
-                    <label htmlFor="referralYes">
-                        <input
-                            id="referralYes"
-                            type="radio"
-                            name="referral"
-                            checked={this.state.referral !== null && this.state.referral}
-                            onChange={() => this.changeFilter("referral", true)}
-                        />
-                    Yes</label>
-                    <label htmlFor="referralNo">
-                        <input
-                            id="referralNo"
-                            type="radio"
-                            name="referral"
-                            checked={this.state.referral !== null && !this.state.referral}
-                            onChange={() => this.changeFilter("referral", false)}
-                        />
-                    No</label>
+                    <input
+                        id="referralYes"
+                        type="radio"
+                        name="referral"
+                        checked={this.state.referral !== null && this.state.referral}
+                        onChange={() => this.changeFilter("referral", true)}
+                    />
+                    <label htmlFor="referralYes">Yes</label>
+                    <input
+                        id="referralNo"
+                        type="radio"
+                        name="referral"
+                        checked={this.state.referral !== null && !this.state.referral}
+                        onChange={() => this.changeFilter("referral", false)}
+                    />
+                    <label htmlFor="referralNo">No</label>
                 </fieldset>
                 <fieldset>
                     <legend>Appointment Required</legend>
-                    <label htmlFor="appointmentYes">
-                        <input
-                            id="appointmentYes"
-                            type="radio"
-                            name="appointment"
-                            checked={this.state.appointment !== null && this.state.appointment}
-                            onChange={() => this.changeFilter("appointment", true)}
-                        />
-                    Yes</label>
-                    <label htmlFor="appointmentNo">
-                        <input
-                            id="appointmentNo"
-                            type="radio"
-                            name="appointment"
-                            checked={this.state.appointment !== null && !this.state.appointment}
-                            onChange={() => this.changeFilter("appointment", false)}
-                        />
-                    No</label>
+                    <input
+                        id="appointmentYes"
+                        type="radio"
+                        name="appointment"
+                        checked={this.state.appointment !== null && this.state.appointment}
+                        onChange={() => this.changeFilter("appointment", true)}
+                    />
+                    <label htmlFor="appointmentYes">Yes</label>
+                    <input
+                        id="appointmentNo"
+                        type="radio"
+                        name="appointment"
+                        checked={this.state.appointment !== null && !this.state.appointment}
+                        onChange={() => this.changeFilter("appointment", false)}
+                    />
+                    <label htmlFor="appointmentNo">No</label>
                 </fieldset>
-                <button onClick={() => this.props.applyFilters(this.state)}>Apply Filters</button>
-                <button onClick={this.clearFilters}>Clear Filters</button>
+                <div id="filter_buttons">
+                    <button className="btn-light" onClick={() => this.props.applyFilters(this.state)}>Apply Filters</button>
+                    <button className="btn-light" onClick={this.clearFilters}>Clear Filters</button>
+                </div>
             </div>
         );
     }
@@ -148,7 +136,6 @@ class FilteredTestCenters extends React.Component {
     applyFilters(filters) {
         let filteredData = this.state.data;
         filteredData = filteredData.filter((d) => {
-            console.log(d);
             let keep = true;
             keep &= (filters.walkUp === null || d.walkUp == filters.walkUp);
             keep &= (filters.referral === null || d.referral == filters.referral);
@@ -163,14 +150,14 @@ class FilteredTestCenters extends React.Component {
 
     render() {
         return (
-            <div>
+            <div id="tc_results_control">
                 <FilterForm clearFilters={this.clearFilters} applyFilters={this.applyFilters}/>
-                <TCTable data={this.state.filteredData}/>
+                <TCList data={this.state.filteredData}/>
             </div>
         );
     }
 }
 
 function loadTestingCenters(data) {
-    ReactDOM.render(<FilteredTestCenters data={data}/>, document.getElementById("results"));
+    ReactDOM.render(<FilteredTestCenters data={data}/>, document.getElementById("tc_results_container"));
 }

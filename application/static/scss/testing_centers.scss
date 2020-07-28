@@ -1,8 +1,82 @@
 @import 'config';
 
-#map {
+#testing_centers_map {
+    padding: 5%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#tc_map_container {
     width: 100%;
-    max-width: 1000px;
     height: 500px;
     margin: auto;
+}
+
+#tc_results_control {
+    display: flex;
+    margin: 3% auto;
+}
+
+#filterForm {
+    flex-grow: 1;
+
+    p {
+        font-weight: bold;
+        font-size: 1.5em;
+        text-align: center;
+    }
+
+    fieldset {
+        display: block;
+        margin: 0 2% 10px 2%;
+
+        legend {
+            font-size: 1em;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        input {
+            display: none;
+        }
+
+        input[type="radio"]:checked + label, input[type="checkbox"]:checked + label {
+            background: #ffe6e6;
+        }
+    
+        label {
+            @include set-background(darken(#ffffff, 3));
+            display: block;
+            text-align: center;
+            width: 70%;
+            margin: 5px auto;
+            padding: 5px 0px;
+    
+            @include transition(background 0.5s ease-in-out);
+            &:hover {
+                background: lighten(#ffe6e6, 2);
+            }
+        }
+    }
+
+    #filter_buttons {
+        display: flex;
+        text-align: center;
+        justify-content: center;
+
+        button {
+            padding: 5px 12px;
+        }
+    }
+}
+
+#tc_results {
+    flex-grow: 4;
+}
+
+.tc_result {
+    background: darken(#fff, 5);
+    margin: 10px 5%;
+    padding: 20px;
 }
