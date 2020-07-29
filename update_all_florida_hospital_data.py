@@ -51,7 +51,7 @@ for i in [beds, icus]:
     time.sleep(0.5)
     print("Download Done")
 
-import update_florida_hospital_data
+import florida_hospital_data_extraction
 
 beds = os.path.join(path, "Hospital_BedsHospital1_crosstab.csv")
 icus = os.path.join(path, "ICU_BedsHospital1_crosstab.csv")
