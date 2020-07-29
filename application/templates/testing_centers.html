@@ -6,7 +6,31 @@
 
 {% block content %}
 <section id="testing_centers_map">
-    <h2>Testing Centers</h2>
+    {% if not random %}
+        <h2>Testing Centers</h2>
+    {% else %}
+        <h2>Testing Centers - Random FL Location</h2>
+    {% endif %}
+    {% if not random %}
+        {% if length == 0 %}
+            <p style="text-align: center;">
+                We don't have data for the testing centers in your area, but don't worry, we'll be there soon!<br>
+                If you work at a hospital, testing center, or government and can help us reach your area, contact us <a href={{ url_for('home', _anchor='contact') }}>here</a>.<br>
+                To see how the application currently works for a random Florida address, please click <a href="{{ url_for('testing_centers_random') }}">here</a>
+            </p>
+        {% else %}
+            <p style="text-align: center;">
+                We found <strong>{{ length }}</strong> testing centers in your area.
+            </p>
+        {% endif %}
+        <p style="text-align: center;"><small>Your Location: {{ address }}. If this is incorrect, please <a href="{{ url_for('input_location') }}">Enter your location</a>.</small></p>
+    {% else %}
+        <p style="text-align: center;">
+            We found <strong>{{ length }}</strong> testing centers in your area.
+        </p>     
+        <p style="text-align: center;"><small>Your Random Florida Location: {{ address }}.</small></p>
+    {% endif %}
+
     <p style="text-align: center;"><strong>If your condition is serious, leave this site and call 911</strong></p>
     <div id="tc_map_container"></div>
     <div id="tc_results_container"></div>

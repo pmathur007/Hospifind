@@ -4,6 +4,7 @@ from application.models import TestingCenter, Submission
 import time
 import json 
 from datetime import datetime
+import random
 from application.utils import distance
 
 def update_address():
@@ -70,7 +71,53 @@ def testing_centers():
                 
                 session["TESTING_CENTERS"].append(tc)
                 
-    return render_template('testing_centers.html', address=session['ADDRESS'], testing_centers=session["TESTING_CENTERS"], api_key=app.config['GOOGLE_MAPS_API_KEY_FRONTEND'])
+    return render_template('testing_centers.html', address=session['ADDRESS'], testing_centers=session["TESTING_CENTERS"], length=len(session['TESTING_CENTERS']), random=False, api_key=app.config['GOOGLE_MAPS_API_KEY_FRONTEND'])
+
+@app.route('/testing_centers/random')
+def testing_centers_random():
+    addresses = [('323 Applegate Court, Miami, FL, USA 33135', 25.76193, -80.221183)]
+    address, latitude, longitude = random.choice(addresses)
+    
+    tc_objects = [x for x in TestingCenter.query.all() if x.latitude is not None and distance(latitude, longitude, x.latitude, x.longitude) < 60]
+    tcs = []
+
+    if len(tc_objects) > 0:
+        tc_objects.sort(key=lambda x: distance(latitude, longitude, x.latitude, x.longitude))
+        info = app.config['GOOGLE_MAPS'].distance_matrix(address, [tc_object.address for tc_object in tc_objects], mode="driving", units="imperial")
+
+        for i in range(len(tc_objects)):
+            tc = {}
+            tc["id"] = tc_objects[i].id
+            tc["name"] = tc_objects[i].name
+            tc["address"] = tc_objects[i].address
+            tc["lat"] = tc_objects[i].latitude
+            tc["lng"] = tc_objects[i].longitude
+
+            if info['rows'][0]['elements'][i]['status'] == 'OK':
+                tc["distance_num"] = float(info['rows'][0]['elements'][i]['distance']['text'].replace(",", "").split(" ")[0])
+
+                arr = info['rows'][0]['elements'][i]['duration']['text'].replace(",", "").split(" ")
+                time = 99999
+                if len(arr) == 2:
+                    time = float(arr[0])
+                elif len(arr) == 4 and arr[1].strip()[0:4] == "hour":
+                    time = float(arr[0]) * 60 + float(arr[2])
+                elif len(arr) == 4 and arr[1].strip()[0:3] == "day":
+                    time = float(arr[0]) * 1440 + float(arr[2]) * 60
+                tc["time_num"] = time
+
+                tc["distance"] = info['rows'][0]['elements'][i]['distance']['text']
+                tc["time"] = info['rows'][0]['elements'][i]['duration']['text']
+            else:
+                tc["distance_num"] = 99999
+                tc["time_num"] = 99999
+                tc["distance"] = "Error"
+                tc["time"] = "Error"
+            
+            tcs.append(tc)
+    
+    return render_template('testing_centers.html', address=address, testing_centers=tcs, length=len(tcs), random=True, api_key=app.config['GOOGLE_MAPS_API_KEY_FRONTEND'])
+
 
 @app.route('/testing_centers/report_wait_time/<int:id>/<int:report>')
 def wait_time_submission(id, report):
