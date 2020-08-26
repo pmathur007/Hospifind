@@ -36,7 +36,6 @@ def home():
 
     form = ContactForm()
     if form.validate_on_submit():
-        print('here')
         send_contact_email(form.name.data, form.email.data, form.subject.data, form.message.data)
         flash('Your contact email has been sent to the Hospifind team!', 'success')
         return redirect(url_for('home'))

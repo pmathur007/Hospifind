@@ -46,4 +46,24 @@
   padding: 10px 0;
 }
 
+.green-top {
+  border-top: 4px solid lime;
+}
+
+.yellow-top {
+  border-top: 4px solid #e6e600;
+}
+
+.orange-top {
+  border-top: 4px solid #ffad33;
+}
+
+.red-top {
+  border-top: 4px solid red;
+}
+
+.grey-top {
+  border-top: 4px solid grey;
+}
+
 /*# sourceMappingURL=hospitals.css.map */

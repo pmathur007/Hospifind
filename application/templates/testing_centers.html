@@ -11,6 +11,7 @@
     {% else %}
         <h2>Testing Centers - Random FL Location</h2>
     {% endif %}
+    <a class="btn-wide btn-red"href="{{ url_for('report_wait_time') }}">Report Testing Center Wait Time</a>
     {% if not random %}
         {% if length == 0 %}
             <p style="text-align: center;">

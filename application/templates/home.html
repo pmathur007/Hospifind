@@ -28,6 +28,7 @@
         </p>
         <a href="{{ url_for('hospitals') }}" class="btn-light btn-wide">Find a Hospital</a>
         <a href="{{ url_for('testing_centers') }}" class="btn-light btn-wide">Find a COVID-19 Testing Center</a>
+        <a href="{{ url_for('report_wait_time') }}" class="btn-light btn-wide">Report Testing Center Wait Time</a>
         <p><small>Your Location: {{ address }}. If this is incorrect, please <a href="{{ url_for('input_location') }}">Enter your location</a>.</small></p>
         {% if state != "FL" %}
             <p>Hospifind is currently only available in <strong>Florida</strong><br>Want a preview of how the app works? Click <a style="color: white; text-decoration: underline;" href="{{ url_for('hospitals_random') }}">here</a> for a sample hospitals page and <a style="color: white; text-decoration: underline;" href="{{ url_for('testing_centers_random') }}">here</a> for a sample testing centers page.</p>
