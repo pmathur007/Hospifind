@@ -94,7 +94,7 @@ def testing_centers_random():
             tc["lat"] = tc_objects[i].latitude
             tc["lng"] = tc_objects[i].longitude
             tc["walkUp"] = tc_objects[i].walkUp
-            tc["referral"] = tc_objects[i].referral
+            tc["referral"] = tc_objects[i].referral if tc_objects[i].referral is not None else False
             tc["appointment"] = tc_objects[i].appointment
 
             if info['rows'][0]['elements'][i]['status'] == 'OK':
