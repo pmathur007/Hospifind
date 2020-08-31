@@ -18,6 +18,10 @@ import numpy as np
 @app.route("/", methods=['GET', 'POST'])
 @app.route("/home", methods=['GET', 'POST'])
 def home():
+    ip = str(request.remote_addr)
+    with open("ip_addresses.txt", "a") as file:
+        file.write(ip + "\n")
+
     if 'ADDRESS' not in session:
         session['IP'] = str(request.remote_addr)
         g = geocoder.ip(session['IP'])
